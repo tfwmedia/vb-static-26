@@ -1,6 +1,22 @@
 <?php
 declare(strict_types=1);
 
+// Fallback front-controller routing:
+// Some hosters route every request to index.php. In that case we still
+// render the correct subpage based on REQUEST_URI.
+$requestPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+if (preg_match('~(?:^|/)(weihnachtsmaerchen|impressum|datenschutz)(?:\.php)?/?$~i', $requestPath, $matches) === 1) {
+    $routeMap = [
+        'weihnachtsmaerchen' => __DIR__ . '/weihnachtsmaerchen.php',
+        'impressum' => __DIR__ . '/impressum.php',
+        'datenschutz' => __DIR__ . '/datenschutz.php',
+    ];
+
+    $routeKey = strtolower($matches[1]);
+    require $routeMap[$routeKey];
+    exit;
+}
+
 require_once __DIR__ . '/includes/bootstrap.php';
 
 $yearsActive = max(0, (int) date('Y') - 1908);
@@ -52,7 +68,7 @@ require __DIR__ . '/partials/layout-start.php';
                 </p>
                 <div class="actions">
                     <a class="btn btn-primary" href="<?= e(site_url('/weihnachtsmaerchen/')) ?>">Zum Weihnachtsmärchen</a>
-                    <a class="btn btn-secondary" href="<?= e($siteConfig['ticket_url']) ?>" target="_blank" rel="noopener noreferrer">Tickets kaufen</a>
+                    <a class="btn btn-secondary" href="mailto:<?= e($siteConfig['maerchen_contact_email']) ?>">Kontakt für Gruppen</a>
                 </div>
             </div>
             <div class="hero-visual">
@@ -96,19 +112,19 @@ require __DIR__ . '/partials/layout-start.php';
     <section class="section section-highlight" aria-labelledby="spielzeit-highlight">
         <div class="container split">
             <div class="split-media">
-                <img src="<?= e(asset('/assets/img/weihnachtsmaerchen-2025.jpeg')) ?>" width="640" height="362" alt="Titelbild des Weihnachtsmärchens 2025: Die Schöne und das Biest" loading="lazy" decoding="async">
+                <img class="maerchen-poster" src="<?= e(asset('/img/bsm.jpeg')) ?>" width="1024" height="1536" alt="Titelbild zum Weihnachtsmärchen 2026: Die Bremer Stadtmusikanten" loading="lazy" decoding="async">
             </div>
             <div class="split-copy" data-reveal>
                 <p class="eyebrow">Nicht verpassen</p>
-                <h2 id="spielzeit-highlight">Das Weihnachtsmärchen 2025</h2>
+                <h2 id="spielzeit-highlight">Das Weihnachtsmärchen 2026</h2>
                 <p class="lead-compact">
-                    In diesem Jahr erwartet Sie „Die Schöne und das Biest“ nach dem französischen Volksmärchen,
-                    liebevoll inszeniert von Peter Schmitt.
+                    „Die Bremer Stadtmusikanten“: Ein Märchen der Brüder Grimm,
+                    in einer Inszenierung von Peter Schmitt.
                 </p>
                 <dl class="facts">
                     <div>
-                        <dt>Freiverkaufsvorstellung</dt>
-                        <dd>Mittwoch, 03.12.2025 · 18:00 Uhr</dd>
+                        <dt>Vorstellungen</dt>
+                        <dd>Dienstag, 01.12.2026 · 18:00 Uhr<br>Mittwoch, 02.12.2026 · 18:00 Uhr</dd>
                     </div>
                     <div>
                         <dt>Ort</dt>
@@ -116,12 +132,12 @@ require __DIR__ . '/partials/layout-start.php';
                     </div>
                     <div>
                         <dt>Eintritt</dt>
-                        <dd>Vorverkauf 10,00 € · Abendkasse 12,00 €</dd>
+                        <dd>Vorverkauf 12,00 € · Abendkasse 14,00 €</dd>
                     </div>
                 </dl>
                 <div class="actions">
                     <a class="btn btn-primary" href="<?= e(site_url('/weihnachtsmaerchen/')) ?>">Mehr Infos</a>
-                    <a class="btn btn-secondary" href="<?= e($siteConfig['ticket_url']) ?>" target="_blank" rel="noopener noreferrer">Tickets sichern</a>
+                    <a class="btn btn-secondary" href="mailto:<?= e($siteConfig['maerchen_contact_email']) ?>">Kontakt</a>
                 </div>
             </div>
         </div>

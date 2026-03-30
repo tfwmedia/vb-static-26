@@ -8,17 +8,13 @@ function e(mixed $value): string
 
 function site_url(string $path = '/'): string
 {
-    /** @var array<string, mixed> $siteConfig */
-    global $siteConfig;
-
-    $baseUrl = rtrim((string) $siteConfig['base_url'], '/');
     $trimmedPath = ltrim($path, '/');
 
     if ($trimmedPath === '') {
-        return $baseUrl . '/';
+        return '/';
     }
 
-    return $baseUrl . '/' . $trimmedPath;
+    return '/' . $trimmedPath;
 }
 
 function asset(string $path): string
