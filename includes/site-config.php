@@ -28,6 +28,4 @@ $metaDefaults = [
 $navigation = [
     ['key' => 'home', 'label' => 'Start', 'href' => '/'],
     ['key' => 'maerchen', 'label' => 'Weihnachtsmärchen', 'href' => '/weihnachtsmaerchen/'],
-    ['key' => 'impressum', 'label' => 'Impressum', 'href' => '/impressum/'],
-    ['key' => 'datenschutz', 'label' => 'Datenschutz', 'href' => '/datenschutz/'],
 ];

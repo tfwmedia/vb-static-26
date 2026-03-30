@@ -229,6 +229,10 @@ button:focus-visible {
     align-items: center;
 }
 
+.page-maerchen .hero-grid {
+    align-items: start;
+}
+
 .eyebrow {
     display: inline-block;
     margin: 0 0 var(--space-sm);
@@ -467,6 +471,16 @@ h3 {
     padding-bottom: var(--space-xl);
 }
 
+.page-legal .hero-inner,
+.page-maerchen .hero-inner {
+    padding-bottom: var(--space-lg);
+}
+
+.page-legal .hero + .section,
+.page-maerchen .hero + .section {
+    padding-top: var(--space-lg);
+}
+
 .event-meta {
     background: var(--surface);
     border: 1px solid color-mix(in srgb, var(--line) 70%, #fff);
@@ -516,30 +530,13 @@ h3 {
 }
 
 .prose-legal {
-    max-width: 82ch;
+    max-width: none;
+    width: 100%;
 }
 
 .prose-legal p {
-    line-height: 1.78;
+    line-height: 1.72;
     margin-bottom: 0;
-}
-
-.prose-legal p br {
-    content: "";
-    display: block;
-    margin-top: 0.4rem;
-}
-
-.prose-legal p br + br {
-    margin-top: 0.9rem;
-}
-
-.prose-legal p > strong:first-child {
-    display: block;
-    margin-top: 1.25rem;
-    margin-bottom: 0.2rem;
-    font-size: 1.08rem;
-    color: var(--ink);
 }
 
 .site-footer {

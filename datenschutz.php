@@ -28,8 +28,10 @@ require __DIR__ . '/partials/layout-start.php';
     </section>
 
     <section class="section">
-        <div class="container prose prose-legal">
-            <?= $legalContent ?>
+        <div class="container">
+            <div class="prose prose-legal">
+                <?= $legalContent ?>
+            </div>
         </div>
     </section>
 </main>
