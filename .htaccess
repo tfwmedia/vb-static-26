@@ -1,0 +1,15 @@
+RewriteEngine On
+
+# Keep direct requests for existing files and directories untouched.
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Canonical user-facing routes.
+RewriteRule ^weihnachtsmaerchen/?$ weihnachtsmaerchen.php [L,QSA]
+RewriteRule ^impressum/?$ impressum.php [L,QSA]
+RewriteRule ^datenschutz/?$ datenschutz.php [L,QSA]
+
+# Hide .php endings from direct URL requests.
+RewriteCond %{THE_REQUEST} \s/+(.*)\.php[\s?] [NC]
+RewriteRule ^ %1 [R=301,L]

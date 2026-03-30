@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 660" role="img" aria-labelledby="title desc">
+  <title id="title">Weihnachtsmärchen Bühne</title>
+  <desc id="desc">Bühnenbild mit Stern und warmen Theaterfarben</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1b3240"/>
+      <stop offset="100%" stop-color="#0f242e"/>
+    </linearGradient>
+    <linearGradient id="curtain" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#d15337"/>
+      <stop offset="100%" stop-color="#9f3521"/>
+    </linearGradient>
+    <radialGradient id="spot" cx="52%" cy="30%" r="44%">
+      <stop offset="0%" stop-color="#fce6c6" stop-opacity=".96"/>
+      <stop offset="100%" stop-color="#fce6c6" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="960" height="660" rx="28" fill="url(#bg)"/>
+  <path d="M55 52h220l-40 540H45zM905 52H685l40 540h190z" fill="url(#curtain)"/>
+  <rect x="230" y="52" width="500" height="540" fill="#14313b"/>
+  <ellipse cx="490" cy="215" rx="260" ry="165" fill="url(#spot)"/>
+  <polygon points="490,190 514,242 570,248 528,286 538,340 490,311 442,340 452,286 410,248 466,242" fill="#ffd9a1"/>
+  <ellipse cx="490" cy="540" rx="230" ry="58" fill="#132731"/>
+</svg>
