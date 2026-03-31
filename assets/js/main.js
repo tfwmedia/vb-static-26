@@ -18,6 +18,18 @@
             setOpen(!isExpanded);
         });
 
+        document.addEventListener("click", (event) => {
+            const target = event.target;
+            if (!(target instanceof Element)) {
+                return;
+            }
+
+            const clickedInsideHeader = header.contains(target);
+            if (!clickedInsideHeader) {
+                setOpen(false);
+            }
+        });
+
         document.addEventListener("keydown", (event) => {
             if (event.key === "Escape") {
                 setOpen(false);
@@ -27,6 +39,12 @@
 
         nav.querySelectorAll("a").forEach((link) => {
             link.addEventListener("click", () => setOpen(false));
+        });
+
+        window.addEventListener("resize", () => {
+            if (window.matchMedia("(min-width: 48rem)").matches) {
+                setOpen(false);
+            }
         });
     }
 

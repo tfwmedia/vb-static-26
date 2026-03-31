@@ -14,6 +14,12 @@ $structuredData = null;
 $legalContent = @file_get_contents(__DIR__ . '/content/legal/impressum.html');
 if (!is_string($legalContent) || trim($legalContent) === '') {
     $legalContent = '<p>Der Impressumstext konnte lokal nicht geladen werden.</p>';
+} else {
+    $legalContent = sanitize_legal_html($legalContent);
+}
+
+if (trim($legalContent) === '') {
+    $legalContent = '<p>Der Impressumstext ist derzeit nicht verfügbar.</p>';
 }
 
 require __DIR__ . '/partials/layout-start.php';

@@ -112,13 +112,13 @@ require __DIR__ . '/partials/layout-start.php';
     <section class="section section-highlight" aria-labelledby="spielzeit-highlight">
         <div class="container split">
             <div class="split-media">
-                <img class="maerchen-poster" src="<?= e(asset('/img/bsm.jpeg')) ?>" width="1024" height="1536" alt="Titelbild zum Weihnachtsmärchen 2026: Die Bremer Stadtmusikanten" loading="lazy" decoding="async">
+                <img class="maerchen-poster" src="<?= e(asset('/assets/img/bsm.jpeg')) ?>" width="1024" height="1536" alt="Titelbild zum Weihnachtsmärchen 2026: Die Bremer Stadtmusikanten" loading="lazy" decoding="async">
             </div>
             <div class="split-copy" data-reveal>
                 <p class="eyebrow">Nicht verpassen</p>
                 <h2 id="spielzeit-highlight">Das Weihnachtsmärchen 2026</h2>
                 <p class="lead-compact">
-                    „Die Bremer Stadtmusikanten“: Ein Märchen der Brüder Grimm,
+                    "Die Bremer Stadtmusikanten": Ein Märchen der Brüder Grimm,
                     in einer Inszenierung von Peter Schmitt.
                 </p>
                 <dl class="facts">

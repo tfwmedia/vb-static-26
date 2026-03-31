@@ -8,7 +8,7 @@ $meta = meta([
     'description' => 'Die Bremer Stadtmusikanten: Weihnachtsmärchen 2026 der Volksbühne Worms am 01.12. und 02.12.2026 in Das Wormser.',
     'canonical' => site_url('/weihnachtsmaerchen/'),
     'og_type' => 'article',
-    'og_image' => '/img/bsm.jpeg',
+    'og_image' => '/assets/img/bsm.jpeg',
 ]);
 $activeNav = 'maerchen';
 $bodyClass = 'page-maerchen';
@@ -91,7 +91,7 @@ require __DIR__ . '/partials/layout-start.php';
                 </div>
             </div>
             <aside class="event-meta" aria-label="Veranstaltungsdetails">
-                <img class="maerchen-poster" src="<?= e(asset('/img/bsm.jpeg')) ?>" width="1024" height="1536" alt="Titelmotiv des Weihnachtsmärchens 2026: Die Bremer Stadtmusikanten" loading="lazy" decoding="async">
+                <img class="maerchen-poster" src="<?= e(asset('/assets/img/bsm.jpeg')) ?>" width="1024" height="1536" alt="Titelmotiv des Weihnachtsmärchens 2026: Die Bremer Stadtmusikanten" loading="lazy" decoding="async">
                 <h2>Vorstellungen 2026</h2>
                 <ul>
                     <li><strong>Dienstag:</strong> 01.12.2026 · 18:00 Uhr · Das Wormser</li>
@@ -107,13 +107,13 @@ require __DIR__ . '/partials/layout-start.php';
         <div class="container prose" data-reveal>
             <h2>Inhalt</h2>
             <p>
-                In dem Märchen „Die Bremer Stadtmusikanten“ schließen sich ein alter Esel, ein Hund,
+                In dem Märchen "Die Bremer Stadtmusikanten" schließen sich ein alter Esel, ein Hund,
                 eine Katze und ein Hahn zusammen, nachdem ihre Besitzer sie loswerden wollen.
                 Gemeinsam machen sie sich auf den Weg nach Bremen, um dort Stadtmusikanten zu werden.
             </p>
             <p>
                 Unterwegs vertreiben sie mit Mut und Zusammenhalt eine Räuberbande aus einem Haus im Wald
-                und finden dort schließlich ein neues Zuhause – und eine starke Freundschaft.
+                und finden dort schließlich ein neues Zuhause - und eine starke Freundschaft.
             </p>
             <p>
                 Die Volksbühne Worms 1908 e. V. freut sich, in der Vorweihnachtszeit wieder ein
