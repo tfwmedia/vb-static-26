@@ -9,6 +9,7 @@ Diese Dokumentation beschreibt Aufbau, lokale Entwicklung, Deployment-nahe Detai
 - [`architecture.md`](./architecture.md) — Projektstruktur, Rendering-Fluss, Routing und Kernkomponenten
 - [`development.md`](./development.md) — Lokales Setup, nützliche Befehle und Qualitätssicherung
 - [`content-workflow.md`](./content-workflow.md) — Pflege von Inhalten (v. a. Rechtstexte und Weihnachtsmärchen)
+- [`design-changes.md`](./design-changes.md) — Dokumentation der visuellen und UX-seitigen Redesign-Änderungen
 
 ## Quick Start
 
