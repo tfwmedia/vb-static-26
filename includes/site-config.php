@@ -22,7 +22,7 @@ $metaDefaults = [
     'canonical' => '/',
     'og_type' => 'website',
     'og_locale' => 'de_DE',
-    'og_image' => '/assets/img/vorhang.jpg',
+    'og_image' => '/assets/img/vorhang.webp',
 ];
 
 $navigation = [

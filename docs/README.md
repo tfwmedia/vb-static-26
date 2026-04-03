@@ -6,6 +6,8 @@ Diese Dokumentation beschreibt Aufbau, lokale Entwicklung, Deployment-nahe Detai
 
 ## Inhalte
 
+- [`optimization-plan.md`](./optimization-plan.md) — Optimierungsstrategie nach Webdesign-, SEO- und Content-Best-Practices für 2026
+- [`agency-project-plan.md`](./agency-project-plan.md) — Zeitlicher Projekt- und Umsetzungsplan für Web-Agenturen zur Implementierung des Optimierungsplans
 - [`architecture.md`](./architecture.md) — Projektstruktur, Rendering-Fluss, Routing und Kernkomponenten
 - [`development.md`](./development.md) — Lokales Setup, nützliche Befehle und Qualitätssicherung
 - [`content-workflow.md`](./content-workflow.md) — Pflege von Inhalten (v. a. Rechtstexte und Weihnachtsmärchen)

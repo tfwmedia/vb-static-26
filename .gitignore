@@ -1,0 +1,5 @@
+node_modules/
+.DS_Store
+.junie/
+.playwright-mcp/
+playwright-*-snapshot.md

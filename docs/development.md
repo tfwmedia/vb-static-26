@@ -10,15 +10,28 @@
 Projektverzeichnis öffnen und den integrierten PHP-Server mit Router starten:
 
 ```bash
-php -S 127.0.0.1:8080 scripts/ci-router.php
+php -S 127.0.0.1:8080 router.php
 ```
 
 Danach im Browser aufrufen:
-
 - `http://127.0.0.1:8080/`
 - `http://127.0.0.1:8080/weihnachtsmaerchen/`
-- `http://127.0.0.1:8080/impressum/`
-- `http://127.0.0.1:8080/datenschutz/`
+
+## Build-Prozess (Optimierung 2026)
+
+Das Projekt verfügt über einen automatisierten Build-Prozess für Assets:
+
+```bash
+npm install
+node scripts/build.js
+```
+
+Dieser Prozess führt folgende Optimierungen aus:
+- **JS Minification**: Komprimiert `assets/js/main.js` zu `assets/js/main.min.js`.
+- **CSS Minification**: Komprimiert `assets/css/main.css` zu `assets/css/main.min.css`.
+- **Image Conversion**: Konvertiert alle Bilder aus `img/` in das moderne `WebP`-Format in `assets/img/`.
+
+Die optimierten Assets werden automatisch über die `asset()`-Helper-Funktion in den Templates eingebunden.
 
 ## Entwicklungsprinzipien im Projekt
 

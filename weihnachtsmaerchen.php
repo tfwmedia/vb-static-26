@@ -8,7 +8,7 @@ $meta = meta([
     'description' => 'Die Bremer Stadtmusikanten: Weihnachtsmärchen 2026 der Volksbühne Worms am 01.12. und 02.12.2026 in Das Wormser.',
     'canonical' => site_url('/weihnachtsmaerchen/'),
     'og_type' => 'article',
-    'og_image' => '/assets/img/bsm.jpeg',
+    'og_image' => '/assets/img/bsm.webp',
 ]);
 $activeNav = 'maerchen';
 $bodyClass = 'page-maerchen';
@@ -20,6 +20,16 @@ $structuredData = [
             '@type' => 'PerformingGroup',
             'name' => $siteConfig['name'],
             'url' => site_url('/'),
+            'additionalType' => 'LocalBusiness',
+            'email' => $siteConfig['email'],
+            'telephone' => $siteConfig['phone_display'],
+            'address' => [
+                '@type' => 'PostalAddress',
+                'streetAddress' => $siteConfig['address']['street'],
+                'postalCode' => '67549',
+                'addressLocality' => 'Worms',
+                'addressCountry' => 'DE',
+            ],
         ],
         [
             '@type' => 'EventSeries',
@@ -91,7 +101,7 @@ require __DIR__ . '/partials/layout-start.php';
                 </div>
             </div>
             <aside class="event-meta" aria-label="Veranstaltungsdetails">
-                <img class="maerchen-poster" src="<?= e(asset('/assets/img/bsm.jpeg')) ?>" width="1024" height="1536" alt="Titelmotiv des Weihnachtsmärchens 2026: Die Bremer Stadtmusikanten" loading="lazy" decoding="async">
+                <img class="maerchen-poster" src="<?= e(asset('/assets/img/bsm.webp')) ?>" width="1024" height="1536" alt="Titelmotiv des Weihnachtsmärchens 2026: Die Bremer Stadtmusikanten" loading="lazy" decoding="async">
                 <h2>Vorstellungen 2026</h2>
                 <ul>
                     <li><strong>Dienstag:</strong> 01.12.2026 · 18:00 Uhr · Das Wormser</li>

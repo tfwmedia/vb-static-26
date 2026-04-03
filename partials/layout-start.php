@@ -32,9 +32,9 @@ declare(strict_types=1);
     <link rel="icon" type="image/png" href="<?= e(asset('/assets/img/vb-icon.png')) ?>" sizes="32x32">
     <link rel="apple-touch-icon" href="<?= e(asset('/assets/img/vb-logo.png')) ?>">
 
-    <link rel="preload" href="<?= e(asset('/assets/css/main.css')) ?>" as="style">
-    <link rel="stylesheet" href="<?= e(asset('/assets/css/main.css')) ?>">
-    <script src="<?= e(asset('/assets/js/main.js')) ?>" defer></script>
+    <link rel="preload" href="<?= e(asset('/assets/css/main.min.css')) ?>" as="style">
+    <link rel="stylesheet" href="<?= e(asset('/assets/css/main.min.css')) ?>">
+    <script src="<?= e(asset('/assets/js/main.min.js')) ?>" defer></script>
 
     <?php if (!empty($structuredData)) : ?>
         <script type="application/ld+json"><?= json_ld($structuredData) ?></script>
@@ -45,16 +45,8 @@ declare(strict_types=1);
 <header class="site-header" data-header>
     <div class="container header-shell">
         <a class="brand" href="<?= e(site_url('/')) ?>" aria-label="Startseite Volksbühne Worms">
-            <img class="brand-mark" src="<?= e(asset('/assets/img/vb-logo.png')) ?>" width="432" height="324" alt="">
-            <span class="brand-copy">
-                <span class="brand-name"><?= e($siteConfig['name']) ?></span>
-                <span class="brand-tagline">Theater seit 1908</span>
-            </span>
+            <img class="brand-mark" src="<?= e(asset('/assets/img/vb-logo.png')) ?>" width="432" height="324" alt="Volksbühne Worms Logo">
         </a>
-
-        <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="primary-navigation">
-            Menü
-        </button>
 
         <nav id="primary-navigation" class="site-nav" aria-label="Hauptnavigation" data-nav>
             <ul>
@@ -72,8 +64,14 @@ declare(strict_types=1);
             </ul>
         </nav>
 
-        <a class="header-cta" href="mailto:<?= e($siteConfig['email']) ?>">
-            Kontakt aufnehmen
-        </a>
+        <div class="header-controls">
+            <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="primary-navigation">
+                Menü
+            </button>
+
+            <a class="header-cta" href="mailto:<?= e($siteConfig['email']) ?>">
+                Kontakt
+            </a>
+        </div>
     </div>
 </header>

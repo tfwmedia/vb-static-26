@@ -44,6 +44,7 @@ $structuredData = [
                 'addressLocality' => 'Worms',
                 'addressCountry' => 'DE',
             ],
+            'additionalType' => 'LocalBusiness',
         ],
         [
             '@type' => 'WebSite',
@@ -72,47 +73,16 @@ require __DIR__ . '/partials/layout-start.php';
                 </div>
             </div>
             <div class="hero-visual">
-                <img src="<?= e(asset('/assets/img/vorhang.jpg')) ?>" width="1132" height="635" alt="Bühnenvorhang der Volksbühne Worms" fetchpriority="high">
+                <img src="<?= e(asset('/assets/img/vorhang.webp')) ?>" width="1132" height="635" alt="Bühnenvorhang der Volksbühne Worms" fetchpriority="high">
             </div>
         </div>
     </section>
 
-    <section class="section">
-        <div class="container">
-            <div class="section-head">
-                <p class="eyebrow">Auf einen Blick</p>
-                <h2>Was uns ausmacht</h2>
-            </div>
-            <div class="card-grid">
-                <article class="card" data-reveal>
-                    <h3>Historie & Zukunft</h3>
-                    <p>
-                        Seit über <?= e((string) $yearsActive) ?> Jahren gestalten wir in Worms lebendige Theaterkultur
-                        und entwickeln unser Programm kontinuierlich weiter.
-                    </p>
-                </article>
-                <article class="card" data-reveal>
-                    <h3>Weihnachtsmärchen</h3>
-                    <p>
-                        Ein fester Termin im Jahreskalender für Familien, Schulen und Kitas:
-                        atmosphärisch inszeniert und generationsübergreifend.
-                    </p>
-                </article>
-                <article class="card" data-reveal>
-                    <h3>Gemeinschaft</h3>
-                    <p>
-                        Wir freuen uns immer über neue Mitglieder. Ob auf, vor oder hinter der Bühne:
-                        Engagement ist bei uns willkommen.
-                    </p>
-                </article>
-            </div>
-        </div>
-    </section>
 
     <section class="section section-highlight" aria-labelledby="spielzeit-highlight">
         <div class="container split">
             <div class="split-media">
-                <img class="maerchen-poster" src="<?= e(asset('/assets/img/bsm.jpeg')) ?>" width="1024" height="1536" alt="Titelbild zum Weihnachtsmärchen 2026: Die Bremer Stadtmusikanten" loading="lazy" decoding="async">
+                <img class="maerchen-poster" src="<?= e(asset('/assets/img/bsm.webp')) ?>" width="1024" height="1536" alt="Titelbild zum Weihnachtsmärchen 2026: Die Bremer Stadtmusikanten" loading="lazy" decoding="async">
             </div>
             <div class="split-copy" data-reveal>
                 <p class="eyebrow">Nicht verpassen</p>

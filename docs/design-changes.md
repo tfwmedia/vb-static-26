@@ -1,108 +1,29 @@
-# Design-Änderungen (Redesign 2026)
+# Design-Änderungen 2026 (Premium Minimalist Redesign)
 
-Dieses Dokument beschreibt die wesentlichen visuellen und UX-seitigen Änderungen des Redesigns in `vb-static-26`.
+Dieses Dokument beschreibt die visuelle Neuausrichtung der Volksbühne Worms Website auf einen modernen, minimalistischen "Premium Apple-Like" Standard.
 
-## Zielbild des Redesigns
+## Design-Philosophie
+Das Ziel war eine Reduktion auf das Wesentliche (Clarity), kombiniert mit einer hochwertigen Haptik durch Tiefe und Bewegung (Glassmorphism & Motion).
 
-Die Website wurde auf eine moderne, ruhige Theater-Ästhetik umgestellt:
+### 1. Farbpalette (Neutral/Minimalist)
+- **Hintergrund:** Neutrales Off-White (`#f5f5f7` - "Cloud Dancer" Stil) für eine ruhige, hochwertige Basis.
+- **Typografie:** "Deep Charcoal" (`#1d1d1f`) für maximale Lesbarkeit und Apple-typischen Kontrast.
+- **Akzente:** Einsatz des Volksbühne-Rots (`#c31e2e`) als Haupt-Akzentfarbe für maximale CI-Wiedererkennung.
 
-- klarere visuelle Hierarchie,
-- bessere Lesbarkeit auf allen Viewports,
-- konsistentes Komponenten-Design,
-- höherer Wiedererkennungswert der Marke,
-- solide Accessibility-Baseline.
+### 2. Typografie & Hierarchie
+- **System-Fonts & Serifen:** Einsatz der Serifenschrift "Playfair Display" (Google Fonts) für Headlines im Theater-Stil für mehr Eleganz. Als Fließtext (Body) kommt weiterhin die SF Pro (San Francisco) Schriftartfamilie für ein natives, performantes Look & Feel zum Einsatz.
+- **Responsives Scaling:** Einsatz von `clamp()` in `rem`-Einheiten für fließende Schriftskalierung über alle Devices.
+- **Bold Headlines:** Große, gut lesbare Überschriften mit leichtem Abstand für den traditionellen, aber modernen Charakter.
+- **Readability:** Fließtext nutzt responsiv `1.125rem` bis `1.5rem` Lead-Texte und optimierte Zeilenhöhen (1.1 für Headlines, 1.4 - 1.6 für Fließtext).
 
-## 1) Neues visuelles System (Design Tokens)
+### 3. Layout: Standard CSS Grid
+- Effiziente Layouts basierend auf sauberem CSS Grid für Content-Darstellungen, umgesetzt für höchste Responsivität auf Mobile und Desktop.
 
-Die zentrale Basis liegt in `assets/css/main.css` (`:root`):
+### 4. Glassmorphism 2.0 (Liquid Glass)
+- Der Header nutzt eine hohe Transparenz (`80%`) mit intensivem Backdrop-Blur (`20px`) und Sättigungs-Boost (`180%`).
+- Dies erzeugt einen "Liquid Glass" Effekt, bei dem Inhalte beim Scrollen sanft hindurchscheinen, ohne die Navigation zu beeinträchtigen.
 
-- **Farben** mit warmen Flächen und bühnenrotem Akzent (`--brand`, `--brand-deep`),
-- **Typografie** mit Serif-Headlines (`--font-heading`) und neutraler Sans im Fließtext (`--font-body`),
-- **Spacing-Skala** von `--space-2xs` bis `--space-3xl`,
-- **Radius- und Schattenstufen** für ein einheitliches Karten-/Panel-Verhalten,
-- **Container-Breite** über `--container` für konsistente horizontale Rhythmik.
-
-Dadurch können neue Sektionen und Komponenten ohne visuelle Brüche ergänzt werden.
-
-## 2) Header & Navigation
-
-### Struktur
-
-- Sticky Header (`.site-header`) mit leichter Transparenz/Blur.
-- Brand-Bereich mit Logo und Tagline „Theater seit 1908“.
-- Mobile Menüsteuerung per Toggle-Button.
-
-### Interaktion (`assets/js/main.js`)
-
-Das Navigationsverhalten wurde robuster gemacht:
-
-- `aria-expanded` wird sauber synchronisiert,
-- Menü schließt bei Klick außerhalb,
-- Menü schließt bei `Escape`,
-- Menü schließt nach Linkklick,
-- auf Desktop-Breakpoint (`min-width: 48rem`) wird der Mobile-State zurückgesetzt.
-
-## 3) Seitenlayout & Content-Inszenierung
-
-### Startseite (`index.php`)
-
-Neue Dramaturgie der Inhalte in klar getrennten Blöcken:
-
-1. **Hero** mit Leitbotschaft + CTA,
-2. **„Was uns ausmacht“** als 3-Karten-Raster,
-3. **Highlight-Sektion** für das Weihnachtsmärchen (Split-Layout mit Poster + Fakten),
-4. **Kontakt-Sektion** als markantes Conversion-Element.
-
-### Weihnachtsmärchen (`weihnachtsmaerchen.php`)
-
-- Hero mit Titel/Untertitel und direkten Kontakt-CTAs,
-- seitliches Event-Panel (`.event-meta`) mit Terminen/Preisen,
-- klar strukturierter Inhaltsabschnitt,
-- abschließender Gruppenkontakt im selben visuellen Muster wie auf der Startseite.
-
-## 4) Komponenten & Muster
-
-Einheitliche UI-Bausteine wurden geschärft:
-
-- Buttons mit festen Varianten (`.btn-primary`, `.btn-secondary`, `.btn-tertiary`),
-- Karten- und Panel-Styling über gemeinsame Radius-/Border-/Shadow-Logik,
-- wiederverwendbare Abschnittsmuster (`.section`, `.section-highlight`, `.section-contact`),
-- Footer als dreispaltige Informationszone mit deutlich kontrastierter Fläche.
-
-## 5) Motion, Responsiveness, Accessibility
-
-### Motion
-
-- Reveal-Animationen über `[data-reveal]` + `IntersectionObserver`.
-- Bei fehlendem Observer werden Elemente direkt sichtbar geschaltet.
-
-### Reduced Motion
-
-- `@media (prefers-reduced-motion: reduce)` deaktiviert Animationen/Transitions weitgehend.
-
-### Accessibility
-
-- Skip-Link für Tastaturnutzung,
-- klare Fokus-Indikatoren über `:focus-visible`,
-- semantische Bereiche (Header, Main, Footer, `aria-label`/`aria-labelledby`) in zentralen Layoutteilen.
-
-## 6) SEO-/Meta-Konsistenz im neuen Look
-
-Parallel zum visuellen Redesign bleiben technische SEO-Bausteine konsistent:
-
-- zentrale Meta-Defaults,
-- seitenindividuelle Überschreibungen,
-- OG/Twitter-Meta aus den Layout-Partials,
-- strukturierte Daten (JSON-LD) je nach Seitentyp.
-
-So sind Design- und Auslieferungsqualität synchron umgesetzt.
-
-## 7) Leitplanken für zukünftige Design-Änderungen
-
-Bei Erweiterungen bitte bevorzugt:
-
-1. vorhandene Tokens und Komponenten wiederverwenden,
-2. neue Varianten in `main.css` nahe bestehender Muster ergänzen,
-3. Mobile-First testen (inkl. Navigation und CTA-Lesbarkeit),
-4. `prefers-reduced-motion` und Fokuszustände nicht regressiv verändern,
-5. Inhalt + visuelle Änderungen gemeinsam dokumentieren (`docs/`).
+### 5. Motion & Scroll Animations
+- **Fade-In Reveal:** Inhalte erscheinen beim Scrollen sanft mit einer leichten Verschiebung nach oben (`12px`).
+- **Intersection Observer:** Performante Umsetzung ohne Performance-Einbußen.
+- **Reduced Motion:** Berücksichtigt Barrierefreiheitseinstellungen (`prefers-reduced-motion`).
