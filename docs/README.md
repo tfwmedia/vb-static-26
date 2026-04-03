@@ -12,6 +12,7 @@ Diese Dokumentation beschreibt Aufbau, lokale Entwicklung, Deployment-nahe Detai
 - [`development.md`](./development.md) — Lokales Setup, nützliche Befehle und Qualitätssicherung
 - [`content-workflow.md`](./content-workflow.md) — Pflege von Inhalten (v. a. Rechtstexte und Weihnachtsmärchen)
 - [`design-changes.md`](./design-changes.md) — Dokumentation der visuellen und UX-seitigen Redesign-Änderungen
+- [`security.md`](./security.md) — Umgesetzte Sicherheitskonzepte und OWASP Top 10 Abdeckung
 - [`mailboxes.md`](./mailboxes.md) — Dokumentation der aktuell in IONOS sichtbaren E-Mail-Adressen (ohne Zugangsdaten)
 
 ## Quick Start

@@ -1,5 +1,39 @@
+# Node.js
 node_modules/
-.DS_Store
-.junie/
-.playwright-mcp/
+npm-debug.log
+yarn-error.log
+
+# Build / Cache
+.cache/
+
+# Playwright
+test-results/
+playwright-report/
+blob-report/
 playwright-*-snapshot.md
+.playwright-mcp/
+
+# Agent
+.junie/
+
+# Environmnet Variables & Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# OS Generated Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
