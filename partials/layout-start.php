@@ -13,7 +13,7 @@ declare(strict_types=1);
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= e($meta['title']) ?></title>
     <meta name="description" content="<?= e($meta['description']) ?>">
-    <meta name="theme-color" content="#961C22">
+    <meta name="theme-color" content="#c31e2e">
     <link rel="canonical" href="<?= e($meta['canonical']) ?>">
 
     <meta property="og:site_name" content="<?= e($siteConfig['name']) ?>">
@@ -45,7 +45,7 @@ declare(strict_types=1);
 <header class="site-header" data-header>
     <div class="container header-shell">
         <a class="brand" href="<?= e(site_url('/')) ?>" aria-label="Startseite Volksbühne Worms">
-            <img class="brand-mark" src="<?= e(asset('/assets/img/vb-logo.png')) ?>" width="432" height="324" alt="Volksbühne Worms Logo">
+            <img class="brand-mark" src="<?= e(asset('/assets/img/vb-logo.png')) ?>" width="432" height="324" alt="Volksbühne Worms Logo" loading="eager">
         </a>
 
         <nav id="primary-navigation" class="site-nav" aria-label="Hauptnavigation" data-nav>
@@ -65,8 +65,12 @@ declare(strict_types=1);
         </nav>
 
         <div class="header-controls">
-            <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="primary-navigation">
-                Menü
+            <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="primary-navigation" aria-label="Menü öffnen">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+                    <line x1="4" y1="7" x2="20" y2="7"/>
+                    <line x1="4" y1="12" x2="20" y2="12"/>
+                    <line x1="4" y1="17" x2="20" y2="17"/>
+                </svg>
             </button>
 
             <a class="header-cta" href="mailto:<?= e($siteConfig['email']) ?>">

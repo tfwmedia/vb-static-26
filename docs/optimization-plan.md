@@ -1,42 +1,83 @@
-# Website Optimization Plan 2026
+# Optimierungs-Plan — Statusübersicht
 
-This document outlines the optimization strategy for the Volksbühne Worms website (`vb-static-26`), based on web design, SEO, and content best practices for 2026.
+Dieser Dokumentiert den Umsetzungsstand der Optimierungen für die Volksbühne Worms Website. Basierend auf Webdesign-, SEO- und Content-Best-Practices für 2026.
 
-## 1. SEO & Core Web Vitals Optimization
+## Bereits umgesetzt
 
-Expectations for 2026 revolve heavily around performance, mobile-first indexation, and structured data.
+### Performance & Core Web Vitals
 
-### 1.1 Technical Performance
-- **Core Web Vitals:** Ensure LCP (Largest Contentful Paint) is < 2.5s, FID (First Input Delay) < 100ms, and CLS (Cumulative Layout Shift) < 0.1.
-- **Image Optimization:** Migrate all images to modern formats like WebP or AVIF. Target file sizes should be <200KB for hero images and <50KB for thumbnails. Introduce lazy loading for off-screen images.
-- **Resource Minification:** Since the project uses static CSS and JS, establish a build step to minify `main.css` and `main.js` for production.
+| Maßnahme | Status | Details |
+|----------|--------|---------|
+| CSS-Minifizierung | ✅ Umgesetzt | esbuild-Build: `main.css` → `main.min.css` |
+| JS-Minifizierung | ✅ Umgesetzt | esbuild-Build: `main.js` → `main.min.js` |
+| WebP-Konvertierung | ✅ Umgesetzt | Automatischer Build per `cwebp`, Ausnahmen für Icons/Logos |
+| Cache-Busting | ✅ Umgesetzt | `asset()`-Helper mit `filemtime`-Parameter |
+| Preload CSS | ✅ Umgesetzt | `<link rel="preload">` für Stylesheet |
+| Deferred JS | ✅ Umgesetzt | `<script defer>` für JavaScript |
+| Lazy Loading Bilder | ✅ Umgesetzt | `loading="lazy"` für unter dem Fold liegende Bilder |
+| Bildoptimierung im CI | ✅ Umgesetzt | `jpegtran` (lossless JPEG), `optipng` (lossless PNG) in GitHub Actions |
+| Hero-Bild Priorisierung | ✅ Umgesetzt | `fetchpriority="high"` für Above-the-Fold Bild |
 
-### 1.2 Structural SEO
-- **Semantic HTML & Headings:** Ensure strict hierarchical use of headers (one `H1` per page, followed logically by `H2`, `H3`). Avoid skipping heading levels to satisfy CSS aesthetics.
-- **URL Structure:** Keep URLs human-readable, under 60 characters, and hyphen-separated. The current routing in `.htaccess` and `ci-router.php` supports this well, but ongoing content must adhere to it.
-- **Schema Markup:** Expand JSON-LD usage. Currently, structured data is supported via `json_ld()` helper. Add specific schemas like `Event` for the "Weihnachtsmärchen" and `LocalBusiness` for the theater.
+### SEO & Strukturierte Daten
 
-## 2. Content & Readability Best Practices
+| Maßnahme | Status | Details |
+|----------|--------|---------|
+| Semantic HTML | ✅ Umgesetzt | `<header>`, `<nav>`, `<main>`, `<footer>`, `<section>`, `<aside>`, `<address>` |
+| Heading-Hierarchie | ✅ Umgesetzt | Eine `H1` pro Seite, logische Abfolge |
+| Kanonische URLs | ✅ Umgesetzt | `<link rel="canonical">` pro Seite |
+| Open Graph Meta | ✅ Umgesetzt | `og:title`, `og:description`, `og:type`, `og:url`, `og:image`, `og:locale` |
+| Twitter Cards | ✅ Umgesetzt | `twitter:card`, `twitter:title`, `twitter:description`, `twitter:image` |
+| Schema.org EventSeries | ✅ Umgesetzt | In `weihnachtsmaerchen.php` mit `subEvent`, `AggregateOffer` |
+| Schema.org PerformingGroup | ✅ Umgesetzt | In `index.php` und `weihnachtsmaerchen.php` |
+| Schema.org WebSite | ✅ Umgesetzt | In `index.php` |
+| LocalBusiness | ✅ Umgesetzt | Über `additionalType: LocalBusiness` in `PerformingGroup` |
+| Saubere URLs | ✅ Umgesetzt | `/weihnachtsmaerchen/`, `/impressum/`, `/datenschutz/` per `.htaccess` |
 
-In 2026, user engagement and dwell time are critical SEO ranking factors, heavily influenced by how content is formatted.
+### Design & UX
 
-- **Micro-Copy & Paragraphs:** Limit paragraphs to 3-4 sentences (max 150 words). Break up text with subheadings every 300 words.
-- **Typography:** Ensure a minimum base font size of 16px with a line height of 1.5–1.6 for optimal readability on mobile and desktop. Maintain a high contrast ratio (minimum 4.5:1 text-to-background).
-- **Scannability:** Utilize bullet points, lists, and strategic whitespace (aiming for 30-40% white space visually) to make the content easier to scan.
-- **Immediate Value:** Place short, direct answers to common user questions (40-60 words) immediately following `H2` subheadings.
+| Maßnahme | Status | Details |
+|----------|--------|---------|
+| Responsive Design | ✅ Umgesetzt | 3 Breakpoints: Mobile, 48rem (768px), 80rem (1280px) |
+| Mobile Navigation | ✅ Umgesetzt | Hamburger-Menü mit Overlay, Escape-Taste, Klick-außen-Schließen |
+| Sticky Header | ✅ Umgesetzt | `position: sticky`, Glassmorphism mit `backdrop-filter` |
+| Touch-Targets | ✅ Umgesetzt | `min-height: 48px` für Navigations-Links |
+| Skip-Link | ✅ Umgesetzt | `<a href="#main-content">` für Barrierefreiheit |
+| Focus-Styles | ✅ Umgesetzt | `outline: 3px solid var(--brand)` für `focus-visible` |
+| Reduced Motion | ✅ Umgesetzt | `@media (prefers-reduced-motion: reduce)` deaktiviert alle Animationen |
+| Reveal-Animationen | ✅ Umgesetzt | `IntersectionObserver` mit `data-reveal`, 15% Schwellwert |
+| Design-Tokens | ✅ Umgesetzt | CSS Custom Properties für Farben, Spacing, Radien, Schatten |
+| Responsive Typografie | ✅ Umgesetzt | `clamp()` für alle Schriftgrößen |
 
-## 3. Layout & Modern UI/UX
+### Sicherheit
 
-Smooth interactions and an intuitive mobile experience are standard.
+| Maßnahme | Status | Details |
+|----------|--------|---------|
+| Content-Security-Policy | ✅ Umgesetzt | Default `'self'`, keine externen Ressourcen |
+| HSTS | ✅ Umgesetzt | `max-age=31536000; includeSubDomains` |
+| X-Frame-Options | ✅ Umgesetzt | `DENY` |
+| XSS-Schutz | ✅ Umgesetzt | `e()`-Helper für alle dynamischen Ausgaben |
+| HTML-Sanitizing | ✅ Umgesetzt | `sanitize_legal_html()` für Rechtstexte |
 
-- **Mobile-First Approach:** Ensure all touch targets are at least 48x48px (especially important for the navigation menu and ticket purchase buttons).
-- **Navigation:** Limit main navigation to 5-7 essential items. Consider implementing a sticky header for longer landing pages (e.g., `weihnachtsmaerchen.php`) to keep navigation and ticket purchasing accessible.
-- **Trust Elements:** Integrate trust signals permanently on the pages. For the theater, this means customer reviews/testimonials, clear contact information, secure links, and perhaps a history of sold-out shows.
-- **Accessibility (A11y):** Go beyond basic contrast. Ensure keyboard navigability, proper ARIA roles for custom elements, and descriptive `alt` texts for all theater images.
+### CI/CD & Testing
 
-## Next Steps for the Current Codebase
+| Maßnahme | Status | Details |
+|----------|--------|---------|
+| GitHub Actions Pipeline | ✅ Umgesetzt | Test + Deploy Jobs |
+| PHP-Syntax-Prüfung | ✅ Umgesetzt | `php -l` für alle `.php`-Dateien |
+| Route-Tests | ✅ Umgesetzt | HTTP 200 für alle 4 Routen |
+| Asset-Tests | ✅ Umgesetzt | Erreichbarkeit kritischer Assets |
+| 404-Handling-Test | ✅ Umgesetzt | Unbekannte Route → HTTP 404 |
+| FTP-Deploy mit Retry | ✅ Umgesetzt | 3 Versuche, Fallback-Protokoll |
+| Visuelle Tests | ✅ Umgesetzt | Playwright (Desktop + iPhone 13) |
 
-To bring `vb-static-26` fully up to 2026 standards, the following adjustments are recommended:
-1. **Assets:** Implement an automated image optimization and CSS/JS minification pipeline.
-2. **Components:** Modify `partials/layout-start.php` to ensure the sticky navigation and mobile touch targets meet guidelines.
-3. **Structured Data:** Inject `Event` JSON-LD directly into `weihnachtsmaerchen.php`.
+## Noch offen
+
+| Maßnahme | Priorität | Beschreibung |
+|----------|-----------|-------------|
+| AVIF-Unterstützung | Niedrig | AVIF als zusätzliches Bildformat neben WebP |
+| Trust-Elemente | Mittel | Testimonials, "Ausverkauft"-Hinweise, Social Proof |
+| Sitemap.xml | Mittel | Automatisch generierte Sitemap für Google Search Console |
+| robots.txt | Mittel | Explizite Steuerung für Suchmaschinen-Crawler |
+| Erweiterte A11y | Mittel | Keyboard-Navigation für alle interaktiven Elemente prüfen |
+| Lighthouse-Audit | Niedrig | Baseline-Metriken dokumentieren und überwachen |
+| Performance-Budget | Niedrig | Definierte Schwellwerte für LCP, FID, CLS |

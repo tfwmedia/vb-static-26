@@ -113,6 +113,37 @@ require __DIR__ . '/partials/layout-start.php';
         </div>
     </section>
 
+    <section class="about-section" aria-labelledby="about-us" data-reveal>
+        <div class="container about-grid">
+            <div>
+                <p class="eyebrow">Über uns</p>
+                <h2 id="about-us">Mehr als Theater —<br>Gemeinschaft seit 1908.</h2>
+                <p class="about-text">
+                    Die <strong>Volksbühne Worms 1908 e.&thinsp;V.</strong> ist eine der ältesten und traditionsreichsten Laienspielgruppen in Rheinland-Pfalz.
+                    Seit über <?= $yearsActive ?> Jahren bringen wir Klassiker und Modernes auf die Bühne — getragen von engagierten Mitgliedern, die ihre Begeisterung für das Theater teilen wollen.
+                </p>
+                <p class="about-text">
+                    Ob Märchen oder Komödie: Unsere Inszenierungen sind handgemacht, nahbar und voller Herzblut.
+                    Wir laden Sie ein, Teil dieser lebendigen Theatergemeinschaft zu werden.
+                </p>
+            </div>
+            <div class="stat-row">
+                <div class="stat-item">
+                    <span class="stat-number"><?= $yearsActive ?>+</span>
+                    <span class="stat-label">Jahre aktiv</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">500+</span>
+                    <span class="stat-label">Vorstellungen</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">80+</span>
+                    <span class="stat-label">Mitglieder</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="section section-contact" id="kontakt">
         <div class="container contact-card" data-reveal>
             <div>

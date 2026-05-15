@@ -1,60 +1,81 @@
-# Web Agency Project Plan
+# Implementierungs-Roadmap
 
-This document breaks down the implementation of the optimizations defined in the `optimization-plan.md` for the Volksbühne Worms website. It acts as an actionable timeline and task list for the web agency.
+Statusübersicht der Umsetzung nach Phasen. Grundlage: Optimierungsplan für die Volksbühne Worms Website (`vb-static-26`).
 
-## Phase 1: Audit & Foundation (Weeks 1-2)
+## Phase 1: Audit & Foundation
 
-**Objective:** Establish baselines, configure tooling, and apply foundational fixes.
+**Status: ✅ Abgeschlossen**
 
-- [ ] **Task 1.1: Technical SEO & Core Web Vitals Audit**
-  - Run Google Lighthouse / PageSpeed Insights on all existing pages.
-  - Document baseline metrics (LCP, FID, CLS).
-- [ ] **Task 1.2: Build Pipeline Setup**
-  - Introduce an automated build step (e.g., using npm/vite or specialized PHP task runners) to handle CSS/JS minification.
-  - Configure automated image conversion and compression (to WebP format).
-- [ ] **Task 1.3: HTML Structure Review**
-  - Audit `index.php` and `weihnachtsmaerchen.php` to ensure a strict, single `H1`, cascading `H2`-`H6` structure.
-  - Fix any skipped heading ranks.
+| Aufgabe | Status | Umsetzung |
+|---------|--------|-----------|
+| Technical SEO Audit | ✅ | HTML-Struktur, Heading-Hierarchie, Meta-Tags geprüft |
+| Build Pipeline Setup | ✅ | esbuild für CSS/JS-Minifizierung, cwebp für WebP, `scripts/build.js` |
+| HTML Structure Review | ✅ | Eine `H1` pro Seite, semantische HTML5-Elemente, logische Heading-Abfolge |
 
-## Phase 2: Design Systems & UX (Weeks 3-4)
+**Ergebnis**: Automatisierter Build-Prozess (`node scripts/build.js`) und saubere HTML-Struktur in allen 4 Seiten.
 
-**Objective:** Align the UI with 2026 accessibility and design standards.
+## Phase 2: Design System & UX
 
-- [ ] **Task 2.1: Typography & Spacing Update**
-  - Update `main.css` variables: ensure minimum `16px` body font size and `1.5` line height.
-  - Increase margins/padding on main content blocks to ensure 30-40% white space.
-- [ ] **Task 2.2: Mobile Navigation & Touch Targets**
-  - Audit all buttons and links in the mobile view.
-  - Standardize touch targets to minimum `48x48px` via CSS padding in `main.css`.
-  - Implement a sticky, low-profile header for smooth scrolling on long pages.
-- [ ] **Task 2.3: Accessibility (A11y) Pass**
-  - Verify minimum 4.5:1 text contrast across all color variables.
-  - Update `layout-start.php` and interactive elements in `main.js` with proper `aria-` attributes.
-  - Ensure all `<img src="...">` tags have descriptive `alt` text.
+**Status: ✅ Abgeschlossen**
 
-## Phase 3: Content Strategy & SEO Injection (Weeks 5-6)
+| Aufgabe | Status | Umsetzung |
+|---------|--------|-----------|
+| Typography & Spacing | ✅ | CSS Custom Properties, `clamp()` für responsive Schriftgrößen, 16px Basis |
+| Mobile Navigation | ✅ | Hamburger-Menü, Overlay, Escape-Taste, Resize-Handling in `main.js` |
+| Touch Targets (48px) | ✅ | `min-height: 48px` für Navigations-Links |
+| Sticky Header | ✅ | `position: sticky`, Glassmorphism (`backdrop-filter`) |
+| Accessibility (A11y) | ✅ | Skip-Link, ARIA-Attribute, `focus-visible` Styles, `alt`-Texte |
+| Reduced Motion | ✅ | `@media (prefers-reduced-motion: reduce)` deaktiviert Animationen |
 
-**Objective:** Optimize textual content for dwell time and search engine understanding.
+**Ergebnis**: Vollständiges Design-System mit Design-Tokens, 3 Breakpoints und Barrierefreiheits-Features.
 
-- [ ] **Task 3.1: Content Formatting**
-  - Refactor large text blocks in `index.php` and `weihnachtsmaerchen.php`: max 150 words per paragraph, utilizing list formats where appropriate.
-  - Inject 40-60 word definitive target answers below key `H2` subheadings.
-- [ ] **Task 3.2: Structured Data (Schema.org)**
-  - Expand the `json_ld(...)` helper call in `weihnachtsmaerchen.php` to include full `Event` schema (dates, location, offers/tickets).
-  - Add `LocalBusiness` schema to `index.php` representing the theater entity.
-- [ ] **Task 3.3: Trust Signals Integration**
-  - Design and implement a "Testimonials" or "Past Successes" component.
-  - Add social proof elements to the ticket-buying section on `weihnachtsmaerchen.php` (e.g., "Fast ausverkauft in 2025").
+## Phase 3: Content Strategy & SEO
 
-## Phase 4: QA, Testing, & Deployment (Week 7)
+**Status: 🟡 Teilweise umgesetzt**
 
-**Objective:** Final validation before launch.
+| Aufgabe | Status | Umsetzung |
+|---------|--------|-----------|
+| Content Formatting | ✅ | Kurze Absätze, Listen, Fakten-Grid in Templates |
+| Schema.org EventSeries | ✅ | `weihnachtsmaerchen.php`: EventSeries mit subEvent, AggregateOffer |
+| Schema.org LocalBusiness | ✅ | Über `additionalType: LocalBusiness` in PerformingGroup |
+| Schema.org WebSite | ✅ | In `index.php` |
+| Open Graph / Twitter Cards | ✅ | Vollständige OG- und Twitter-Meta in `layout-start.php` |
+| Trust-Elemente | ❌ Offen | Testimonials, "Ausverkauft"-Hinweise, Social Proof fehlen noch |
+| Sitemap.xml | ❌ Offen | Keine Sitemap für Google Search Console vorhanden |
+| robots.txt | ❌ Offen | Keine explizite robots.txt vorhanden |
 
-- [ ] **Task 4.1: Cross-Browser & Device Testing**
-  - Test the site in Chrome, Safari, and Firefox.
-  - Emulate various mobile device viewports to ensure responsive breakpoint integrity.
-- [ ] **Task 4.2: Final Lighthouse Validation**
-  - Re-run Core Web Vitals checks. Ensure all metrics are in the "Green" (Good) category.
-- [ ] **Task 4.3: Deployment**
-  - Deploy updated static assets, optimized images, and PHP views to the production environment.
-  - Submit the sitemap/URLs to Google Search Console to encourage re-indexing.
+**Ergebnis**: Strukturierte Daten und Meta-Tags vollständig. Trust-Elemente und Sitemap stehen noch aus.
+
+## Phase 4: QA, Testing & Deployment
+
+**Status: ✅ Abgeschlossen**
+
+| Aufgabe | Status | Umsetzung |
+|---------|--------|-----------|
+| CI/CD Pipeline | ✅ | GitHub Actions: Test-Job + Deploy-Job |
+| PHP-Syntax-Prüfung | ✅ | `php -l` für alle `.php`-Dateien in CI |
+| Route-Tests (HTTP 200) | ✅ | Alle 4 Routen werden geprüft |
+| Asset-Tests | ✅ | 6 kritische Assets auf Erreichbarkeit geprüft |
+| 404-Handling | ✅ | Unbekannte Route → HTTP 404 |
+| FTP-Deploy | ✅ | 3 Versuche mit Fallback-Protokoll, Exclude-Liste |
+| Visuelle Tests | ✅ | Playwright: Desktop + iPhone 13 für Startseite und Märchen-Seite |
+| Bildoptimierung im CI | ✅ | `jpegtran` (JPEG), `optipng` (PNG) lossless |
+
+**Ergebnis**: Vollständige CI/CD-Pipeline mit automatisierten Tests und robustem Deployment.
+
+## Zusammenfassung
+
+| Phase | Status |
+|-------|--------|
+| Phase 1: Audit & Foundation | ✅ Abgeschlossen |
+| Phase 2: Design System & UX | ✅ Abgeschlossen |
+| Phase 3: Content Strategy & SEO | 🟡 Teilweise (Trust-Elemente, Sitemap offen) |
+| Phase 4: QA, Testing & Deployment | ✅ Abgeschlossen |
+
+### Offene Aufgaben (nach Priorität)
+
+1. **Trust-Elemente**: Testimonials, "Ausverkauft"-Hinweise, Social Proof auf der Märchen-Seite
+2. **Sitemap.xml**: Automatisch generierte Sitemap für Google Search Console
+3. **robots.txt**: Explizite Steuerung für Suchmaschinen-Crawler
+4. **AVIF-Unterstützung**: Zusätzliches Bildformat im Build-Prozess
+5. **Lighthouse-Baseline**: Performance-Metriken dokumentieren und überwachen

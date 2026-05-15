@@ -12,7 +12,7 @@ declare(strict_types=1);
         </section>
 
         <section aria-labelledby="footer-address">
-            <h2 id="footer-address">Unsere Adresse</h2>
+            <h2 id="footer-address">Adresse</h2>
             <address>
                 <?= e($siteConfig['address']['name']) ?><br>
                 <?= e($siteConfig['address']['street']) ?><br>
@@ -21,19 +21,17 @@ declare(strict_types=1);
         </section>
 
         <section aria-labelledby="footer-links">
-            <h2 id="footer-links">Informationen</h2>
+            <h2 id="footer-links">Links</h2>
             <ul class="footer-links">
+                <li><a href="<?= e(site_url('/weihnachtsmaerchen/')) ?>">Weihnachtsmärchen</a></li>
                 <li><a href="<?= e(site_url('/impressum/')) ?>">Impressum</a></li>
                 <li><a href="<?= e(site_url('/datenschutz/')) ?>">Datenschutz</a></li>
-                <li><a href="<?= e(site_url('/weihnachtsmaerchen/')) ?>">Weihnachtsmärchen</a></li>
             </ul>
         </section>
     </div>
 
     <div class="container footer-bottom">
-        <p>
-            © <?= e((string) date('Y')) ?> <?= e($siteConfig['name']) ?>
-        </p>
+        <p>&copy; <?= e((string) date('Y')) ?> <?= e($siteConfig['name']) ?></p>
     </div>
 </footer>
 </body>

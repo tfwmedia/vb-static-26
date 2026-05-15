@@ -2,106 +2,238 @@
 
 ## Überblick
 
-Die Website ist als **klassische PHP-Multi-Page-Anwendung** aufgebaut (ohne Framework).
-Jede Seite rendert serverseitig HTML und nutzt gemeinsame Includes für Konfiguration, Helper und Layout.
+Die Website ist als **klassische PHP-Multi-Page-Anwendung** aufgebaut — bewusst ohne Framework, ohne Composer, ohne Datenbank. Jede Seite rendert serverseitig HTML und nutzt gemeinsame Includes für Konfiguration, Helper-Funktionen und Layout.
 
-Wichtige Ziele der Architektur:
+Architekturziele:
 
-- einfache Wartbarkeit,
-- geringe Komplexität,
-- SEO-freundliche, statische URLs,
-- klare Trennung zwischen Seiteninhalten und wiederverwendbarem Layout.
+- Einfache Wartbarkeit durch klare Struktur
+- Geringe Komplexität, keine Framework-Abhängigkeiten
+- SEO-freundliche, saubere URLs
+- Klare Trennung zwischen Seiteninhalten und wiederverwendbarem Layout
 
-## Verzeichnisstruktur (relevant)
+## Verzeichnisstruktur
 
 ```text
 .
-├── index.php
-├── weihnachtsmaerchen.php
-├── impressum.php
-├── datenschutz.php
-├── includes/
-│   ├── bootstrap.php
-│   ├── helpers.php
-│   └── site-config.php
-├── partials/
-│   ├── layout-start.php
-│   └── layout-end.php
+├── .github/workflows/
+│   └── deploy.yml                  # CI/CD Pipeline (GitHub Actions)
 ├── assets/
-│   ├── css/main.css
-│   ├── js/main.js
-│   └── img/*
+│   ├── css/
+│   │   ├── main.css                # Quelldatei (756 Zeilen)
+│   │   └── main.min.css            # Minifizierte Version (esbuild)
+│   ├── fonts/                      # 8 WOFF2-Dateien (Playfair Display)
+│   │   ├── playfair-display-italic-cyrillic.woff2
+│   │   ├── playfair-display-italic-latin-ext.woff2
+│   │   ├── playfair-display-italic-latin.woff2
+│   │   ├── playfair-display-italic-vietnamese.woff2
+│   │   ├── playfair-display-normal-cyrillic.woff2
+│   │   ├── playfair-display-normal-latin-ext.woff2
+│   │   ├── playfair-display-normal-latin.woff2
+│   │   └── playfair-display-normal-vietnamese.woff2
+│   ├── img/                        # 16 Bilddateien (JPEG, PNG, WebP, SVG)
+│   └── js/
+│       ├── main.js                 # Quelldatei (73 Zeilen)
+│       └── main.min.js             # Minifizierte Version (esbuild)
 ├── content/
 │   └── legal/
-│       ├── impressum.html
-│       └── datenschutz.html
+│       ├── impressum.html          # HTML-Fragment
+│       └── datenschutz.html        # HTML-Fragment
+├── docs/                           # Projektdokumentation (9 Markdown-Dateien)
+├── includes/
+│   ├── bootstrap.php               # Autoloader: Config + Helpers
+│   ├── helpers.php                 # 8 Helper-Funktionen
+│   └── site-config.php             # Zentrale Konfiguration
+├── partials/
+│   ├── layout-start.php            # HTML-Head, Header, Navigation
+│   └── layout-end.php              # Footer, Dokumentende
 ├── scripts/
-│   ├── ci-router.php
-│   └── sync-legal-content.php
-└── .htaccess
+│   ├── build.js                    # esbuild-Build (CSS/JS/WebP)
+│   ├── ci-router.php               # Router für CI/lokalen Dev-Server
+│   ├── playwright-test.js          # Visuelle Tests (Playwright)
+│   └── sync-legal-content.php      # Rechtstext-Sync von Live-Seite
+├── .gitignore
+├── .htaccess                       # Apache: URL-Rewriting + Security Header
+├── datenschutz.php                 # Seite: Datenschutz
+├── impressum.php                   # Seite: Impressum
+├── index.php                       # Startseite + Fallback-Router
+├── package.json                    # npm-Manifest (esbuild, playwright)
+├── package-lock.json
+├── router.php                      # Lokaler Entwicklungsrouter
+└── weihnachtsmaerchen.php          # Seite: Weihnachtsmärchen
 ```
 
-## Rendering-Fluss pro Seite
+## Rendering-Fluss
 
-1. Seite lädt `includes/bootstrap.php`.
-2. Bootstrap bindet `site-config.php` + `helpers.php`.
-3. Seite setzt Meta-Informationen (`meta(...)`), aktive Navigation und optionale strukturierte Daten.
-4. Seite rendert `partials/layout-start.php` (Head, Header, Navigation).
-5. Seite rendert den individuellen Main-Content.
-6. Seite rendert `partials/layout-end.php` (Footer, Dokumentende).
+Jede Seite folgt demselben Ablauf:
+
+```
+1. Seiten-Datei (z.B. index.php)
+   │
+   ├── require_once 'includes/bootstrap.php'
+   │       ├── header('Content-Type: text/html; charset=UTF-8')
+   │       ├── require 'site-config.php'  → $siteConfig, $metaDefaults, $navigation
+   │       └── require 'helpers.php'      → e(), site_url(), asset(), ...
+   │
+   ├── $meta = meta([...])                  // Seiten-spezifische Meta-Daten
+   ├── $activeNav = 'home'                  // Aktiver Navigationspunkt
+   ├── $bodyClass = 'page-home'             // CSS-Klasse für <body>
+   ├── $structuredData = [...]              // JSON-LD Schema.org Daten
+   │
+   ├── require 'partials/layout-start.php'  // <head>, Header, <nav>
+   │
+   ├── <main> ... </main>                   // Individueller Seiteninhalt
+   │
+   └── require 'partials/layout-end.php'    // Footer, </body>, </html>
+```
 
 ## Routing
 
-### Produktion (`.htaccess`)
+### Ebene 1: Produktion (`.htaccess`)
 
-- vorhandene Dateien/Ordner werden direkt ausgeliefert,
-- kanonische Routen werden auf PHP-Dateien gemappt:
-  - `/` → `index.php`
-  - `/weihnachtsmaerchen/` → `weihnachtsmaerchen.php`
-  - `/impressum/` → `impressum.php`
-  - `/datenschutz/` → `datenschutz.php`
-- direkte `.php`-Aufrufe werden auf die saubere URL umgeleitet (301).
+Apache `mod_rewrite` mappt saubere URLs auf PHP-Dateien:
 
-### Fallback in `index.php`
+| Kanonische URL | PHP-Datei |
+|----------------|-----------|
+| `/` | `index.php` |
+| `/weihnachtsmaerchen/` | `weihnachtsmaerchen.php` |
+| `/impressum/` | `impressum.php` |
+| `/datenschutz/` | `datenschutz.php` |
 
-Falls ein Hoster alle Requests über `index.php` leitet, erkennt die Datei bestimmte Pfade selbst und lädt die passende Zielseite.
+Zusätzlich:
+- Vorhandene Dateien/Ordner werden direkt ausgeliefert (Assets, Fonts)
+- Direkte `.php`-Aufrufe werden per 301 auf die saubere URL umgeleitet
 
-### Lokal/CI (`scripts/ci-router.php`)
+### Ebene 2: Fallback in `index.php`
 
-Der Router für den eingebauten PHP-Server bildet dieselben Routen nach und liefert bei unbekannten Pfaden ein klares `404 Not Found`.
+Falls ein Hoster alle Requests auf `index.php` leitet, erkennt die Datei bekannte Pfade über einen Regex und lädt die passende Zielseite:
 
-## Konfiguration
+```php
+preg_match('~(?:^|/)(weihnachtsmaerchen|impressum|datenschutz)(?:\.php)?/?$~i', $requestPath, $matches)
+```
 
-`includes/site-config.php` enthält:
+### Ebene 3: Lokal/CI (`router.php` bzw. `scripts/ci-router.php`)
 
-- Vereinsname,
-- Kontaktinformationen,
-- Weihnachtsmärchen-Kontaktdaten,
-- Adressdaten,
-- Meta-Defaults,
-- Navigationsdefinition.
+Beide Router nutzen den eingebauten PHP-Dev-Server:
 
-## Helper-Funktionen
+- `router.php` — für lokale Entwicklung (`php -S 127.0.0.1:8080 router.php`)
+- `scripts/ci-router.php` — für CI-Umgebung, mit explizitem 404-Handling und `Content-Type`-Header
 
-`includes/helpers.php` stellt zentrale Utilities bereit:
+## Konfiguration (`includes/site-config.php`)
 
-- `e(...)`: HTML-Escaping,
-- `site_url(...)`: interne URL-Normalisierung,
-- `asset(...)`: Asset-Pfade mit Cache-Busting per `filemtime`,
-- `absolute_url(...)`: relative/absolute URL-Auflösung,
-- `meta(...)`: Merge aus Default- und Seiten-Meta,
-- `sanitize_legal_html(...)`: Sanitizing von Rechtstext-HTML,
-- `json_ld(...)`: JSON-LD-Ausgabe.
+Drei globale Variablen:
 
-## Layout & Frontend
+### `$siteConfig`
 
-- `partials/layout-start.php`: HTML-Head, SEO/OG/Twitter-Meta, Header, Navigation.
-- `partials/layout-end.php`: Footer mit Kontakt, Adresse, Legal-Links.
-- `assets/css/main.css`: zentrales Designsystem (Variablen, Layout, responsive Regeln).
-- `assets/js/main.js`: mobile Navigation + Reveal-Animation per IntersectionObserver.
+```php
+[
+    'name' => 'Volksbühne Worms 1908 e. V.',
+    'email' => 'info@volksbuehne-worms.de',
+    'phone_display' => '06241 51429',
+    'phone_href' => '+49624151429',
+    'maerchen_contact_email' => 'kontakt@volksbuehne-worms.de',
+    'maerchen_contact_phone_display' => '0152 57204453',
+    'maerchen_contact_phone_href' => '+4915257204453',
+    'address' => [
+        'name' => 'Volksbühne Worms 1908 e. V.',
+        'street' => 'Würdtweinstraße 11',
+        'postal_city' => '67549 Worms',
+    ],
+]
+```
 
-## Rechtstexte
+### `$metaDefaults`
 
-- Inhalte liegen als HTML-Fragmente in `content/legal/*.html`.
-- `impressum.php` und `datenschutz.php` laden diese Fragmente und sanitizen sie vor Ausgabe.
-- Bei fehlenden Inhalten gibt es robuste Fallback-Meldungen.
+```php
+[
+    'title' => 'Volksbühne Worms 1908 e. V.',
+    'description' => 'Theater seit 1908: Spielzeit, Weihnachtsmärchen und Kultur für Worms und die Region.',
+    'canonical' => '/',
+    'og_type' => 'website',
+    'og_locale' => 'de_DE',
+    'og_image' => '/assets/img/vorhang.webp',
+]
+```
+
+### `$navigation`
+
+```php
+[
+    ['key' => 'home', 'label' => 'Start', 'href' => '/'],
+    ['key' => 'maerchen', 'label' => 'Weihnachtsmärchen', 'href' => '/weihnachtsmaerchen/'],
+]
+```
+
+## Helper-Funktionen (`includes/helpers.php`)
+
+| Funktion | Signatur | Beschreibung |
+|----------|----------|-------------|
+| `e()` | `e(mixed $value): string` | HTML-Escaping via `htmlspecialchars($value, ENT_QUOTES \| ENT_SUBSTITUTE, 'UTF-8')` |
+| `site_origin()` | `site_origin(): string` | Ermittelt die Origin (`https://host`) aus `$_SERVER`, bereinigt den Host |
+| `site_url()` | `site_url(string $path = '/'): string` | Normalisiert interne Pfade (führendes `/`, kein doppelter Slash) |
+| `asset()` | `asset(string $path): string` | Gibt den Asset-Pfad mit Cache-Busting-Parameter zurück (`?v=filemtime`) |
+| `asset_url()` | `asset_url(string $path): string` | Kombiniert `site_url()` und `asset()` für absolute Asset-URLs |
+| `absolute_url()` | `absolute_url(string $urlOrPath): string` | Macht relative URLs absolut, lässt bereits absolute URLs unverändert |
+| `meta()` | `meta(array $pageMeta): array` | Merged Seiten-Meta mit `$metaDefaults`, setzt `canonical` und `og_image` auf absolute URLs |
+| `sanitize_legal_html()` | `sanitize_legal_html(string $html): string` | Bereinigt HTML-Fragmente: entfernt gefährliche Tags, normalisiert `h1` → `h2`, filtert Attribute |
+| `json_ld()` | `json_ld(array $schema): string` | JSON-kodiert Schema.org-Daten (`JSON_UNESCAPED_SLASHES \| JSON_PRETTY_PRINT`) |
+
+## Layout-System
+
+### `partials/layout-start.php`
+
+Rendert den HTML-Kopf:
+
+1. `<!doctype html>`, `<html lang="de">`, `<head>`
+2. Charset, Viewport, Title, Description, Canonical
+3. Open Graph Meta-Tags (`og:site_name`, `og:title`, `og:description`, `og:type`, `og:url`, `og:image`, `og:locale`)
+4. Twitter Card Meta-Tags (`twitter:card`, `twitter:title`, `twitter:description`, `twitter:image`)
+5. Favicon und Apple Touch Icon (mit Cache-Busting)
+6. CSS-Stylesheet (`main.min.css`, mit `<link rel="preload">`)
+7. JavaScript (`main.min.js`, mit `defer`)
+8. JSON-LD strukturierte Daten (wenn `$structuredData` gesetzt)
+9. Skip-Link (`<a href="#main-content">`)
+10. Header mit Logo, Navigation und Kontakt-Button
+
+### `partials/layout-end.php`
+
+Rendert das HTML-Ende:
+
+1. Footer mit drei Spalten: Kontakt, Adresse, Links
+2. Copyright-Zeile (dynamisches Jahr)
+3. `</body>`, `</html>`
+
+## Strukturierte Daten (JSON-LD)
+
+Jede Seite kann `$structuredData` setzen. Die Daten werden in `layout-start.php` per `json_ld()` ausgegeben.
+
+### Startseite (`index.php`)
+
+- `PerformingGroup` mit `additionalType: LocalBusiness`
+- `WebSite`
+
+### Weihnachtsmärchen (`weihnachtsmaerchen.php`)
+
+- `PerformingGroup` mit `additionalType: LocalBusiness`
+- `EventSeries` mit:
+  - `OfflineEventAttendanceMode`
+  - `Place`: Das Wormser
+  - `AggregateOffer` (12,00 € – 14,00 €)
+  - `subEvent`: Zwei einzelne `Event`-Einträge (01.12. und 02.12.2026)
+
+### Impressum / Datenschutz
+
+`$structuredData = null` — keine strukturierten Daten.
+
+## Rechtstext-System
+
+1. `content/legal/impressum.html` und `content/legal/datenschutz.html` enthalten HTML-Fragmente
+2. Die jeweilige PHP-Seite lädt den Inhalt per `file_get_contents()`
+3. Bei Fehlschlagen wird eine Fallback-Meldung angezeigt
+4. Der HTML-Inhalt wird durch `sanitize_legal_html()` bereinigt:
+   - Blockierte Tags: `script`, `style`, `iframe`, `object`, `embed`, `form`, `input`, `button`
+   - Erlaubte Tags: `p`, `br`, `strong`, `em`, `b`, `i`, `u`, `small`, `ul`, `ol`, `li`, `a`, `h2`, `h3`, `h4`, `address`
+   - `h1` wird zu `h2` normalisiert
+   - Bei `<a>`-Tags werden nur sichere `href`-Schemata erlaubt (`https://`, `mailto:`, `tel:`, `/`)
+   - Externe Links erhalten `rel="noopener noreferrer"`
+   - Alle anderen Attribute werden entfernt
+5. Nach leerem Ergebnis wird ebenfalls eine Fallback-Meldung angezeigt
