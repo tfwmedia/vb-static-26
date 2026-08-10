@@ -73,8 +73,11 @@ declare(strict_types=1);
                 </svg>
             </button>
 
-            <a class="header-cta" href="mailto:<?= e($siteConfig['email']) ?>">
+            <a class="header-cta header-cta--secondary" href="mailto:<?= e($siteConfig['email']) ?>">
                 Kontakt
+            </a>
+            <a class="header-cta" href="<?= e(site_url('/tickets-kaufen/')) ?>">
+                Tickets kaufen
             </a>
         </div>
     </div>

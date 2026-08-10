@@ -10,6 +10,9 @@ if (preg_match('/^\/weihnachtsmaerchen(\/)?$/', $path)) {
 } elseif (preg_match('/^\/datenschutz(\/)?$/', $path)) {
     $_SERVER["SCRIPT_NAME"] = '/datenschutz.php';
     require 'datenschutz.php';
+} elseif (preg_match('/^\/tickets-kaufen(\/)?$/', $path)) {
+    header('Location: https://www.ticket-regional.de/events.php?mysearchSpecificType=eventtype&mysearchSpecificID=1883', true, 301);
+    exit;
 } elseif ($path === '/' || $path === '/index.php') {
     $_SERVER["SCRIPT_NAME"] = '/index.php';
     require 'index.php';

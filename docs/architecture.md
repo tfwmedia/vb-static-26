@@ -92,12 +92,13 @@ Jede Seite folgt demselben Ablauf:
 
 Apache `mod_rewrite` mappt saubere URLs auf PHP-Dateien:
 
-| Kanonische URL | PHP-Datei |
-|----------------|-----------|
+| Kanonische URL | Ziel |
+|----------------|------|
 | `/` | `index.php` |
 | `/weihnachtsmaerchen/` | `weihnachtsmaerchen.php` |
 | `/impressum/` | `impressum.php` |
 | `/datenschutz/` | `datenschutz.php` |
+| `/tickets-kaufen/` | 301 → `https://www.ticket-regional.de/events.php?mysearchSpecificType=eventtype&mysearchSpecificID=1883` |
 
 Zusätzlich:
 - Vorhandene Dateien/Ordner werden direkt ausgeliefert (Assets, Fonts)
@@ -105,7 +106,7 @@ Zusätzlich:
 
 ### Ebene 2: Fallback in `index.php`
 
-Falls ein Hoster alle Requests auf `index.php` leitet, erkennt die Datei bekannte Pfade über einen Regex und lädt die passende Zielseite:
+Falls ein Hoster alle Requests auf `index.php` leitet, erkennt die Datei bekannte Pfade über einen Regex und lädt die passende Zielseite. Externe Redirects (z. B. `/tickets-kaufen/`) werden vorab per 301 an den externen Dienst weitergeleitet:
 
 ```php
 preg_match('~(?:^|/)(weihnachtsmaerchen|impressum|datenschutz)(?:\.php)?/?$~i', $requestPath, $matches)

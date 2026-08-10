@@ -274,6 +274,18 @@ button:focus-visible {
     transform: translateY(-1px);
 }
 
+.header-cta--secondary {
+    background: transparent;
+    color: var(--brand);
+    border: 1px solid var(--line);
+}
+
+.header-cta--secondary:hover {
+    background: var(--brand-soft);
+    border-color: var(--brand);
+    color: var(--brand);
+}
+
 .hero {
     padding-block: var(--space-2xl);
 }
@@ -458,6 +470,19 @@ h3 {
 .split-media .maerchen-poster {
     width: min(100%, 24rem);
     margin-inline: auto;
+}
+
+.split-copy .actions {
+    margin-top: var(--space-lg);
+}
+
+@media (min-width: 48rem) {
+    .split-reverse > .split-media {
+        order: 2;
+    }
+    .split-reverse > .split-copy {
+        order: 1;
+    }
 }
 
 .facts {

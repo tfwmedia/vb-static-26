@@ -4,14 +4,15 @@ Technische Dokumentation der Website **vb-static-26**: eine schlanke, serverseit
 
 ## Projektübersicht
 
-Die Website umfasst vier Seiten:
+Die Website umfasst vier Seiten und einen externen Redirect:
 
 | Seite | Route | Datei | Beschreibung |
 |-------|-------|-------|-------------|
-| Startseite | `/` | `index.php` | Hero-Bereich, Weihnachtsmärchen-Highlight, Kontakt |
+| Startseite | `/` | `index.php` | Hero-Bereich, Weihnachtsmärchen- und Saisonstück-Highlight, Kontakt |
 | Weihnachtsmärchen | `/weihnachtsmaerchen/` | `weihnachtsmaerchen.php` | Landingpage mit Event-Details, Schema.org EventSeries |
 | Impressum | `/impressum/` | `impressum.php` | Rechtstext, geladen aus HTML-Fragment |
 | Datenschutz | `/datenschutz/` | `datenschutz.php` | Rechtstext, geladen aus HTML-Fragment |
+| Tickets kaufen | `/tickets-kaufen/` | — | 301-Redirect zu ticket-regional.de (Eventtyp-Übersicht 1883) |
 
 ## Technologie-Stack
 
@@ -48,6 +49,7 @@ Verfügbare Routen im Browser:
 - `http://127.0.0.1:8080/weihnachtsmaerchen/` — Weihnachtsmärchen
 - `http://127.0.0.1:8080/impressum/` — Impressum
 - `http://127.0.0.1:8080/datenschutz/` — Datenschutz
+- `http://127.0.0.1:8080/tickets-kaufen/` — 301 → ticket-regional.de
 
 ## Dokumentation
 

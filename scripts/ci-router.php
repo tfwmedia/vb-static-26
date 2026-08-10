@@ -15,6 +15,13 @@ if ($route === '') {
     $route = '/';
 }
 
+// External redirect: ticket purchase is handled by ticket-regional.de.
+if ($route === '/tickets-kaufen') {
+    header('HTTP/1.1 301 Moved Permanently');
+    header('Location: https://www.ticket-regional.de/events.php?mysearchSpecificType=eventtype&mysearchSpecificID=1883');
+    return true;
+}
+
 $routeMap = [
     '/' => 'index.php',
     '/weihnachtsmaerchen' => 'weihnachtsmaerchen.php',

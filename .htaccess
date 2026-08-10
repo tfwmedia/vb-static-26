@@ -10,6 +10,9 @@ RewriteRule ^weihnachtsmaerchen/?$ weihnachtsmaerchen.php [L,QSA]
 RewriteRule ^impressum/?$ impressum.php [L,QSA]
 RewriteRule ^datenschutz/?$ datenschutz.php [L,QSA]
 
+# External redirect: ticket purchase is handled by ticket-regional.de.
+RewriteRule ^tickets-kaufen/?$ https://www.ticket-regional.de/events.php?mysearchSpecificType=eventtype&mysearchSpecificID=1883 [R=301,L]
+
 # Hide .php endings from direct URL requests.
 RewriteCond %{THE_REQUEST} \s/+(.*)\.php[\s?] [NC]
 RewriteRule ^ %1 [R=301,L]

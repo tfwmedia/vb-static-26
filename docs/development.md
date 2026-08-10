@@ -30,6 +30,7 @@ Verfügbare Routen:
 - `http://127.0.0.1:8080/weihnachtsmaerchen/` — Weihnachtsmärchen
 - `http://127.0.0.1:8080/impressum/` — Impressum
 - `http://127.0.0.1:8080/datenschutz/` — Datenschutz
+- `http://127.0.0.1:8080/tickets-kaufen/` — 301 → ticket-regional.de
 
 ## Build-Prozess
 

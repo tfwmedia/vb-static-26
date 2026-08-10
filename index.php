@@ -5,6 +5,10 @@ declare(strict_types=1);
 // Some hosters route every request to index.php. In that case we still
 // render the correct subpage based on REQUEST_URI.
 $requestPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+if (preg_match('~^/tickets-kaufen/?$~i', $requestPath) === 1) {
+    header('Location: https://www.ticket-regional.de/events.php?mysearchSpecificType=eventtype&mysearchSpecificID=1883', true, 301);
+    exit;
+}
 if (preg_match('~(?:^|/)(weihnachtsmaerchen|impressum|datenschutz)(?:\.php)?/?$~i', $requestPath, $matches) === 1) {
     $routeMap = [
         'weihnachtsmaerchen' => __DIR__ . '/weihnachtsmaerchen.php',
@@ -68,7 +72,7 @@ require __DIR__ . '/partials/layout-start.php';
                     Von Saisonstücken bis Weihnachtsmärchen: Kultur lebt hier nahbar und handgemacht.
                 </p>
                 <div class="actions">
-                    <a class="btn btn-primary" href="<?= e(site_url('/weihnachtsmaerchen/')) ?>">Zum Weihnachtsmärchen</a>
+                    <a class="btn btn-primary" href="<?= e(site_url('/tickets-kaufen/')) ?>">Tickets kaufen</a>
                     <a class="btn btn-secondary" href="mailto:<?= e($siteConfig['maerchen_contact_email']) ?>">Kontakt für Gruppen</a>
                 </div>
             </div>
@@ -78,6 +82,31 @@ require __DIR__ . '/partials/layout-start.php';
         </div>
     </section>
 
+
+    <section class="section section-highlight" aria-labelledby="saisonstueck-highlight">
+        <div class="container split split-reverse">
+            <div class="split-copy" data-reveal>
+                <p class="eyebrow">Saisonstück 2026</p>
+                <h2 id="saisonstueck-highlight">Die Löffelliste</h2>
+                <p class="lead-compact">
+                    Ein Tag, den sich Erika ganz anders vorgestellt hat.
+                    Eine unerwartete Nachricht von ihrem Pächter, dann Freunde,
+                    die sich in ihr Leben einmischen wollen und zu guter Letzt
+                    noch die Begegnung mit Gevatter Tod. Aber nicht mit Erika.
+                    Sie weiß sich zu helfen und hat dabei ihren Spaß.
+                </p>
+                <p class="lead-compact">
+                    <strong>Einlass:</strong> 1,5 Stunden vor Beginn
+                </p>
+                <div class="actions">
+                    <a class="btn btn-primary" href="<?= e(site_url('/tickets-kaufen/')) ?>">Tickets kaufen</a>
+                </div>
+            </div>
+            <div class="split-media">
+                <img src="<?= e(asset('/assets/img/loeffelliste.webp')) ?>" width="450" height="300" alt="Titelbild des Saisonstücks 2026: Die Löffelliste" loading="lazy" decoding="async">
+            </div>
+        </div>
+    </section>
 
     <section class="section section-highlight" aria-labelledby="spielzeit-highlight">
         <div class="container split">

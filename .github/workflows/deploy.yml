@@ -80,6 +80,24 @@ jobs:
           done
           [ $ERROR -eq 0 ] || exit 1
 
+      - name: Check external redirect returns HTTP 301
+        run: |
+          set -euo pipefail
+          ERROR=0
+          redirect_routes=(
+            "/tickets-kaufen/"
+          )
+          for route in "${redirect_routes[@]}"; do
+            status=$(curl -o /dev/null -s -w "%{http_code}" "http://127.0.0.1:8080$route")
+            if [ "$status" = "301" ]; then
+              echo "  ✓ $route → $status"
+            else
+              echo "::error::Route $route returned HTTP $status (expected 301)"
+              ERROR=1
+            fi
+          done
+          [ $ERROR -eq 0 ] || exit 1
+
       - name: Check critical assets are reachable
         run: |
           set -euo pipefail
@@ -91,6 +109,7 @@ jobs:
             "/assets/img/vb-icon.png"
             "/assets/img/vorhang.jpg"
             "/assets/img/weihnachtsmaerchen-2025.jpeg"
+            "/assets/img/loeffelliste.webp"
           )
           for asset in "${assets[@]}"; do
             status=$(curl -o /dev/null -s -w "%{http_code}" "http://127.0.0.1:8080$asset")
