@@ -216,8 +216,8 @@ require __DIR__ . '/partials/layout-start.php';
                         Tickets für das Weihnachtsmärchen verfügbar
                     </p>
                     <h1 id="hero-title">
-                        Wir sind Theater.<br>
-                        Mit Haltung, Herz und Bühne.
+                        Theater seit 1908.<br>
+                        Handgemacht, nahbar, mit Herzblut.
                     </h1>
                     <p class="lead">
                         Seit <?= e((string) $siteConfig['founding_year']) ?> begeistert die Volksbühne Worms Generationen
@@ -267,7 +267,7 @@ require __DIR__ . '/partials/layout-start.php';
                     <?php endif; ?>
 
                     <div class="actions">
-                        <a class="btn btn-primary btn-lg" href="<?= e(site_url('/tickets-kaufen/#produktion-die-bremer-stadtmusikanten')) ?>">
+                        <a class="btn btn-primary btn-lg" href="<?= e(site_url('/tickets-kaufen/#alle-termine')) ?>">
                             Tickets bestellen
                             <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M5 12h14M13 5l7 7-7 7"/>
@@ -365,14 +365,11 @@ require __DIR__ . '/partials/layout-start.php';
                     $event = [
                         'title'      => $card['title'],
                         'subtitle'   => truncate_text($card['lead'], 220, '…'),
-                        'date'       => '2026-09-01',
-                        'time'       => '19:30',
-                        'venue'      => $card['meta'],
                         'image'      => $card['image'],
                         'image_alt'  => $card['image_alt'],
                         'href'       => $card['cta_url'],
                         'ticket_url' => $card['cta_url'],
-                        'price'      => 'Tickets im Vorverkauf',
+                        'price'      => $card['meta'], // "Premiere 03.10.2026 · Volksbühne — kleines Theater"
                         'eyebrow'    => $card['eyebrow'],
                         'status'     => 'tickets',
                     ];

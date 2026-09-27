@@ -36,8 +36,8 @@
   <text x="80" y="240" fill="#c4bab4" font-family="-apple-system, Segoe UI, Roboto, sans-serif" font-size="16" letter-spacing="4" font-weight="500">THEATER SEIT 1908</text>
 
   <!-- Title -->
-  <text x="80" y="380" fill="#fff" font-family="Georgia, 'Times New Roman', serif" font-size="78" font-weight="700">Wir sind Theater.</text>
-  <text x="80" y="460" fill="#fff" font-family="Georgia, 'Times New Roman', serif" font-size="44" font-weight="400" opacity="0.85">Mit Haltung, Herz und Bühne.</text>
+  <text x="80" y="380" fill="#fff" font-family="Inter, -apple-system, Segoe UI, Roboto, sans-serif" font-size="64" font-weight="700" letter-spacing="-0.02em">Theater seit 1908.</text>
+  <text x="80" y="445" fill="#fff" font-family="Inter, -apple-system, Segoe UI, Roboto, sans-serif" font-size="36" font-weight="500" opacity="0.9" letter-spacing="-0.01em">Handgemacht, nahbar, mit Herzblut.</text>
 
   <!-- Footer line -->
   <line x1="80" y1="540" x2="1120" y2="540" stroke="#ffffff22"/>

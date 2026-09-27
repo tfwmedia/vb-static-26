@@ -94,29 +94,41 @@ $isoDateTime      = $eventDate !== '' ? iso_local($eventDate, $eventTime) : '';
         </div>
     </div>
 
-    <?php if ($eventPrice !== null) : ?>
+    <?php
+        // Footer shows a price label + CTA. For marketing/hero cards where
+        // the "price" field carries premiere metadata instead of a real
+        // price, we detect that and render as a tagline instead of "€X".
+        $hasRealPrice = is_numeric(str_replace(',', '.', preg_replace('/[^0-9,.]/', '', (string) $eventPrice))) && str_contains((string) $eventPrice, '€');
+        $priceLabel = $eventPrice !== null && str_contains((string) $eventPrice, '€') ? 'Tickets' : 'Tickets kaufen';
+        $footerLeftLabel = $hasRealPrice ? $eventPrice : $eventPrice;
+    ?>
+    <?php if ($eventPrice !== null || !empty($eventTicketUrl)) : ?>
         <div class="event-card__footer">
-            <span class="event-card__price">
-                <?= e($eventPrice) ?>
-                <?php if ($eventPriceNote) : ?>
-                    <small><?= e($eventPriceNote) ?></small>
-                <?php endif; ?>
-            </span>
-            <a class="btn btn-primary btn-sm"
-               href="<?= e($eventTicketUrl) ?>"
-               rel="noopener"
-               itemprop="offers"
-               itemscope
-               itemtype="https://schema.org/Offer">
-                <meta itemprop="url" content="<?= e($eventTicketUrl) ?>">
-                <meta itemprop="availability" content="https://schema.org/InStock">
-                <meta itemprop="priceCurrency" content="EUR">
-                <span itemprop="price"><?= e((string) preg_replace('/[^0-9,.]/', '', (string) $eventPrice)) ?></span>
-                <?= e($eventPrice !== null && str_contains((string) $eventPrice, '€') ? 'Tickets' : 'Tickets kaufen') ?>
-                <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M5 12h14M13 5l7 7-7 7"/>
-                </svg>
-            </a>
+            <?php if ($eventPrice !== null) : ?>
+                <span class="event-card__price">
+                    <?= e($eventPrice) ?>
+                    <?php if ($eventPriceNote) : ?>
+                        <small><?= e($eventPriceNote) ?></small>
+                    <?php endif; ?>
+                </span>
+            <?php endif; ?>
+            <?php if (!empty($eventTicketUrl)) : ?>
+                <a class="btn btn-primary btn-sm"
+                   href="<?= e($eventTicketUrl) ?>"
+                   rel="noopener"
+                   itemprop="offers"
+                   itemscope
+                   itemtype="https://schema.org/Offer">
+                    <meta itemprop="url" content="<?= e($eventTicketUrl) ?>">
+                    <meta itemprop="availability" content="https://schema.org/InStock">
+                    <meta itemprop="priceCurrency" content="EUR">
+                    <span itemprop="price"><?= $hasRealPrice ? e((string) preg_replace('/[^0-9,.]/', '', (string) $eventPrice)) : '0' ?></span>
+                    <?= e($priceLabel) ?>
+                    <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14M13 5l7 7-7 7"/>
+                    </svg>
+                </a>
+            <?php endif; ?>
         </div>
     <?php endif; ?>
 </article>
