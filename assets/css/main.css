@@ -409,7 +409,7 @@ p {
 
 .eyebrow {
     display: inline-block;
-    margin: 0 0 var(--space-sm);
+    margin: 0 0 var(--space-md);
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.2em;
