@@ -10,6 +10,19 @@ if ($requestUri !== '/' && is_file($publicPath)) {
     return false;
 }
 
+// Static SEO files (defensive — in case they ever become PHP-routed).
+if ($requestUri === '/sitemap.xml') {
+    header('Content-Type: application/xml; charset=UTF-8');
+    readfile($projectRoot . '/sitemap.xml');
+    return true;
+}
+
+if ($requestUri === '/robots.txt') {
+    header('Content-Type: text/plain; charset=UTF-8');
+    readfile($projectRoot . '/robots.txt');
+    return true;
+}
+
 $route = rtrim($requestUri, '/');
 if ($route === '') {
     $route = '/';
@@ -24,6 +37,9 @@ if ($route === '/tickets-kaufen') {
 
 $routeMap = [
     '/' => 'index.php',
+    '/spielzeit' => 'spielzeit.php',
+    '/verein' => 'verein.php',
+    '/kontakt' => 'kontakt.php',
     '/weihnachtsmaerchen' => 'weihnachtsmaerchen.php',
     '/impressum' => 'impressum.php',
     '/datenschutz' => 'datenschutz.php',
@@ -43,7 +59,8 @@ if (str_ends_with($requestUri, '.php')) {
     }
 }
 
+// Custom 404 page with proper status code.
 http_response_code(404);
-header('Content-Type: text/plain; charset=UTF-8');
-echo "404 Not Found\n";
+header('Content-Type: text/html; charset=UTF-8');
+require $projectRoot . '/404.php';
 return true;

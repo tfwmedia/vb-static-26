@@ -6,9 +6,14 @@ RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
 
 # Canonical user-facing routes.
+RewriteRule ^spielzeit/?$ spielzeit.php [L,QSA]
+RewriteRule ^verein/?$ verein.php [L,QSA]
+RewriteRule ^kontakt/?$ kontakt.php [L,QSA]
 RewriteRule ^weihnachtsmaerchen/?$ weihnachtsmaerchen.php [L,QSA]
 RewriteRule ^impressum/?$ impressum.php [L,QSA]
 RewriteRule ^datenschutz/?$ datenschutz.php [L,QSA]
+
+# Sitemap and robots are static files served directly.
 
 # External redirect: ticket purchase is handled by ticket-regional.de.
 RewriteRule ^tickets-kaufen/?$ https://www.ticket-regional.de/events.php?mysearchSpecificType=eventtype&mysearchSpecificID=1883 [R=301,L]
@@ -16,6 +21,9 @@ RewriteRule ^tickets-kaufen/?$ https://www.ticket-regional.de/events.php?mysearc
 # Hide .php endings from direct URL requests.
 RewriteCond %{THE_REQUEST} \s/+(.*)\.php[\s?] [NC]
 RewriteRule ^ %1 [R=301,L]
+
+# Custom 404: render 404.php with status 404 if the request reaches this far.
+ErrorDocument 404 /404.php
 
 <IfModule mod_headers.c>
     Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'none'"

@@ -1,7 +1,21 @@
 <?php
 $path = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
 
-if (preg_match('/^\/weihnachtsmaerchen(\/)?$/', $path)) {
+// Static SEO files: served as-is (Apache also has the .htaccess rule).
+if (preg_match('/^\/(sitemap\.xml|robots\.txt)$/', $path)) {
+    return false;
+}
+
+if (preg_match('/^\/spielzeit(\/)?$/', $path)) {
+    $_SERVER["SCRIPT_NAME"] = '/spielzeit.php';
+    require 'spielzeit.php';
+} elseif (preg_match('/^\/verein(\/)?$/', $path)) {
+    $_SERVER["SCRIPT_NAME"] = '/verein.php';
+    require 'verein.php';
+} elseif (preg_match('/^\/kontakt(\/)?$/', $path)) {
+    $_SERVER["SCRIPT_NAME"] = '/kontakt.php';
+    require 'kontakt.php';
+} elseif (preg_match('/^\/weihnachtsmaerchen(\/)?$/', $path)) {
     $_SERVER["SCRIPT_NAME"] = '/weihnachtsmaerchen.php';
     require 'weihnachtsmaerchen.php';
 } elseif (preg_match('/^\/impressum(\/)?$/', $path)) {
@@ -20,5 +34,5 @@ if (preg_match('/^\/weihnachtsmaerchen(\/)?$/', $path)) {
     return false; // serve the requested resource as-is.
 } else {
     http_response_code(404);
-    echo "404 Not Found";
+    require '404.php';
 }
