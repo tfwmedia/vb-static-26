@@ -290,6 +290,20 @@ function truncate_text(string $text, int $max, string $suffix = '…'): string
 }
 
 /**
+ * URL-safe slug from a German string (handles umlauts and ß).
+ */
+function slugify(string $s): string
+{
+    $s = strtolower($s);
+    $s = preg_replace('/ä/', 'ae', $s) ?? $s;
+    $s = preg_replace('/ö/', 'oe', $s) ?? $s;
+    $s = preg_replace('/ü/', 'ue', $s) ?? $s;
+    $s = preg_replace('/ß/', 'ss', $s) ?? $s;
+    $s = preg_replace('/[^a-z0-9]+/', '-', $s) ?? $s;
+    return trim($s, '-');
+}
+
+/**
  * Returns the German short day name for an ISO date (e.g. "Di").
  */
 function weekday_short_de(string $isoDate): string

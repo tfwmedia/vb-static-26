@@ -5,12 +5,9 @@ declare(strict_types=1);
 // Some hosters route every request to index.php. In that case we still
 // render the correct subpage based on REQUEST_URI.
 $requestPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
-if (preg_match('~^/tickets-kaufen/?$~i', $requestPath) === 1) {
-    header('Location: ' . $siteConfig['spielzeit_ticket_url'], true, 301);
-    exit;
-}
-if (preg_match('~(?:^|/)(spielzeit|verein|kontakt|weihnachtsmaerchen|impressum|datenschutz)(?:\.php)?/?$~i', $requestPath, $matches) === 1) {
+if (preg_match('~(?:^|/)(tickets-kaufen|spielzeit|verein|kontakt|weihnachtsmaerchen|impressum|datenschutz)(?:\.php)?/?$~i', $requestPath, $matches) === 1) {
     $routeMap = [
+        'tickets-kaufen' => __DIR__ . '/tickets-kaufen.php',
         'spielzeit' => __DIR__ . '/spielzeit.php',
         'verein' => __DIR__ . '/verein.php',
         'kontakt' => __DIR__ . '/kontakt.php',
@@ -28,7 +25,9 @@ require_once __DIR__ . '/includes/bootstrap.php';
 
 $yearsActive = max(0, (int) date('Y') - (int) $siteConfig['founding_year']);
 
-// Determine the next upcoming event with a target date in the future for countdown.
+// Determine the next upcoming event (including sold-out premieres)
+// for the hero countdown. Premiere dates count down even when sold out
+// — that's part of the marketing message ("the premiere is coming up").
 $now = time();
 $nextUpcoming = null;
 foreach ($upcomingEvents as $evt) {
@@ -209,15 +208,15 @@ $structuredData = [
         count($upcomingSorted) > 0 ? [
             '@type' => 'ItemList',
             'name' => 'Nächste Vorstellungen',
-            'itemListElement' => array_values(array_map(function ($evt, $i) {
+            'itemListElement' => array_values(array_map(function ($evt, $globalIdx) {
                 return [
                     '@type' => 'ListItem',
-                    'position' => $i + 1,
+                    'position' => $globalIdx + 1,
                     'name' => $evt['title'] . ' — ' . ($evt['subtitle'] ?? ''),
                     'startDate' => iso_local((string) $evt['date'], (string) ($evt['time'] ?? '18:00')),
-                    'url' => isset($evt['ticket_url']) ? $evt['ticket_url'] : absolute_url('/'),
+                    'url' => absolute_url('/tickets-kaufen/#termin-' . ($globalIdx + 1)),
                 ];
-            }, array_slice($upcomingSorted, 0, 8), array_keys(array_slice($upcomingSorted, 0, 8)))),
+            }, $upcomingSorted, array_keys($upcomingSorted))),
         ] : null,
     ])),
 ];
@@ -244,13 +243,23 @@ require __DIR__ . '/partials/layout-start.php';
                     </p>
 
                     <?php if ($countdownTarget && $nextUpcoming) : ?>
+                        <?php
+                            $isPremiere = str_contains(strtolower($nextUpcoming['subtitle'] ?? ''), 'premiere');
+                            $countdownLabel = $isPremiere ? 'Nächste Premiere' : 'Nächste Vorstellung';
+                            $isCountdownSoldOut = ($nextUpcoming['status'] ?? 'tickets') === 'sold_out';
+                        ?>
                         <div class="hero__countdown"
                              role="group"
                              aria-labelledby="countdown-label"
                              data-countdown="<?= e($countdownTarget) ?>"
                              data-countdown-label="Noch">
                             <p id="countdown-label" class="eyebrow" style="margin-bottom: 0; align-self: center;">
-                                Nächste Premiere: <?= e(format_date_de($nextUpcoming['date'], true)) ?> · <?= e($nextUpcoming['time']) ?> Uhr
+                                <?= e($countdownLabel) ?>: <?= e(format_date_de($nextUpcoming['date'], true)) ?> · <?= e($nextUpcoming['time']) ?> Uhr
+                                <?php if ($isCountdownSoldOut) : ?>
+                                    <span class="chip chip--warning" style="margin-left: var(--space-sm); vertical-align: middle;">
+                                        <span class="chip__dot" aria-hidden="true"></span>Ausverkauft
+                                    </span>
+                                <?php endif; ?>
                             </p>
                             <div class="countdown-unit" aria-hidden="true">
                                 <span class="num" data-countdown-day>–</span>
@@ -269,13 +278,13 @@ require __DIR__ . '/partials/layout-start.php';
                                 <span class="lbl">Sek</span>
                             </div>
                             <span class="visually-hidden" data-countdown-live aria-live="polite">
-                                Countdown zur nächsten Vorstellung
+                                Countdown zur <?= $isPremiere ? 'Premiere' : 'nächsten Vorstellung' ?>
                             </span>
                         </div>
                     <?php endif; ?>
 
                     <div class="actions">
-                        <a class="btn btn-primary btn-lg" href="<?= e($siteConfig['maerchen_ticket_url']) ?>" rel="noopener">
+                        <a class="btn btn-primary btn-lg" href="<?= e(site_url('/tickets-kaufen/#produktion-die-bremer-stadtmusikanten')) ?>">
                             Tickets bestellen
                             <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M5 12h14M13 5l7 7-7 7"/>
@@ -294,7 +303,7 @@ require __DIR__ . '/partials/layout-start.php';
                          fetchpriority="high"
                          decoding="async">
                     <span class="hero-visual__caption">
-                        Die Bremer Stadtmusikanten — Premiere 29. November 2026, Das Wormser
+                        Die Bremer Stadtmusikanten — ab 1. Dezember 2026, Das Wormser
                     </span>
                 </div>
             </div>
@@ -317,10 +326,15 @@ require __DIR__ . '/partials/layout-start.php';
 
             <?php if (!empty($upcomingStrip)) : ?>
                 <div class="upcoming-strip" role="list">
-                    <?php foreach ($upcomingStrip as $evt) : ?>
+                    <?php foreach ($upcomingStrip as $i => $evt) : ?>
+                        <?php
+                        $eventIdx = array_search($evt, $upcomingSorted, true);
+                        $deepLink = $eventIdx !== false
+                            ? site_url('/tickets-kaufen/#termin-' . ($eventIdx + 1))
+                            : site_url('/tickets-kaufen/');
+                        ?>
                         <a class="upcoming-item"
-                           href="<?= e($evt['ticket_url'] ?? $siteConfig['spielzeit_ticket_url']) ?>"
-                           rel="noopener"
+                           href="<?= e($deepLink) ?>"
                            role="listitem">
                             <div class="upcoming-item__date" aria-hidden="true">
                                 <span class="day"><?= e(date('d', strtotime($evt['date']))) ?></span>
@@ -343,7 +357,7 @@ require __DIR__ . '/partials/layout-start.php';
             <?php endif; ?>
 
             <div class="actions" style="margin-top: var(--space-xl); justify-content: center;" data-reveal>
-                <a class="btn btn-ghost" href="<?= e(site_url('/spielzeit/')) ?>">Alle Termine ansehen →</a>
+                <a class="btn btn-ghost" href="<?= e(site_url('/tickets-kaufen/')) ?>">Alle Termine &amp; Tickets →</a>
             </div>
         </div>
     </section>

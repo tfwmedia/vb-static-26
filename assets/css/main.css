@@ -1114,7 +1114,13 @@ p {
 }
 
 .hero--feature {
-    padding-block: var(--space-3xl);
+    padding-block: var(--space-2xl) var(--space-3xl);
+}
+
+@media (min-width: 64rem) {
+    .hero--feature {
+        padding-top: var(--space-3xl);
+    }
 }
 
 .hero-grid {
@@ -1666,6 +1672,174 @@ p {
     .benefits {
         grid-template-columns: repeat(3, 1fr);
     }
+}
+
+/* =========================================================================
+   Tickets kaufen page
+   ========================================================================= */
+.tickets-production {
+    margin-block: var(--space-2xl);
+}
+
+.tickets-production__head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid var(--line);
+    flex-wrap: wrap;
+}
+
+.tickets-production__title {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin: 4px 0 0;
+}
+
+.ticket-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--space-sm);
+}
+
+.ticket-row {
+    display: grid;
+    grid-template-columns: 88px 1fr auto;
+    gap: var(--space-md);
+    align-items: center;
+    padding: var(--space-md) var(--space-lg);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.ticket-row:hover,
+.ticket-row:focus-within {
+    border-color: var(--brand);
+    box-shadow: var(--shadow-sm);
+}
+
+.ticket-row__date {
+    display: grid;
+    text-align: center;
+    padding: var(--space-xs);
+    background: var(--brand-soft);
+    border-radius: var(--radius-sm);
+    color: var(--brand);
+    line-height: 1;
+}
+
+.ticket-row__date .day {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.ticket-row__date .month {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 2px;
+}
+
+.ticket-row__date .weekday {
+    font-size: 0.6875rem;
+    color: var(--ink-muted);
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.ticket-row__main {
+    min-width: 0;
+}
+
+.ticket-row__title {
+    font-family: var(--font-heading);
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 0 0 4px;
+    line-height: 1.2;
+}
+
+.ticket-row__meta {
+    font-size: 0.875rem;
+    color: var(--ink-secondary);
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.ticket-row__note {
+    font-size: 0.8125rem;
+    color: var(--ink-muted);
+    margin: 4px 0 0;
+    font-style: italic;
+}
+
+.ticket-row__status {
+    display: none;
+}
+
+.ticket-row__cta {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+@media (min-width: 48rem) {
+    .ticket-row {
+        grid-template-columns: 88px 1fr auto auto;
+    }
+    .ticket-row__status {
+        display: flex;
+    }
+}
+
+@media (max-width: 36rem) {
+    .ticket-row {
+        grid-template-columns: 64px 1fr;
+        grid-template-areas:
+            "date main"
+            "cta  cta";
+        padding: var(--space-md);
+    }
+    .ticket-row__date {
+        grid-area: date;
+    }
+    .ticket-row__date .day {
+        font-size: 1.5rem;
+    }
+    .ticket-row__main {
+        grid-area: main;
+    }
+    .ticket-row__cta {
+        grid-area: cta;
+        justify-content: stretch;
+    }
+    .ticket-row__cta .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+.ticket-row__cta .btn[aria-disabled="true"] {
+    background: var(--surface-alt);
+    color: var(--ink-muted);
+    cursor: not-allowed;
+    border: 1px solid var(--line);
 }
 
 .benefit {

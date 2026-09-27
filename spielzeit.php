@@ -98,22 +98,12 @@ $structuredData = [
                     '@type' => 'ListItem',
                     'position' => $i + 1,
                     'name' => $p['title'],
-                    'url' => $p['kind'] === 'maerchen' ? absolute_url('/weihnachtsmaerchen/') : absolute_url('/spielzeit/#' . e(slugbar($p['title']))),
+                    'url' => $p['kind'] === 'maerchen' ? absolute_url('/weihnachtsmaerchen/') : absolute_url('/spielzeit/#' . e(slugify($p['title']))),
                 ];
             }, $productions, array_keys($productions)),
         ],
     ],
 ];
-
-function slugbar(string $s): string {
-    $s = strtolower($s);
-    $s = preg_replace('/ä/', 'ae', $s) ?? $s;
-    $s = preg_replace('/ö/', 'oe', $s) ?? $s;
-    $s = preg_replace('/ü/', 'ue', $s) ?? $s;
-    $s = preg_replace('/ß/', 'ss', $s) ?? $s;
-    $s = preg_replace('/[^a-z0-9]+/', '-', $s) ?? $s;
-    return trim($s, '-');
-}
 
 require __DIR__ . '/partials/layout-start.php';
 ?>
@@ -132,9 +122,9 @@ require __DIR__ . '/partials/layout-start.php';
         <div class="container">
             <div class="card-grid card-grid--featured">
                 <?php foreach ($productions as $i => $prod) : ?>
-                    <article id="<?= e(slugbar($prod['title'])) ?>" class="event-card" data-reveal data-reveal-delay="<?= e((string) ($i + 1)) ?>"
+                    <article id="<?= e(slugify($prod['title'])) ?>" class="event-card" data-reveal data-reveal-delay="<?= e((string) ($i + 1)) ?>"
                              itemscope itemtype="https://schema.org/TheaterEvent">
-                        <a class="event-card__media" href="<?= $prod['kind'] === 'maerchen' ? e(site_url('/weihnachtsmaerchen/')) : '#' . e(slugbar($prod['title'])) ?>" itemprop="url">
+                        <a class="event-card__media" href="<?= $prod['kind'] === 'maerchen' ? e(site_url('/weihnachtsmaerchen/')) : '#' . e(slugify($prod['title'])) ?>" itemprop="url">
                             <img src="<?= e($prod['image']) ?>"
                                  alt="<?= e($prod['image_alt']) ?>"
                                  width="450" height="300"

@@ -153,7 +153,7 @@ require __DIR__ . '/partials/layout-start.php';
                     In einer Inszenierung von Peter Schmitt.
                 </p>
                 <div class="actions">
-                    <a class="btn btn-primary" href="<?= e($siteConfig['maerchen_ticket_url']) ?>" rel="noopener">
+                    <a class="btn btn-primary" href="<?= e(site_url('/tickets-kaufen/#produktion-die-bremer-stadtmusikanten')) ?>">
                         Tickets bestellen
                         <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M5 12h14M13 5l7 7-7 7"/>
@@ -188,7 +188,7 @@ require __DIR__ . '/partials/layout-start.php';
                     </div>
                 </dl>
                 <div class="event-meta__cta">
-                    <a class="btn btn-primary" href="<?= e($siteConfig['maerchen_ticket_url']) ?>" rel="noopener">Tickets bestellen</a>
+                    <a class="btn btn-primary" href="<?= e(site_url('/tickets-kaufen/#produktion-die-bremer-stadtmusikanten')) ?>">Tickets bestellen</a>
                 </div>
             </aside>
         </div>

@@ -35,7 +35,7 @@ declare(strict_types=1);
                     <li><a href="<?= e(site_url('/')) ?>">Aktuelle Spielzeit</a></li>
                     <li><a href="<?= e(site_url('/spielzeit/')) ?>">Alle Produktionen</a></li>
                     <li><a href="<?= e(site_url('/weihnachtsmaerchen/')) ?>">Weihnachtsmärchen</a></li>
-                    <li><a href="<?= e($siteConfig['spielzeit_ticket_url']) ?>" rel="noopener">Tickets kaufen</a></li>
+                    <li><a href="<?= e(site_url('/tickets-kaufen/')) ?>">Tickets kaufen</a></li>
                 </ul>
             </div>
 

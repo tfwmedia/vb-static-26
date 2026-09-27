@@ -38,20 +38,135 @@ $siteConfig = [
 ];
 
 /**
- * Nächste Vorstellungen — wird auf der Startseite und im Spielzeit-Kontext
- * ausgespielt. Reihenfolge = Anzeigereihenfolge (aufsteigend nach Datum).
- * `ticket_url` ist optional; ohne URL erscheint kein Ticket-Button.
+ * Nächste Vorstellungen — wird auf der Startseite, der Spielzeit-Übersicht
+ * und der Tickets-Kaufen-Seite ausgespielt. Quelle der Wahrheit sind die
+ * Ticket-Regional-Veranstaltungsseiten:
+ *   - Löffelliste (eventID 274872) — kleines Theater, Würdtweinstraße 11:
+ *     https://www.ticket-regional.de/events_info.php?eventID=274872
+ *     Normalpreis € 25,00
+ *   - Bremer Stadtmusikanten (eventID 257737) — Das Wormser, Rathenaustraße 11:
+ *     https://www.ticket-regional.de/events_info.php?eventID=257737
+ *     Normalpreis € 12,00
+ *
+ * Reihenfolge = Anzeigereihenfolge (aufsteigend nach Datum).
+ * `ticket_url` führt direkt zur Ticket-Regional-Buchung mit timeID.
+ * `status`:
+ *   - 'tickets'   Tickets verfügbar
+ *   - 'sold_out'  Ausverkauft (kein Ticket-Button)
+ *   - 'premiere'  Premiere / Sondervorstellung
+ *   - 'few_left'  Nur noch wenige Plätze
  */
 $upcomingEvents = [
+    // Die Löffelliste — eventID 274872 — kleines Theater, Würdtweinstraße 11
+    [
+        'title' => 'Die Löffelliste',
+        'subtitle' => 'Saisonstück 2026 · Premiere',
+        'date' => '2026-10-03',
+        'time' => '20:00',
+        'venue' => 'Volksbühne — kleines Theater',
+        'ticket_url' => null,
+        'price' => '25,00 €',
+        'price_note' => 'VVK',
+        'status' => 'sold_out',
+    ],
+    [
+        'title' => 'Die Löffelliste',
+        'subtitle' => 'Saisonstück 2026',
+        'date' => '2026-10-09',
+        'time' => '20:00',
+        'venue' => 'Volksbühne — kleines Theater',
+        'ticket_url' => 'https://www.ticket-regional.de/stage_7698.php?timeID=1139633',
+        'price' => '25,00 €',
+        'price_note' => 'VVK',
+        'status' => 'tickets',
+    ],
+    [
+        'title' => 'Die Löffelliste',
+        'subtitle' => 'Saisonstück 2026',
+        'date' => '2026-10-10',
+        'time' => '20:00',
+        'venue' => 'Volksbühne — kleines Theater',
+        'ticket_url' => 'https://www.ticket-regional.de/stage_7698.php?timeID=1139634',
+        'price' => '25,00 €',
+        'price_note' => 'VVK',
+        'status' => 'tickets',
+    ],
+    [
+        'title' => 'Die Löffelliste',
+        'subtitle' => 'Saisonstück 2026',
+        'date' => '2026-10-16',
+        'time' => '20:00',
+        'venue' => 'Volksbühne — kleines Theater',
+        'ticket_url' => 'https://www.ticket-regional.de/stage_7698.php?timeID=1139635',
+        'price' => '25,00 €',
+        'price_note' => 'VVK',
+        'status' => 'tickets',
+    ],
+    [
+        'title' => 'Die Löffelliste',
+        'subtitle' => 'Saisonstück 2026',
+        'date' => '2026-10-17',
+        'time' => '20:00',
+        'venue' => 'Volksbühne — kleines Theater',
+        'ticket_url' => 'https://www.ticket-regional.de/stage_7698.php?timeID=1139636',
+        'price' => '25,00 €',
+        'price_note' => 'VVK',
+        'status' => 'tickets',
+    ],
+    [
+        'title' => 'Die Löffelliste',
+        'subtitle' => 'Saisonstück 2026',
+        'date' => '2026-10-24',
+        'time' => '20:00',
+        'venue' => 'Volksbühne — kleines Theater',
+        'ticket_url' => 'https://www.ticket-regional.de/stage_7698.php?timeID=1139637',
+        'price' => '25,00 €',
+        'price_note' => 'VVK',
+        'status' => 'tickets',
+    ],
+    [
+        'title' => 'Die Löffelliste',
+        'subtitle' => 'Saisonstück 2026 · Sonntagsvorstellung',
+        'date' => '2026-10-25',
+        'time' => '18:00',
+        'venue' => 'Volksbühne — kleines Theater',
+        'ticket_url' => 'https://www.ticket-regional.de/stage_7698.php?timeID=1139638',
+        'price' => '25,00 €',
+        'price_note' => 'VVK',
+        'status' => 'tickets',
+    ],
+    [
+        'title' => 'Die Löffelliste',
+        'subtitle' => 'Saisonstück 2026',
+        'date' => '2026-11-06',
+        'time' => '20:00',
+        'venue' => 'Volksbühne — kleines Theater',
+        'ticket_url' => null,
+        'price' => '25,00 €',
+        'price_note' => 'VVK',
+        'status' => 'sold_out',
+    ],
+    [
+        'title' => 'Die Löffelliste',
+        'subtitle' => 'Saisonstück 2026',
+        'date' => '2026-11-14',
+        'time' => '20:00',
+        'venue' => 'Volksbühne — kleines Theater',
+        'ticket_url' => 'https://www.ticket-regional.de/stage_7698.php?timeID=1139640',
+        'price' => '25,00 €',
+        'price_note' => 'VVK',
+        'status' => 'tickets',
+    ],
+    // Die Bremer Stadtmusikanten — eventID 257737 — Das Wormser, Rathenaustraße 11
     [
         'title' => 'Die Bremer Stadtmusikanten',
         'subtitle' => 'Weihnachtsmärchen 2026',
         'date' => '2026-12-01',
         'time' => '18:00',
         'venue' => 'Das Wormser',
-        'ticket_url' => 'https://www.ticket-regional.de/events_info.php?eventID=257737',
+        'ticket_url' => 'https://www.ticket-regional.de/stage_3769.php?timeID=1119484',
         'price' => '12,00 €',
-        'price_note' => 'Vorverkauf',
+        'price_note' => 'VVK',
         'status' => 'tickets',
     ],
     [
@@ -60,54 +175,55 @@ $upcomingEvents = [
         'date' => '2026-12-02',
         'time' => '18:00',
         'venue' => 'Das Wormser',
-        'ticket_url' => 'https://www.ticket-regional.de/events_info.php?eventID=257737',
+        'ticket_url' => 'https://www.ticket-regional.de/stage_3769.php?timeID=1119485',
         'price' => '12,00 €',
-        'price_note' => 'Vorverkauf',
+        'price_note' => 'VVK',
         'status' => 'tickets',
     ],
-    [
-        'title' => 'Die Bremer Stadtmusikanten',
-        'subtitle' => 'Weihnachtsmärchen 2026 · Zusatzvorstellung',
-        'date' => '2026-12-05',
-        'time' => '18:00',
-        'venue' => 'Das Wormser',
-        'ticket_url' => 'https://www.ticket-regional.de/events_info.php?eventID=257737',
-        'price' => '12,00 €',
-        'price_note' => 'Vorverkauf',
-        'status' => 'few_left',
-    ],
+    // Die Löffelliste — Dezember
     [
         'title' => 'Die Löffelliste',
-        'subtitle' => 'Saisonstück — Vorstellung',
-        'date' => '2026-10-25',
-        'time' => '19:30',
-        'venue' => 'Das Wormser',
-        'ticket_url' => 'https://www.ticket-regional.de/events.php?mysearchSpecificType=eventtype&mysearchSpecificID=1883',
-        'price' => 'ab 14,00 €',
+        'subtitle' => 'Saisonstück 2026',
+        'date' => '2026-12-11',
+        'time' => '20:00',
+        'venue' => 'Volksbühne — kleines Theater',
+        'ticket_url' => 'https://www.ticket-regional.de/stage_7698.php?timeID=1139641',
+        'price' => '25,00 €',
         'price_note' => 'VVK',
         'status' => 'tickets',
     ],
     [
         'title' => 'Die Löffelliste',
-        'subtitle' => 'Saisonstück — Vorstellung',
-        'date' => '2026-11-08',
-        'time' => '19:30',
-        'venue' => 'Das Wormser',
-        'ticket_url' => 'https://www.ticket-regional.de/events.php?mysearchSpecificType=eventtype&mysearchSpecificID=1883',
-        'price' => 'ab 14,00 €',
+        'subtitle' => 'Saisonstück 2026',
+        'date' => '2026-12-12',
+        'time' => '20:00',
+        'venue' => 'Volksbühne — kleines Theater',
+        'ticket_url' => 'https://www.ticket-regional.de/stage_7698.php?timeID=1139642',
+        'price' => '25,00 €',
         'price_note' => 'VVK',
-        'status' => 'premiere',
+        'status' => 'tickets',
     ],
     [
-        'title' => 'Die Bremer Stadtmusikanten',
-        'subtitle' => 'Weihnachtsmärchen 2026 · Premiere',
-        'date' => '2026-11-29',
-        'time' => '18:00',
-        'venue' => 'Das Wormser',
-        'ticket_url' => 'https://www.ticket-regional.de/events_info.php?eventID=257737',
-        'price' => '12,00 €',
-        'price_note' => 'Vorverkauf',
-        'status' => 'premiere',
+        'title' => 'Die Löffelliste',
+        'subtitle' => 'Saisonstück 2026',
+        'date' => '2026-12-18',
+        'time' => '20:00',
+        'venue' => 'Volksbühne — kleines Theater',
+        'ticket_url' => 'https://www.ticket-regional.de/stage_7698.php?timeID=1139643',
+        'price' => '25,00 €',
+        'price_note' => 'VVK',
+        'status' => 'tickets',
+    ],
+    [
+        'title' => 'Die Löffelliste',
+        'subtitle' => 'Saisonstück 2026',
+        'date' => '2026-12-19',
+        'time' => '20:00',
+        'venue' => 'Volksbühne — kleines Theater',
+        'ticket_url' => 'https://www.ticket-regional.de/stage_7698.php?timeID=1139644',
+        'price' => '25,00 €',
+        'price_note' => 'VVK',
+        'status' => 'tickets',
     ],
 ];
 
