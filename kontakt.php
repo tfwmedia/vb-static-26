@@ -5,7 +5,7 @@ require_once __DIR__ . '/includes/bootstrap.php';
 
 $meta = meta([
     'title' => 'Kontakt | ' . $siteConfig['name'],
-    'description' => 'Kontakt und Anfahrt zur Volksbühne Worms 1908 e. V.: Anschrift, Telefon, E-Mail, Spielstätte Das Wormser.',
+    'description' => 'Kontakt und Anfahrt zur Volksbühne Worms 1908 e. V.: Vereinsadresse, beide Spielstätten, Telefon, E-Mail.',
     'canonical' => site_url('/kontakt/'),
     'og_type' => 'website',
     'og_image' => asset_url('/assets/img/og-kontakt.svg'),
@@ -48,7 +48,7 @@ require __DIR__ . '/partials/layout-start.php';
             <p class="eyebrow">Kontakt</p>
             <h1 id="kontakt-h1">So erreichst du uns.</h1>
             <p class="lead">
-                Postanschrift des Vereins, Spielstätte für Vorstellungen und die direkten Kontaktwege
+                Postanschrift des Vereins, unsere beiden Spielstätten und die direkten Kontaktwege
                 — Telefon, E-Mail und Vorverkaufs-Partner.
             </p>
         </div>
@@ -95,36 +95,54 @@ require __DIR__ . '/partials/layout-start.php';
         </div>
     </section>
 
-    <section class="section section--alt" aria-labelledby="spielstaette-title">
+    <section class="section section--alt" aria-labelledby="spielstaetten-title">
         <div class="container">
             <div class="section-head" data-reveal>
-                <p class="eyebrow">Spielstätte</p>
-                <h2 id="spielstaette-title">Das Wormser</h2>
+                <p class="eyebrow">Spielstätten</p>
+                <h2 id="spielstaetten-title">Zwei Häuser — eine Bühne</h2>
                 <p class="lead-compact">
-                    Sämtliche Vorstellungen der aktuellen Spielzeit finden im Wormser Kulturzentrum statt.
+                    Das <strong>Saisonstück</strong> spielen wir in unserem eigenen Kleinen Theater.
+                    Das <strong>Weihnachtsmärchen</strong> hat im Wormser Kulturzentrum sein Zuhause.
                 </p>
             </div>
 
-            <div class="map-card" data-reveal>
-                <div class="map-card__image" aria-hidden="true">
-                    <img src="<?= e(asset('/assets/img/map-wormser.svg')) ?>"
-                         width="800" height="450"
-                         alt=""
-                         loading="lazy"
-                         decoding="async">
-                </div>
-                <div class="map-card__body">
-                    <h3 class="map-card__title">Das Wormser — Kulturzentrum</h3>
-                    <address class="map-card__address">
-                        Rathenaustraße 11<br>
-                        67549 Worms
-                    </address>
-                    <p style="margin: 0;">
-                        <a href="<?= e($siteConfig['spielzeit_ticket_url']) ?>" rel="noopener" class="btn btn-secondary btn-sm">
-                            Tickets über Ticket-Regional →
-                        </a>
-                    </p>
-                </div>
+            <div class="card-grid card-grid--2">
+                <article class="map-card" data-reveal>
+                    <div class="map-card__body">
+                        <p class="eyebrow">Saisonstück</p>
+                        <h3 class="map-card__title">Volksbühne — kleines Theater</h3>
+                        <address class="map-card__address">
+                            Würdtweinstraße 11<br>
+                            67549 Worms
+                        </address>
+                        <p class="map-card__note">
+                            Unser eigenes Haus — gleiche Adresse wie die Vereinsadresse.
+                        </p>
+                    </div>
+                </article>
+
+                <article class="map-card" data-reveal>
+                    <div class="map-card__image" aria-hidden="true">
+                        <img src="<?= e(asset('/assets/img/map-wormser.svg')) ?>"
+                             width="800" height="450"
+                             alt=""
+                             loading="lazy"
+                             decoding="async">
+                    </div>
+                    <div class="map-card__body">
+                        <p class="eyebrow">Weihnachtsmärchen</p>
+                        <h3 class="map-card__title">Das Wormser — Kulturzentrum</h3>
+                        <address class="map-card__address">
+                            Rathenaustraße 11<br>
+                            67549 Worms
+                        </address>
+                        <p style="margin: 0;">
+                            <a href="<?= e(site_url('/tickets-kaufen/#alle-termine')) ?>" class="btn btn-secondary btn-sm">
+                                Termine ansehen →
+                            </a>
+                        </p>
+                    </div>
+                </article>
             </div>
         </div>
     </section>

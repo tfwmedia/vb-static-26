@@ -76,7 +76,7 @@ $spielzeitHighlights = [
         'cta_url' => $siteConfig['spielzeit_ticket_url'],
         'cta_label' => 'Tickets kaufen',
         'cta_external' => true,
-        'meta' => 'Einlass 1,5 h vor Beginn · Das Wormser',
+        'meta' => 'Premiere 03.10.2026 · Volksbühne — kleines Theater',
     ],
     [
         'eyebrow' => 'Nicht verpassen',
@@ -87,7 +87,7 @@ $spielzeitHighlights = [
         'cta_url' => site_url('/weihnachtsmaerchen/'),
         'cta_label' => 'Mehr erfahren',
         'cta_external' => false,
-        'meta' => 'Premiere 29.11.2026 · Das Wormser',
+        'meta' => 'Premiere 01.12.2026 · Das Wormser',
     ],
 ];
 
@@ -176,27 +176,10 @@ $itemListSchema = [
     'itemListElement' => $spielzeitItems,
 ];
 
-// Upcoming events as Event list.
-$upcomingEventsSchema = [];
-foreach (array_slice($upcomingSorted, 0, 8) as $evt) {
-    $upcomingEventsSchema[] = [
-        '@type' => 'Event',
-        'name' => $evt['title'] . ' — ' . ($evt['subtitle'] ?? ''),
-        'startDate' => iso_local($evt['date'], $evt['time'] ?? '18:00'),
-        'eventStatus' => event_status_url($evt['status'] ?? 'tickets'),
-        'eventAttendanceMode' => 'https://schema.org/OfflineEventAttendanceMode',
-        'location' => [
-            '@type' => 'Place',
-            'name' => $evt['venue'] ?? 'Das Wormser',
-            'address' => [
-                '@type' => 'PostalAddress',
-                'addressLocality' => 'Worms',
-                'addressCountry' => 'DE',
-            ],
-        ],
-        'organizer' => ['@id' => absolute_url('/') . '#organization'],
-    ];
-}
+// Schema.org Event JSON-LD is now sourced from the per-row microdata
+// on /tickets-kaufen/ (Playwright-verified). Home page only emits the
+// Organization + WebSite + Breadcrumb + ItemList(ItemList of items
+// with #termin-N deep-links) blocks below.
 
 $structuredData = [
     '@context' => 'https://schema.org',
@@ -345,7 +328,7 @@ require __DIR__ . '/partials/layout-start.php';
                                     <?= e($evt['title']) ?>
                                 </span>
                                 <span class="upcoming-item__meta">
-                                    <?= e(weekday_short_de($evt['date'])) ?>, <?= e($evt['time']) ?> · <?= e($evt['venue'] ?? 'Das Wormser') ?>
+                                    <?= e(weekday_short_de($evt['date'])) ?>, <?= e($evt['time']) ?><?= !empty($evt['venue']) ? ' · ' . e($evt['venue']) : '' ?>
                                 </span>
                             </div>
                             <div class="upcoming-item__cta">

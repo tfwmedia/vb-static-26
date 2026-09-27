@@ -89,7 +89,7 @@ require __DIR__ . '/partials/layout-start.php';
                 <a href="https://www.ticket-regional.de" rel="noopener">Ticket-Regional</a>.
             </p>
             <div class="actions" style="margin-top: var(--space-lg);">
-                <a class="btn btn-primary" href="#termine">
+                <a class="btn btn-primary" href="#alle-termine">
                     Zu den Terminen
                     <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M12 5v14M19 12l-7 7-7-7"/>
@@ -100,7 +100,7 @@ require __DIR__ . '/partials/layout-start.php';
         </div>
     </section>
 
-    <section class="section" id="termine" aria-labelledby="termine-title">
+    <section class="section" id="alle-termine" aria-labelledby="termine-title">
         <div class="container">
             <div class="section-head" data-reveal>
                 <p class="eyebrow">Vorstellungen 2026</p>
@@ -137,10 +137,15 @@ require __DIR__ . '/partials/layout-start.php';
                                 <meta itemprop="startDate" content="<?= e(iso_local($evt['date'], $evt['time'] ?? '20:00')) ?>">
                                 <meta itemprop="eventStatus" content="<?= e(event_status_url($evt['status'] ?? 'tickets')) ?>">
                                 <meta itemprop="eventAttendanceMode" content="https://schema.org/OfflineEventAttendanceMode">
+                                <?php
+                                    $isBremer = str_contains($evt['title'] ?? '', 'Bremer');
+                                    $placeName = $isBremer ? 'Das Wormser' : 'Volksbühne — kleines Theater';
+                                    $placeStreet = $isBremer ? 'Rathenaustraße 11' : 'Würdtweinstraße 11';
+                                ?>
                                 <div itemprop="location" itemscope itemtype="https://schema.org/Place" style="display:none;">
-                                    <meta itemprop="name" content="Das Wormser">
+                                    <meta itemprop="name" content="<?= e($placeName) ?>">
                                     <div itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
-                                        <meta itemprop="streetAddress" content="Rathenaustraße 11">
+                                        <meta itemprop="streetAddress" content="<?= e($placeStreet) ?>">
                                         <meta itemprop="postalCode" content="67549">
                                         <meta itemprop="addressLocality" content="Worms">
                                         <meta itemprop="addressCountry" content="DE">
@@ -159,7 +164,9 @@ require __DIR__ . '/partials/layout-start.php';
                                         <span aria-hidden="true">·</span>
                                         <span><?= e($evt['time']) ?> Uhr</span>
                                         <span aria-hidden="true">·</span>
-                                        <span><?= e($evt['venue'] ?? 'Das Wormser') ?></span>
+                                        <?php if (!empty($evt['venue'])) : ?>
+                                            <span><?= e($evt['venue']) ?></span>
+                                        <?php endif; ?>
                                     </p>
                                     <?php if (!empty($evt['subtitle']) && $evt['subtitle'] !== 'Saisonstück 2026' && $evt['subtitle'] !== 'Weihnachtsmärchen 2026') : ?>
                                         <p class="ticket-row__note"><?= e($evt['subtitle']) ?></p>
@@ -225,9 +232,11 @@ require __DIR__ . '/partials/layout-start.php';
                     <div class="benefit__icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
                     </div>
-                    <h3 class="benefit__title">Spielstätte</h3>
+                    <h3 class="benefit__title">Spielstätten</h3>
                     <p class="benefit__text">
-                        Alle Vorstellungen finden im <a href="<?= e(site_url('/kontakt/')) ?>">Das Wormser</a> statt,
+                        <strong>Saisonstück:</strong> Volksbühne — kleines Theater,
+                        Würdtweinstraße 11, 67549 Worms.<br>
+                        <strong>Weihnachtsmärchen:</strong> <a href="<?= e(site_url('/kontakt/')) ?>">Das Wormser</a>,
                         Rathenaustraße 11, 67549 Worms.
                     </p>
                 </div>

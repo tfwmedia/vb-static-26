@@ -157,13 +157,13 @@ require __DIR__ . '/partials/layout-start.php';
                                 <?php endif; ?>
                                 <div>
                                     <dt>Spielstätte</dt>
-                                    <dd>Das Wormser, Worms</dd>
+                                    <dd><?= $prod['kind'] === 'maerchen' ? 'Das Wormser, Rathenaustraße 11, Worms' : 'Volksbühne — kleines Theater, Würdtweinstraße 11, Worms' ?></dd>
                                 </div>
                             </dl>
                         </div>
                         <div class="event-card__footer">
                             <span class="event-card__price">
-                                Tickets<small>VVK ab 12,00 €</small>
+                                Tickets<small><?= $prod['kind'] === 'maerchen' ? 'VVK 12,00 €' : 'VVK 25,00 €' ?></small>
                             </span>
                             <a class="btn btn-primary btn-sm" href="<?= e($prod['ticket_url']) ?>" rel="noopener" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
                                 <meta itemprop="url" content="<?= e($prod['ticket_url']) ?>">
@@ -208,7 +208,7 @@ require __DIR__ . '/partials/layout-start.php';
                         <div>
                             <span class="upcoming-item__title"><?= e($evt['title']) ?></span>
                             <span class="upcoming-item__meta">
-                                <?= e(weekday_short_de($evt['date'])) ?>, <?= e($evt['time']) ?> · <?= e($evt['venue'] ?? 'Das Wormser') ?>
+                                <?= e(weekday_short_de($evt['date'])) ?>, <?= e($evt['time']) ?><?= !empty($evt['venue']) ? ' · ' . e($evt['venue']) : '' ?>
                             </span>
                         </div>
                         <div class="upcoming-item__cta">

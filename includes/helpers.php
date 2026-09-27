@@ -264,14 +264,29 @@ function render_breadcrumb(array $items): string
 }
 
 /**
- * Pretty-prints a date in de-DE format (e.g. "01. Dezember 2026").
+ * Pretty-prints a date in de-DE format (e.g. "Samstag, 01. Dezember 2026").
+ * Uses internal German month/weekday maps to avoid locale dependency
+ * (PHP's date('l') returns the English weekday on this server).
  */
 function format_date_de(string $isoDate, bool $withWeekday = true): string
 {
     $ts = strtotime($isoDate);
     if ($ts === false) return $isoDate;
-    $fmt = $withWeekday ? 'l, d. F Y' : 'd. F Y';
-    return date($fmt, $ts);
+
+    static $months = [
+        1 => 'Januar', 2 => 'Februar', 3 => 'März', 4 => 'April',
+        5 => 'Mai', 6 => 'Juni', 7 => 'Juli', 8 => 'August',
+        9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Dezember',
+    ];
+
+    $day = (int) date('j', $ts);
+    $month = $months[(int) date('n', $ts)] ?? '';
+    $year = date('Y', $ts);
+    $formatted = $day . '. ' . $month . ' ' . $year;
+
+    return $withWeekday
+        ? weekday_full_de($isoDate) . ', ' . $formatted
+        : $formatted;
 }
 
 /**

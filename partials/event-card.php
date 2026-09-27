@@ -29,7 +29,7 @@ $eventTitle       = $event['title'] ?? '';
 $eventSubtitle    = $event['subtitle'] ?? '';
 $eventDate        = $event['date'] ?? '';
 $eventTime        = $event['time'] ?? '18:00';
-$eventVenue       = $event['venue'] ?? 'Das Wormser';
+$eventVenue       = $event['venue'] ?? null;
 $eventImage       = $event['image'] ?? '';
 $eventImageAlt    = $event['image_alt'] ?? $eventTitle;
 $eventHref        = $event['href'] ?? ($event['ticket_url'] ?? '#');
@@ -88,7 +88,9 @@ $isoDateTime      = $eventDate !== '' ? iso_local($eventDate, $eventTime) : '';
                     · <?= e($eventTime) ?> Uhr
                 </span>
             <?php endif; ?>
-            <span class="event-card__meta-item">📍 <?= e($eventVenue) ?></span>
+            <?php if (!empty($eventVenue)) : ?>
+                <span class="event-card__meta-item">📍 <?= e($eventVenue) ?></span>
+            <?php endif; ?>
         </div>
     </div>
 
