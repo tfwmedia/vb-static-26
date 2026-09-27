@@ -99,8 +99,7 @@ $isoDateTime      = $eventDate !== '' ? iso_local($eventDate, $eventTime) : '';
         // the "price" field carries premiere metadata instead of a real
         // price, we detect that and render as a tagline instead of "€X".
         $hasRealPrice = is_numeric(str_replace(',', '.', preg_replace('/[^0-9,.]/', '', (string) $eventPrice))) && str_contains((string) $eventPrice, '€');
-        $priceLabel = $eventPrice !== null && str_contains((string) $eventPrice, '€') ? 'Tickets' : 'Tickets kaufen';
-        $footerLeftLabel = $hasRealPrice ? $eventPrice : $eventPrice;
+        $priceLabel = $hasRealPrice ? 'Tickets' : 'Tickets kaufen';
     ?>
     <?php if ($eventPrice !== null || !empty($eventTicketUrl)) : ?>
         <div class="event-card__footer">
@@ -122,7 +121,9 @@ $isoDateTime      = $eventDate !== '' ? iso_local($eventDate, $eventTime) : '';
                     <meta itemprop="url" content="<?= e($eventTicketUrl) ?>">
                     <meta itemprop="availability" content="https://schema.org/InStock">
                     <meta itemprop="priceCurrency" content="EUR">
-                    <span itemprop="price"><?= $hasRealPrice ? e((string) preg_replace('/[^0-9,.]/', '', (string) $eventPrice)) : '0' ?></span>
+                    <?php if ($hasRealPrice) : ?>
+                        <span itemprop="price"><?= e((string) preg_replace('/[^0-9,.]/', '', (string) $eventPrice)) ?></span>
+                    <?php endif; ?>
                     <?= e($priceLabel) ?>
                     <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M5 12h14M13 5l7 7-7 7"/>
