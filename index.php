@@ -336,30 +336,25 @@ require __DIR__ . '/partials/layout-start.php';
 
             <div class="card-grid card-grid--featured">
                 <?php foreach ($spielzeitHighlights as $i => $card) : ?>
-                    <article class="event-card" data-reveal data-reveal-delay="<?= e((string) ($i + 1)) ?>" itemscope itemtype="https://schema.org/Event">
-                        <a class="event-card__media" href="<?= e($card['cta_url']) ?>" <?= $card['cta_external'] ? 'rel="noopener"' : '' ?> itemprop="url">
-                            <img src="<?= e($card['image']) ?>"
-                                 width="450" height="300"
-                                 alt="<?= e($card['image_alt']) ?>"
-                                 loading="lazy"
-                                 decoding="async"
-                                 itemprop="image">
-                        </a>
-                        <div class="event-card__body">
-                            <p class="eyebrow" style="margin-bottom: 0;"><?= e($card['eyebrow']) ?></p>
-                            <h3 class="event-card__title" itemprop="name"><?= e($card['title']) ?></h3>
-                            <p class="event-card__subtitle" itemprop="description"><?= e(mb_strimwidth($card['lead'], 0, 220, '…')) ?></p>
-                            <div class="event-card__meta">
-                                <span class="event-card__meta-item">📍 <?= e($card['meta']) ?></span>
-                            </div>
-                        </div>
-                        <div class="event-card__footer">
-                            <span class="text-muted" style="font-size: 0.875rem;">Tickets im Vorverkauf</span>
-                            <a class="btn btn-primary btn-sm" href="<?= e($card['cta_url']) ?>" <?= $card['cta_external'] ? 'rel="noopener"' : '' ?>>
-                                <?= e($card['cta_label']) ?>
-                            </a>
-                        </div>
-                    </article>
+                    <?php
+                    $event = [
+                        'title'      => $card['title'],
+                        'subtitle'   => mb_strimwidth($card['lead'], 0, 220, '…'),
+                        'date'       => '2026-09-01',
+                        'time'       => '19:30',
+                        'venue'      => $card['meta'],
+                        'image'      => $card['image'],
+                        'image_alt'  => $card['image_alt'],
+                        'href'       => $card['cta_url'],
+                        'ticket_url' => $card['cta_url'],
+                        'price'      => 'Tickets im Vorverkauf',
+                        'eyebrow'    => $card['eyebrow'],
+                        'status'     => 'tickets',
+                    ];
+                    ?>
+                    <div data-reveal data-reveal-delay="<?= e((string) ($i + 1)) ?>">
+                        <?php $compact = false; include __DIR__ . '/partials/event-card.php'; ?>
+                    </div>
                 <?php endforeach; ?>
             </div>
         </div>
