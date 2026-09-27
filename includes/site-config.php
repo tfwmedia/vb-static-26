@@ -9,6 +9,7 @@ $siteConfig = [
     'maerchen_contact_email' => 'kontakt@volksbuehne-worms.de',
     'maerchen_contact_phone_display' => '0152 57204453',
     'maerchen_contact_phone_href' => '+4915257204453',
+    'maerchen_ticket_url' => 'https://www.ticket-regional.de/events_info.php?eventID=257737',
     'address' => [
         'name' => 'Volksbühne Worms 1908 e. V.',
         'street' => 'Würdtweinstraße 11',

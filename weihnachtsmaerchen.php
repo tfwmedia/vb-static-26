@@ -96,8 +96,9 @@ require __DIR__ . '/partials/layout-start.php';
                     In einer Inszenierung von Peter Schmitt.
                 </p>
                 <div class="actions">
-                    <a class="btn btn-primary" href="mailto:<?= e($siteConfig['maerchen_contact_email']) ?>">Kontakt für Gruppen</a>
-                    <a class="btn btn-secondary" href="tel:<?= e($siteConfig['maerchen_contact_phone_href']) ?>">Anrufen: <?= e($siteConfig['maerchen_contact_phone_display']) ?></a>
+                    <a class="btn btn-primary" href="<?= e($siteConfig['maerchen_ticket_url']) ?>" rel="noopener">Tickets bestellen</a>
+                    <a class="btn btn-secondary" href="mailto:<?= e($siteConfig['maerchen_contact_email']) ?>">Kontakt für Gruppen</a>
+                    <a class="btn btn-tertiary" href="tel:<?= e($siteConfig['maerchen_contact_phone_href']) ?>">Anrufen: <?= e($siteConfig['maerchen_contact_phone_display']) ?></a>
                 </div>
             </div>
             <aside class="event-meta" aria-label="Veranstaltungsdetails">

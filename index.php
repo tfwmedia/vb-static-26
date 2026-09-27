@@ -90,10 +90,11 @@ require __DIR__ . '/partials/layout-start.php';
                 <h2 id="saisonstueck-highlight">Die Löffelliste</h2>
                 <p class="lead-compact">
                     Ein Tag, den sich Erika ganz anders vorgestellt hat.
-                    Eine unerwartete Nachricht von ihrem Pächter, dann Freunde,
+                    Eine unerwartete Nachricht von ihrem Vermieter, dann Freunde,
                     die sich in ihr Leben einmischen wollen und zu guter Letzt
                     noch die Begegnung mit Gevatter Tod. Aber nicht mit Erika.
                     Sie weiß sich zu helfen und hat dabei ihren Spaß.
+                    Von Gerhard Schreiner, in einer Inszenierung von Peter Schmitt &amp; Kathrin Landmann.
                 </p>
                 <p class="lead-compact">
                     <strong>Einlass:</strong> 1,5 Stunden vor Beginn
@@ -135,8 +136,9 @@ require __DIR__ . '/partials/layout-start.php';
                     </div>
                 </dl>
                 <div class="actions">
-                    <a class="btn btn-primary" href="<?= e(site_url('/weihnachtsmaerchen/')) ?>">Mehr Infos</a>
-                    <a class="btn btn-secondary" href="mailto:<?= e($siteConfig['maerchen_contact_email']) ?>">Kontakt</a>
+                    <a class="btn btn-primary" href="<?= e($siteConfig['maerchen_ticket_url']) ?>" rel="noopener">Tickets bestellen</a>
+                    <a class="btn btn-secondary" href="<?= e(site_url('/weihnachtsmaerchen/')) ?>">Mehr Infos</a>
+                    <a class="btn btn-tertiary" href="mailto:<?= e($siteConfig['maerchen_contact_email']) ?>">Kontakt</a>
                 </div>
             </div>
         </div>
