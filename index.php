@@ -51,6 +51,21 @@ $upcomingStrip = array_values(array_filter($upcomingSorted, function ($e) use ($
 }));
 $upcomingStrip = array_slice($upcomingStrip, 0, 6);
 
+// Mitglied-werden Block: heading + lead + CTA kommen aus \$mitgliedHeading /
+// \$mitgliedLead / \$mitgliedCtaLabel — siehe redaktionelle Konfiguration.
+$mitgliedHeading = null;
+$mitgliedLead = null;
+$mitgliedCtaLabel = null;
+
+// Section-Überschriften auf der Startseite — bleiben leer, bis die
+// Redaktion konkrete Wording-Vorgaben liefert.
+$upcomingHeading = null;
+$upcomingLead = null;
+$spielzeitHeading = null;
+$spielzeitLead = null;
+$vereinHeading = null;
+$vereinLead = null;
+
 // Spielzeit-Highlights (the two current productions).
 $spielzeitHighlights = [
     [
@@ -290,8 +305,14 @@ require __DIR__ . '/partials/layout-start.php';
         <div class="container">
             <div class="section-head" data-reveal>
                 <p class="eyebrow">Nächste Vorstellungen</p>
-                <h2 id="upcoming-title">Was bei uns als Nächstes auf der Bühne steht</h2>
-                <p class="lead-compact">Alle Termine auf einen Blick — Tickets in wenigen Klicks.</p>
+                <?php if (!empty($upcomingHeading)) : ?>
+                    <h2 id="upcoming-title"><?= e($upcomingHeading) ?></h2>
+                <?php else : ?>
+                    <h2 id="upcoming-title" class="visually-hidden">Nächste Vorstellungen</h2>
+                <?php endif; ?>
+                <?php if (!empty($upcomingLead)) : ?>
+                    <p class="lead-compact"><?= e($upcomingLead) ?></p>
+                <?php endif; ?>
             </div>
 
             <?php if (!empty($upcomingStrip)) : ?>
@@ -331,7 +352,14 @@ require __DIR__ . '/partials/layout-start.php';
         <div class="container">
             <div class="section-head" data-reveal>
                 <p class="eyebrow">Aktuelle Spielzeit</p>
-                <h2 id="spielzeit-title">Was wir gerade spielen</h2>
+                <?php if (!empty($spielzeitHeading)) : ?>
+                    <h2 id="spielzeit-title"><?= e($spielzeitHeading) ?></h2>
+                <?php else : ?>
+                    <h2 id="spielzeit-title" class="visually-hidden">Aktuelle Spielzeit</h2>
+                <?php endif; ?>
+                <?php if (!empty($spielzeitLead)) : ?>
+                    <p class="lead-compact"><?= e($spielzeitLead) ?></p>
+                <?php endif; ?>
             </div>
 
             <div class="card-grid card-grid--featured">
@@ -364,12 +392,10 @@ require __DIR__ . '/partials/layout-start.php';
         <div class="container">
             <div class="section-head" data-reveal>
                 <p class="eyebrow">Der Verein</p>
-                <h2 id="verein-title">Mehr als Theater — Gemeinschaft seit <?= e((string) $siteConfig['founding_year']) ?>.</h2>
-                <p class="lead">
-                    Eine der ältesten Laienspielgruppen in Rheinland-Pfalz — getragen von Mitgliedern,
-                    die ihre Begeisterung für das Theater teilen wollen. Ob Märchen oder Komödie:
-                    Unsere Inszenierungen sind handgemacht, nahbar und voller Herzblut.
-                </p>
+                <h2 id="verein-title"><?= e($vereinHeading ?? ('Seit ' . (string) $siteConfig['founding_year'] . ' auf der Bühne.')) ?></h2>
+                <?php if (!empty($vereinLead)) : ?>
+                    <p class="lead"><?= e($vereinLead) ?></p>
+                <?php endif; ?>
             </div>
 
             <div class="stat-row" data-reveal>
@@ -397,16 +423,16 @@ require __DIR__ . '/partials/layout-start.php';
         <div class="container" style="max-width: 64rem;">
             <div class="section-head section-head--center" data-reveal>
                 <p class="eyebrow" style="color: #fff; opacity: 0.9;">Mitglied werden</p>
-                <h2 id="mitglied-title" style="color: #fff;">Werde Teil unserer Bühne.</h2>
-                <p class="lead" style="color: rgba(255,255,255,0.92); margin-inline: auto;">
-                    Für nur <?= e($siteConfig['verein_bank']['membership_fee']) ?> € im Jahr unterstützt du unsere Arbeit,
-                    erhältst Vorzugspreise auf ausgewählte Vorstellungen und gehörst zu einer
-                    traditionsreichen Theatergemeinschaft.
-                </p>
+                <h2 id="mitglied-title" style="color: #fff;"><?= e($mitgliedHeading ?? 'Mitgliedschaft') ?></h2>
+                <?php if (!empty($mitgliedLead)) : ?>
+                    <p class="lead" style="color: rgba(255,255,255,0.92); margin-inline: auto;">
+                        <?= e($mitgliedLead) ?>
+                    </p>
+                <?php endif; ?>
             </div>
             <div class="actions" style="justify-content: center; margin-top: var(--space-lg);" data-reveal>
                 <a class="btn btn-light btn-lg" href="<?= e(site_url('/verein/#mitglied-werden')) ?>">
-                    Mitgliedschaft erfahren
+                    <?= e($mitgliedCtaLabel ?? 'Mehr erfahren') ?>
                     <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M5 12h14M13 5l7 7-7 7"/>
                     </svg>
