@@ -206,18 +206,18 @@ $structuredData = [
         $websiteSchema,
         $breadcrumbSchema,
         $itemListSchema,
-        count($upcomingEventsSchema) > 0 ? [
+        count($upcomingSorted) > 0 ? [
             '@type' => 'ItemList',
             'name' => 'Nächste Vorstellungen',
-            'itemListElement' => array_map(function ($evt, $i) {
+            'itemListElement' => array_values(array_map(function ($evt, $i) {
                 return [
                     '@type' => 'ListItem',
                     'position' => $i + 1,
-                    'name' => $evt['title'],
-                    'startDate' => iso_local($evt['date'], $evt['time'] ?? '18:00'),
+                    'name' => $evt['title'] . ' — ' . ($evt['subtitle'] ?? ''),
+                    'startDate' => iso_local((string) $evt['date'], (string) ($evt['time'] ?? '18:00')),
                     'url' => isset($evt['ticket_url']) ? $evt['ticket_url'] : absolute_url('/'),
                 ];
-            }, $upcomingEventsSchema, array_keys($upcomingEventsSchema)),
+            }, array_slice($upcomingSorted, 0, 8), array_keys(array_slice($upcomingSorted, 0, 8)))),
         ] : null,
     ])),
 ];
