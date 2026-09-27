@@ -367,7 +367,7 @@ require __DIR__ . '/partials/layout-start.php';
                     <?php
                     $event = [
                         'title'      => $card['title'],
-                        'subtitle'   => mb_strimwidth($card['lead'], 0, 220, '…'),
+                        'subtitle'   => truncate_text($card['lead'], 220, '…'),
                         'date'       => '2026-09-01',
                         'time'       => '19:30',
                         'venue'      => $card['meta'],

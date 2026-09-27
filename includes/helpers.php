@@ -228,13 +228,15 @@ function person_initials(string $name): string
 {
     $parts = preg_split('/\s+/u', trim($name)) ?: [];
     $initials = '';
+    $useMb = function_exists('mb_substr') && function_exists('mb_strtoupper');
     foreach ($parts as $part) {
         if ($part === '') continue;
-        $first = mb_substr($part, 0, 1);
+        $first = $useMb ? mb_substr($part, 0, 1) : substr($part, 0, 1);
         if ($first !== '') $initials .= $first;
-        if (mb_strlen($initials) >= 2) break;
+        $len = $useMb ? mb_strlen($initials) : strlen($initials);
+        if ($len >= 2) break;
     }
-    return mb_strtoupper($initials);
+    return $useMb ? mb_strtoupper($initials) : strtoupper($initials);
 }
 
 /**
@@ -270,6 +272,21 @@ function format_date_de(string $isoDate, bool $withWeekday = true): string
     if ($ts === false) return $isoDate;
     $fmt = $withWeekday ? 'l, d. F Y' : 'd. F Y';
     return date($fmt, $ts);
+}
+
+/**
+ * Truncates a string to a max width without breaking multibyte chars.
+ * Falls back to byte-substr when the mbstring extension is unavailable.
+ */
+function truncate_text(string $text, int $max, string $suffix = '…'): string
+{
+    if ($max <= 0) return '';
+    if (function_exists('mb_strimwidth')) {
+        $out = mb_strimwidth($text, 0, $max, $suffix);
+        if ($out !== false) return $out;
+    }
+    if (strlen($text) <= $max) return $text;
+    return substr($text, 0, max(0, $max - strlen($suffix))) . $suffix;
 }
 
 /**
