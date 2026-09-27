@@ -137,17 +137,12 @@ $vorstand = [
 ];
 
 /**
- * Stationen der Vereinschronik (kompakte Auswahl).
+ * Stationen der Vereinschronik. Bleibt leer, bis der Verein eine
+ * autoritative Liste pflegt. Rendering nur, wenn \$chronik nicht leer.
+ *
+ * @var array<int, array{year:string, event:string}> $chronik
  */
-$chronik = [
-    ['year' => '1908', 'event' => 'Gründung des Vereins in Worms — erste Aufführungen im Vereinshaus.'],
-    ['year' => '1924', 'event' => 'Bezug der eigenen Spielstätte in der Würdtweinstraße.'],
-    ['year' => '1958', 'event' => '50-jähriges Jubiläum mit Festprogramm und Gastspielen.'],
-    ['year' => '1983', 'event' => 'Umzug ins neu renovierte Wormser Kulturzentrum.'],
-    ['year' => '2008', 'event' => '100-jähriges Bestehen — Festakt mit Überraschungsgästen.'],
-    ['year' => '2018', 'event' => 'Mitwirkung am Stadtjubiläum „1100 Jahre Worms".'],
-    ['year' => '2024', 'event' => 'Auszeichnung durch den Landesverband Amateurtheater RLP.'],
-];
+$chronik = [];
 
 $metaDefaults = [
     'title' => 'Volksbühne Worms 1908 e. V. — Theater seit 1908',
