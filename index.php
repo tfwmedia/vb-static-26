@@ -52,18 +52,18 @@ $upcomingStrip = array_slice($upcomingStrip, 0, 6);
 
 // Mitglied-werden Block: heading + lead + CTA kommen aus \$mitgliedHeading /
 // \$mitgliedLead / \$mitgliedCtaLabel — siehe redaktionelle Konfiguration.
-$mitgliedHeading = null;
-$mitgliedLead = null;
-$mitgliedCtaLabel = null;
+$mitgliedHeading = null; // Fallback: 'Mitgliedschaft'
+$mitgliedLead = 'Seit 1908 gemeinnützig aktiv. Mitgliedsbeitrag 25,00 € jährlich, steuerlich absetzbar — und Teil einer starken Theatergemeinschaft in Worms.';
+$mitgliedCtaLabel = 'Mitgliedschaft anfragen';
 
 // Section-Überschriften auf der Startseite — bleiben leer, bis die
 // Redaktion konkrete Wording-Vorgaben liefert.
-$upcomingHeading = null;
-$upcomingLead = null;
-$spielzeitHeading = null;
-$spielzeitLead = null;
-$vereinHeading = null;
-$vereinLead = null;
+$upcomingHeading = null; // Fallback: visuell versteckt; Eyebrow "Nächste Vorstellungen" bleibt sichtbar.
+$upcomingLead = '15 Vorstellungen in der laufenden Spielzeit — Tickets und Termine im Überblick, tagesaktuell von Ticket-Regional.';
+$spielzeitHeading = null; // Fallback: visuell versteckt; Eyebrow "Aktuelle Spielzeit" bleibt sichtbar.
+$spielzeitLead = 'Saisonstück und Weihnachtsmärchen: zwei Inszenierungen, zwei Spielstätten — die Volksbühne live in Worms.';
+$vereinHeading = null; // Fallback: 'Seit 1908 auf der Bühne.'
+$vereinLead = 'Eingetragener Verein, gegründet 1908. Rund 80 Mitglieder, mehr als 500 Vorstellungen, zwei Spielstätten — handgemacht und nahbar.';
 
 // Spielzeit-Highlights (the two current productions).
 $spielzeitHighlights = [

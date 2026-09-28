@@ -51,7 +51,7 @@ declare(strict_types=1);
                     <p class="footer-newsletter__text">
                         Spielplan &amp; Premieren direkt ins Postfach — komplett werbefrei, jederzeit kündbar.
                     </p>
-                    <a class="btn btn-light btn-sm" href="mailto:<?= e($siteConfig['email']) ?>?subject=Newsletter%20Volksb%C3%BChne%20Worms">
+                    <a class="btn btn-light btn-sm" href="mailto:<?= e($siteConfig['email']) ?>?subject=<?= rawurlencode('Newsletter-Anmeldung Volksbühne Worms') ?>&amp;body=<?= rawurlencode('Hallo Volksbühne-Team, ' . "\n\n" . 'bitte tragt mich für den Newsletter ein.' . "\n\n" . 'Vielen Dank!') ?>">
                         Newsletter abonnieren
                     </a>
                 </div>
