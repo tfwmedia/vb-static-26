@@ -4,14 +4,20 @@ Technische Dokumentation der Website **vb-static-26**: eine schlanke, serverseit
 
 ## Projektübersicht
 
-Die Website umfasst vier Seiten und einen externen Redirect:
+Die Website umfasst fünf Seiten, eine gestaltete 404-Seite und einen externen Redirect:
 
 | Seite | Route | Datei | Beschreibung |
 |-------|-------|-------|-------------|
-| Startseite | `/` | `index.php` | Hero-Bereich, Weihnachtsmärchen- und Saisonstück-Highlight, Kontakt |
-| Weihnachtsmärchen | `/weihnachtsmaerchen/` | `weihnachtsmaerchen.php` | Landingpage mit Event-Details, Schema.org EventSeries |
+| Startseite | `/` | `index.php` | Hero, Nächste Vorstellungen, Spielzeit-Cards, Verein, Mitgliedschaft, Kontakt-Strip |
+| Spielzeit | `/spielzeit/` | `spielzeit.php` | Aktuelle Produktionen + Termin-Übersicht (Archiv nur bei Befüllung) |
+| Weihnachtsmärchen | `/weihnachtsmaerchen/` | `weihnachtsmaerchen.php` | Landingpage mit Event-Details, Schema.org EventSeries, Anfahrt |
+| Verein | `/verein/` | `verein.php` | Vorstand, Fakten, Mitgliedschaft, Bankverbindung |
+| Kontakt | `/kontakt/` | `kontakt.php` | Vereinsadresse, Märchen-Kontakt, statische Anfahrtskarte |
 | Impressum | `/impressum/` | `impressum.php` | Rechtstext, geladen aus HTML-Fragment |
 | Datenschutz | `/datenschutz/` | `datenschutz.php` | Rechtstext, geladen aus HTML-Fragment |
+| 404 | beliebig | `404.php` | Eigene Fehlerseite mit Vorhang-Motiv (HTTP 404) |
+| Sitemap | `/sitemap.xml` | `sitemap.xml` | Statisches XML mit allen Routen |
+| Robots | `/robots.txt` | `robots.txt` | Statisch, mit Sitemap-Verweis |
 | Tickets kaufen | `/tickets-kaufen/` | — | 301-Redirect zu ticket-regional.de (Eventtyp-Übersicht 1883) |
 
 ## Technologie-Stack
@@ -46,10 +52,16 @@ php -S 127.0.0.1:8080 scripts/ci-router.php
 Verfügbare Routen im Browser:
 
 - `http://127.0.0.1:8080/` — Startseite
+- `http://127.0.0.1:8080/spielzeit/` — Spielzeit
 - `http://127.0.0.1:8080/weihnachtsmaerchen/` — Weihnachtsmärchen
+- `http://127.0.0.1:8080/verein/` — Verein
+- `http://127.0.0.1:8080/kontakt/` — Kontakt
 - `http://127.0.0.1:8080/impressum/` — Impressum
 - `http://127.0.0.1:8080/datenschutz/` — Datenschutz
+- `http://127.0.0.1:8080/sitemap.xml` — Sitemap
+- `http://127.0.0.1:8080/robots.txt` — Robots
 - `http://127.0.0.1:8080/tickets-kaufen/` — 301 → ticket-regional.de
+- `http://127.0.0.1:8080/beliebiger-falscher-pfad` — gestaltete 404
 
 ## Dokumentation
 
@@ -59,6 +71,7 @@ Verfügbare Routen im Browser:
 | [development.md](./development.md) | Lokales Setup, Build-Prozess, Testing, Konventionen, neue Seite hinzufügen |
 | [content-workflow.md](./content-workflow.md) | Content-Pflege: Weihnachtsmärchen aktualisieren, Rechtstexte synchronisieren, Redaktionsablauf |
 | [design-changes.md](./design-changes.md) | Design-System: CSS Custom Properties, Typografie, Komponenten, Responsive Breakpoints, Animationen |
+| [redesign-2026.md](./redesign-2026.md) | Komplett-Redesign 2026: neue Routen, Komponenten, SEO/A11y-Upgrades |
 | [security.md](./security.md) | OWASP Top 10 Abdeckung, Security-Header, DSGVO-Konformität, HTML-Sanitizing, Secret Management |
 | [optimization-plan.md](./optimization-plan.md) | Umsetzungsstatus der Optimierungen (erledigt/offen) |
 | [agency-project-plan.md](./agency-project-plan.md) | Implementierungs-Roadmap mit Status aller Phasen |

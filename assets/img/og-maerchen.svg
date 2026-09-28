@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Weihnachtsmärchen 2026 — Die Bremer Stadtmusikanten</title>
+  <desc id="desc">Open Graph Bild des Weihnachtsmärchens 2026.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0e1820"/>
+      <stop offset="100%" stop-color="#1f2e3a"/>
+    </linearGradient>
+    <linearGradient id="curtain" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#c31e2e"/>
+      <stop offset="100%" stop-color="#7d121c"/>
+    </linearGradient>
+    <radialGradient id="spot" cx="35%" cy="35%" r="35%">
+      <stop offset="0%" stop-color="#fce6c6" stop-opacity="0.32"/>
+      <stop offset="100%" stop-color="#fce6c6" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#spot)"/>
+  <circle cx="980" cy="120" r="220" fill="#ffffff0a"/>
+  <circle cx="100" cy="540" r="160" fill="#ffffff06"/>
+
+  <rect x="0" y="0" width="220" height="630" fill="url(#curtain)"/>
+  <rect x="220" y="0" width="4" height="630" fill="#7d121c"/>
+
+  <g transform="translate(70, 80)">
+    <rect width="80" height="80" rx="16" fill="#fff"/>
+    <path d="M16 16h12v48H16c3-6 5-12 5-24s-2-18-5-24Zm48 0H52v48h12c-3-6-5-12-5-24s2-18 5-24Z" fill="url(#curtain)"/>
+    <path d="M23 56c5-9 29-9 34 0" fill="none" stroke="#faf9f7" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="40" cy="36" r="4" fill="#faf9f7"/>
+  </g>
+
+  <text x="70" y="210" fill="#c31e2e" font-family="-apple-system, Segoe UI, Roboto, sans-serif" font-size="20" font-weight="700" letter-spacing="3">VOLKSBÜHNE WORMS</text>
+  <text x="70" y="234" fill="#ffd2c7" font-family="-apple-system, Segoe UI, Roboto, sans-serif" font-size="14" letter-spacing="4" font-weight="500">WEIHNACHTSMÄRCHEN 2026</text>
+
+  <text x="70" y="380" fill="#fff" font-family="Georgia, 'Times New Roman', serif" font-size="64" font-weight="700">Die Bremer</text>
+  <text x="70" y="450" fill="#fff" font-family="Georgia, 'Times New Roman', serif" font-size="64" font-weight="700">Stadtmusikanten</text>
+
+  <line x1="70" y1="540" x2="1130" y2="540" stroke="#ffffff22"/>
+  <text x="70" y="580" fill="#dce9ee" font-family="-apple-system, Segoe UI, Roboto, sans-serif" font-size="20" font-weight="500">01. &amp; 02. Dezember 2026 · Das Wormser</text>
+  <text x="1130" y="580" fill="#dce9ee" font-family="-apple-system, Segoe UI, Roboto, sans-serif" font-size="20" font-weight="500" text-anchor="end">volksbuehne-worms.de</text>
+</svg>

@@ -189,3 +189,241 @@ function json_ld(array $schema): string
         JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR
     );
 }
+
+/**
+ * Returns 'true'/'false' suitable for the aria-current attribute, based
+ * on whether the given navigation key matches the currently active one.
+ */
+function nav_is_active(string $activeNav, string $key): bool
+{
+    return $activeNav === $key;
+}
+
+/**
+ * Returns 'page' for the active nav item, or an empty string.
+ * Safe to drop into aria-current="...".
+ */
+function nav_aria_current(string $activeNav, string $key): string
+{
+    return nav_is_active($activeNav, $key) ? 'page' : '';
+}
+
+/**
+ * Renders the HTML class attribute string fragment for the active
+ * navigation entry.
+ */
+function nav_active_class(string $activeNav, string $key, string $base = ''): string
+{
+    if (!nav_is_active($activeNav, $key)) {
+        return $base === '' ? '' : ' ' . $base;
+    }
+    return $base === '' ? 'is-active' : $base . ' is-active';
+}
+
+/**
+ * Returns the Gravatar-friendly initials for a person, used as avatar
+ * placeholder when no portrait photo is supplied.
+ */
+function person_initials(string $name): string
+{
+    $parts = preg_split('/\s+/u', trim($name)) ?: [];
+    $initials = '';
+    $useMb = function_exists('mb_substr') && function_exists('mb_strtoupper');
+    foreach ($parts as $part) {
+        if ($part === '') continue;
+        $first = $useMb ? mb_substr($part, 0, 1) : substr($part, 0, 1);
+        if ($first !== '') $initials .= $first;
+        $len = $useMb ? mb_strlen($initials) : strlen($initials);
+        if ($len >= 2) break;
+    }
+    return $useMb ? mb_strtoupper($initials) : strtoupper($initials);
+}
+
+/**
+ * Renders an array of breadcrumbs as a <nav><ol> structure.
+ *
+ * @param array<int, array{label:string, href?:string|null> $items
+ */
+function render_breadcrumb(array $items): string
+{
+    if (count($items) === 0) return '';
+    $html = '<nav class="breadcrumb-nav" aria-label="Brotkrumen">';
+    $html .= '<ol class="breadcrumb">';
+    $last = count($items) - 1;
+    foreach ($items as $i => $item) {
+        $label = e($item['label']);
+        $href = $item['href'] ?? null;
+        if ($i === $last || $href === null) {
+            $html .= '<li><span aria-current="page">' . $label . '</span></li>';
+        } else {
+            $html .= '<li><a href="' . e(site_url($href)) . '">' . $label . '</a></li>';
+        }
+    }
+    $html .= '</ol></nav>';
+    return $html;
+}
+
+/**
+ * Pretty-prints a date in de-DE format (e.g. "Samstag, 01. Dezember 2026").
+ * Uses internal German month/weekday maps to avoid locale dependency
+ * (PHP's date('l') returns the English weekday on this server).
+ */
+function format_date_de(string $isoDate, bool $withWeekday = true): string
+{
+    $ts = strtotime($isoDate);
+    if ($ts === false) return $isoDate;
+
+    static $months = [
+        1 => 'Januar', 2 => 'Februar', 3 => 'März', 4 => 'April',
+        5 => 'Mai', 6 => 'Juni', 7 => 'Juli', 8 => 'August',
+        9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Dezember',
+    ];
+
+    $day = (int) date('j', $ts);
+    $month = $months[(int) date('n', $ts)] ?? '';
+    $year = date('Y', $ts);
+    $formatted = $day . '. ' . $month . ' ' . $year;
+
+    return $withWeekday
+        ? weekday_full_de($isoDate) . ', ' . $formatted
+        : $formatted;
+}
+
+/**
+ * Truncates a string to a max width without breaking multibyte chars.
+ * Falls back to byte-substr when the mbstring extension is unavailable.
+ */
+function truncate_text(string $text, int $max, string $suffix = '…'): string
+{
+    if ($max <= 0) return '';
+    if (function_exists('mb_strimwidth')) {
+        $out = mb_strimwidth($text, 0, $max, $suffix);
+        if ($out !== false) return $out;
+    }
+    if (strlen($text) <= $max) return $text;
+    return substr($text, 0, max(0, $max - strlen($suffix))) . $suffix;
+}
+
+/**
+ * URL-safe slug from a German string (handles umlauts and ß).
+ */
+function slugify(string $s): string
+{
+    $s = strtolower($s);
+    $s = preg_replace('/ä/', 'ae', $s) ?? $s;
+    $s = preg_replace('/ö/', 'oe', $s) ?? $s;
+    $s = preg_replace('/ü/', 'ue', $s) ?? $s;
+    $s = preg_replace('/ß/', 'ss', $s) ?? $s;
+    $s = preg_replace('/[^a-z0-9]+/', '-', $s) ?? $s;
+    return trim($s, '-');
+}
+
+/**
+ * Returns the German short day name for an ISO date (e.g. "Di").
+ */
+function weekday_short_de(string $isoDate): string
+{
+    $ts = strtotime($isoDate);
+    if ($ts === false) return '';
+    // Manual mapping for stable German short labels independent of locale.
+    static $map = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+    return $map[(int) date('w', $ts)];
+}
+
+/**
+ * Returns the German short month name for an ISO date (e.g. "Dez").
+ */
+function month_short_de(string $isoDate): string
+{
+    $ts = strtotime($isoDate);
+    if ($ts === false) return '';
+    static $map = [
+        'Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun',
+        'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez',
+    ];
+    return $map[(int) date('n', $ts) - 1];
+}
+
+/**
+ * German weekday full name (e.g. "Dienstag").
+ */
+function weekday_full_de(string $isoDate): string
+{
+    $ts = strtotime($isoDate);
+    if ($ts === false) return '';
+    static $map = [
+        'Sonntag', 'Montag', 'Dienstag', 'Mittwoch',
+        'Donnerstag', 'Freitag', 'Samstag',
+    ];
+    return $map[(int) date('w', $ts)];
+}
+
+/**
+ * Renders a <time> element with a German-formatted visible text.
+ * Pass a callable or string for the format. Default: short "01. Dez".
+ */
+function render_date_badge(string $isoDate, string $time = ''): string
+{
+    $day = date('d', strtotime($isoDate));
+    $month = month_short_de($isoDate);
+    $html = '<span class="event-card__date-badge" aria-hidden="true">';
+    $html .= '<span class="day">' . e($day) . '</span>';
+    $html .= '<span class="month">' . e($month) . '</span>';
+    $html .= '</span>';
+    if ($time !== '') {
+        $html .= '<span class="visually-hidden">' . e(weekday_full_de($isoDate)) . ', ' . e($day) . '. ' . e($month) . ' ' . date('Y', strtotime($isoDate)) . ', ' . e($time) . ' Uhr</span>';
+    }
+    return $html;
+}
+
+/**
+ * Renders a chip for an event status.
+ *
+ * @param 'tickets'|'few_left'|'premiere'|'sold_out'|'archive' $status
+ */
+function render_status_chip(string $status): string
+{
+    switch ($status) {
+        case 'sold_out':
+            return '<span class="chip chip--warning"><span class="chip__dot" aria-hidden="true"></span>Ausverkauft</span>';
+        case 'few_left':
+            return '<span class="chip chip--warning"><span class="chip__dot" aria-hidden="true"></span>Nur noch wenige Plätze</span>';
+        case 'premiere':
+            return '<span class="chip chip--brand">Premiere</span>';
+        case 'archive':
+            return '<span class="chip">Archiv</span>';
+        case 'tickets':
+        default:
+            return '<span class="chip chip--success"><span class="chip__dot" aria-hidden="true"></span>Tickets verfügbar</span>';
+    }
+}
+
+/**
+ * Maps an event status to a Schema.org EventStatus URL.
+ */
+function event_status_url(string $status): string
+{
+    switch ($status) {
+        case 'sold_out':
+            return 'https://schema.org/EventCancelled';
+        case 'archive':
+            return 'https://schema.org/EventScheduled';
+        case 'few_left':
+        case 'premiere':
+        case 'tickets':
+        default:
+            return 'https://schema.org/EventScheduled';
+    }
+}
+
+/**
+ * Builds an absolute ISO 8601 date+time in Europe/Berlin for a date and time.
+ */
+function iso_local(string $date, string $time = '18:00'): string
+{
+    $ts = strtotime($date . ' ' . $time);
+    if ($ts === false) return $date . 'T' . $time . ':00+01:00';
+    // Choose CET (+01:00) for winter, CEST (+02:00) for summer.
+    $offset = (int) date('I', $ts) === 1 ? '+02:00' : '+01:00';
+    return date('Y-m-d\TH:i:s', $ts) . $offset;
+}
