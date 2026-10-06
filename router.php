@@ -25,8 +25,9 @@ if (preg_match('/^\/spielzeit(\/)?$/', $path)) {
     $_SERVER["SCRIPT_NAME"] = '/datenschutz.php';
     require 'datenschutz.php';
 } elseif (preg_match('/^\/tickets-kaufen(\/)?$/', $path)) {
-    $_SERVER["SCRIPT_NAME"] = '/tickets-kaufen.php';
-    require 'tickets-kaufen.php';
+    // External redirect: ticket purchase is handled by ticket-regional.de.
+    header('HTTP/1.1 301 Moved Permanently');
+    header('Location: https://www.ticket-regional.de/events.php?mysearchSpecificType=eventtype&mysearchSpecificID=1883');
 } elseif ($path === '/' || $path === '/index.php') {
     $_SERVER["SCRIPT_NAME"] = '/index.php';
     require 'index.php';

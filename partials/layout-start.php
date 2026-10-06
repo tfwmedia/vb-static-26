@@ -78,7 +78,7 @@ declare(strict_types=1);
         </nav>
 
         <div class="header-controls">
-            <a class="header-cta header-cta--header btn btn-primary btn-sm" href="<?= e(site_url('/tickets-kaufen/')) ?>">
+            <a class="header-cta header-cta--header btn btn-primary btn-sm" href="<?= e($siteConfig['spielzeit_ticket_url']) ?>" rel="noopener">
                 Tickets kaufen
             </a>
             <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="primary-navigation" aria-label="Menü öffnen">
@@ -118,7 +118,7 @@ declare(strict_types=1);
                 <?php endforeach; ?>
             </ul>
             <div class="site-nav-dialog__footer">
-                <a class="btn btn-primary" href="<?= e(site_url('/tickets-kaufen/')) ?>">Tickets kaufen</a>
+                <a class="btn btn-primary" href="<?= e($siteConfig['spielzeit_ticket_url']) ?>" rel="noopener">Tickets kaufen</a>
                 <a class="btn btn-secondary" href="mailto:<?= e($siteConfig['email']) ?>">Kontakt</a>
             </div>
         </div>

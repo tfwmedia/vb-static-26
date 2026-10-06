@@ -38,8 +38,8 @@ $siteConfig = [
 ];
 
 /**
- * Nächste Vorstellungen — wird auf der Startseite, der Spielzeit-Übersicht
- * und der Tickets-Kaufen-Seite ausgespielt. Quelle der Wahrheit sind die
+ * Nächste Vorstellungen — wird auf der Startseite und der Spielzeit-Übersicht
+ * ausgespielt. Quelle der Wahrheit sind die
  * Ticket-Regional-Veranstaltungsseiten:
  *   - Löffelliste (eventID 274872) — kleines Theater, Würdtweinstraße 11:
  *     https://www.ticket-regional.de/events_info.php?eventID=274872

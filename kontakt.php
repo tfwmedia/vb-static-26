@@ -137,7 +137,7 @@ require __DIR__ . '/partials/layout-start.php';
                             67549 Worms
                         </address>
                         <p style="margin: 0;">
-                            <a href="<?= e(site_url('/tickets-kaufen/#alle-termine')) ?>" class="btn btn-secondary btn-sm">
+                            <a href="<?= e($siteConfig['maerchen_ticket_url']) ?>" class="btn btn-secondary btn-sm" rel="noopener">
                                 Termine ansehen →
                             </a>
                         </p>

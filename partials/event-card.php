@@ -98,8 +98,10 @@ $isoDateTime      = $eventDate !== '' ? iso_local($eventDate, $eventTime) : '';
         // Footer shows a price label + CTA. For marketing/hero cards where
         // the "price" field carries premiere metadata instead of a real
         // price, we detect that and render as a tagline instead of "€X".
+        // Buttons always read "Tickets kaufen"; the price stays invisible
+        // as schema.org Offer meta.
         $hasRealPrice = is_numeric(str_replace(',', '.', preg_replace('/[^0-9,.]/', '', (string) $eventPrice))) && str_contains((string) $eventPrice, '€');
-        $priceLabel = $hasRealPrice ? 'Tickets' : 'Tickets kaufen';
+        $priceLabel = 'Tickets kaufen';
     ?>
     <?php if ($eventPrice !== null || !empty($eventTicketUrl)) : ?>
         <div class="event-card__footer">
@@ -122,7 +124,7 @@ $isoDateTime      = $eventDate !== '' ? iso_local($eventDate, $eventTime) : '';
                     <meta itemprop="availability" content="https://schema.org/InStock">
                     <meta itemprop="priceCurrency" content="EUR">
                     <?php if ($hasRealPrice) : ?>
-                        <span itemprop="price"><?= e((string) preg_replace('/[^0-9,.]/', '', (string) $eventPrice)) ?></span>
+                        <meta itemprop="price" content="<?= e((string) preg_replace('/[^0-9,.]/', '', (string) $eventPrice)) ?>">
                     <?php endif; ?>
                     <?= e($priceLabel) ?>
                     <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

@@ -10,7 +10,10 @@ RewriteRule ^spielzeit/?$ spielzeit.php [L,QSA]
 RewriteRule ^verein/?$ verein.php [L,QSA]
 RewriteRule ^kontakt/?$ kontakt.php [L,QSA]
 RewriteRule ^weihnachtsmaerchen/?$ weihnachtsmaerchen.php [L,QSA]
-RewriteRule ^tickets-kaufen/?$ tickets-kaufen.php [L,QSA]
+
+# External redirect: ticket purchase is handled by ticket-regional.de.
+RewriteRule ^tickets-kaufen/?$ https://www.ticket-regional.de/events.php?mysearchSpecificType=eventtype&mysearchSpecificID=1883 [R=301,L]
+
 RewriteRule ^impressum/?$ impressum.php [L,QSA]
 RewriteRule ^datenschutz/?$ datenschutz.php [L,QSA]
 

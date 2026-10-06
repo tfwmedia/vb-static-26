@@ -4,13 +4,12 @@ declare(strict_types=1);
 require_once __DIR__ . '/includes/bootstrap.php';
 
 /**
- * Productions of the current Spielzeit (2026/27). Structured so the same
+ * Productions of the current Spielzeit (2026). Structured so the same
  * data could later come from a backend/CMS without changing templates.
  *
  * `productions[]` shape:
  *   - title, subtitle, image, image_alt, lead, ticket_url, status,
- *     director, season, kind ('theater'|'maerchen'), highlight,
- *     upcoming[] (list of dates).
+ *     director, season, kind ('theater'|'maerchen'), highlight.
  */
 $productions = [
     [
@@ -25,7 +24,6 @@ $productions = [
         'author' => 'Gerhard Schreiner',
         'kind' => 'theater',
         'highlight' => true,
-        'upcoming' => array_values(array_filter($upcomingEvents, fn($e) => str_contains($e['title'], 'Löffelliste'))),
     ],
     [
         'title' => 'Die Bremer Stadtmusikanten',
@@ -39,7 +37,6 @@ $productions = [
         'author' => 'Brüder Grimm',
         'kind' => 'maerchen',
         'highlight' => true,
-        'upcoming' => array_values(array_filter($upcomingEvents, fn($e) => str_contains($e['title'], 'Bremer'))),
     ],
 ];
 
@@ -57,12 +54,12 @@ $archiveCtaLabel = '';
 $archiveCtaUrl = '';
 
 $meta = meta([
-    'title' => 'Spielzeit 2026/27 | ' . $siteConfig['name'],
-    'description' => 'Aktuelle Produktionen der Volksbühne Worms: das Saisonstück "Die Löffelliste" und das Weihnachtsmärchen "Die Bremer Stadtmusikanten" — Tickets und Termine im Überblick.',
+    'title' => 'Spielzeit 2026 | ' . $siteConfig['name'],
+    'description' => 'Aktuelle Produktionen der Volksbühne Worms: das Saisonstück "Die Löffelliste" und das Weihnachtsmärchen "Die Bremer Stadtmusikanten" — Tickets direkt über Ticket-Regional.',
     'canonical' => site_url('/spielzeit/'),
     'og_type' => 'website',
     'og_image' => asset_url('/assets/img/og-spielzeit.svg'),
-    'og_image_alt' => 'Spielzeit 2026/27 — Volksbühne Worms',
+    'og_image_alt' => 'Spielzeit 2026 — Volksbühne Worms',
 ]);
 $activeNav = 'spielzeit';
 $bodyClass = 'page-spielzeit';
@@ -77,7 +74,7 @@ $structuredData = [
     '@graph' => [
         [
             '@type' => 'CollectionPage',
-            'name' => 'Spielzeit 2026/27',
+            'name' => 'Spielzeit 2026',
             'description' => $meta['description'],
             'url' => $meta['canonical'],
             'isPartOf' => ['@id' => absolute_url('/') . '#website'],
@@ -92,7 +89,7 @@ $structuredData = [
         ],
         [
             '@type' => 'ItemList',
-            'name' => 'Aktuelle Produktionen 2026/27',
+            'name' => 'Aktuelle Produktionen 2026',
             'itemListElement' => array_map(function ($p, $i) {
                 return [
                     '@type' => 'ListItem',
@@ -110,10 +107,10 @@ require __DIR__ . '/partials/layout-start.php';
 <main id="main-content">
 <section class="hero hero-inner" aria-labelledby="spielzeit-title">
         <div class="container container--narrow" data-reveal>
-            <p class="eyebrow">Spielzeit 2026/27</p>
-            <h1 id="spielzeit-title"><?= e($productionsPageHeading ?? 'Spielzeit 2026/27') ?></h1>
+            <p class="eyebrow">Spielzeit 2026</p>
+            <h1 id="spielzeit-title"><?= e($productionsPageHeading ?? 'Spielzeit 2026') ?></h1>
             <p class="lead">
-                <?= e($productionsPageLead ?? 'Aktuelle Produktionen der Volksbühne Worms — Tickets und Termine im Überblick.') ?>
+                <?= e($productionsPageLead ?? 'Aktuelle Produktionen der Volksbühne Worms — Tickets direkt über Ticket-Regional.') ?>
             </p>
         </div>
     </section>
@@ -169,7 +166,7 @@ require __DIR__ . '/partials/layout-start.php';
                                 <meta itemprop="url" content="<?= e($prod['ticket_url']) ?>">
                                 <meta itemprop="availability" content="https://schema.org/InStock">
                                 <meta itemprop="priceCurrency" content="EUR">
-                                <span itemprop="price">12.00</span>
+                                <meta itemprop="price" content="<?= $prod['kind'] === 'maerchen' ? '12.00' : '25.00' ?>">
                                 Tickets kaufen
                                 <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M5 12h14M13 5l7 7-7 7"/>
@@ -182,40 +179,19 @@ require __DIR__ . '/partials/layout-start.php';
         </div>
     </section>
 
-    <section class="section section--alt" aria-labelledby="termine-title">
+    <section class="section section--alt" aria-label="Tickets und Termine">
         <div class="container">
-            <div class="section-head" data-reveal>
-                <p class="eyebrow">Alle Vorstellungen</p>
-                <h2 id="termine-title">Termine im Überblick</h2>
+            <div class="section-head section-head--center" data-reveal>
+                <p class="eyebrow">Tickets &amp; Termine</p>
                 <p class="lead-compact">
-                    Termine der aktuellen Spielzeit — Tickets führt direkt zu unserem
-                    Vorverkaufs-Partner Ticket-Regional.
+                    Alle Vorstellungen und Tickets der aktuellen Spielzeit finden
+                    Sie bei unserem Vorverkaufs-Partner Ticket-Regional.
                 </p>
-            </div>
-
-            <?php
-            $allUpcoming = $upcomingEvents;
-            usort($allUpcoming, fn($a, $b) => strcmp($a['date'] . $a['time'], $b['date'] . $b['time']));
-            ?>
-
-            <div class="upcoming-strip" role="list">
-                <?php foreach ($allUpcoming as $evt) : ?>
-                    <a class="upcoming-item" href="<?= e($evt['ticket_url']) ?>" rel="noopener" role="listitem">
-                        <div class="upcoming-item__date" aria-hidden="true">
-                            <span class="day"><?= e(date('d', strtotime($evt['date']))) ?></span>
-                            <span class="month"><?= e(month_short_de($evt['date'])) ?></span>
-                        </div>
-                        <div>
-                            <span class="upcoming-item__title"><?= e($evt['title']) ?></span>
-                            <span class="upcoming-item__meta">
-                                <?= e(weekday_short_de($evt['date'])) ?>, <?= e($evt['time']) ?><?= !empty($evt['venue']) ? ' · ' . e($evt['venue']) : '' ?>
-                            </span>
-                        </div>
-                        <div class="upcoming-item__cta">
-                            <?= render_status_chip($evt['status'] ?? 'tickets') ?>
-                        </div>
+                <div class="actions" style="margin-top: var(--space-lg); justify-content: center;">
+                    <a class="btn btn-primary" href="<?= e($siteConfig['spielzeit_ticket_url']) ?>" rel="noopener">
+                        Alle Termine &amp; Tickets →
                     </a>
-                <?php endforeach; ?>
+                </div>
             </div>
         </div>
     </section>

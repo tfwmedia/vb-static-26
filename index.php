@@ -6,8 +6,14 @@ declare(strict_types=1);
 // render the correct subpage based on REQUEST_URI.
 $requestPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
 if (preg_match('~(?:^|/)(tickets-kaufen|spielzeit|verein|kontakt|weihnachtsmaerchen|impressum|datenschutz)(?:\.php)?/?$~i', $requestPath, $matches) === 1) {
+    // External redirect: ticket purchase is handled by ticket-regional.de.
+    if (strtolower($matches[1]) === 'tickets-kaufen') {
+        header('HTTP/1.1 301 Moved Permanently');
+        header('Location: https://www.ticket-regional.de/events.php?mysearchSpecificType=eventtype&mysearchSpecificID=1883');
+        exit;
+    }
+
     $routeMap = [
-        'tickets-kaufen' => __DIR__ . '/tickets-kaufen.php',
         'spielzeit' => __DIR__ . '/spielzeit.php',
         'verein' => __DIR__ . '/verein.php',
         'kontakt' => __DIR__ . '/kontakt.php',
@@ -39,17 +45,6 @@ foreach ($upcomingEvents as $evt) {
 }
 $countdownTarget = $nextUpcoming ? iso_local($nextUpcoming['date'], $nextUpcoming['time'] ?? '18:00') : null;
 
-// Slice upcoming events into "nächste Vorstellungen" strip (top 6, sorted ascending).
-$upcomingSorted = $upcomingEvents;
-usort($upcomingSorted, function ($a, $b) {
-    return strcmp($a['date'] . ' ' . ($a['time'] ?? '00:00'), $b['date'] . ' ' . ($b['time'] ?? '00:00'));
-});
-$upcomingStrip = array_values(array_filter($upcomingSorted, function ($e) use ($now) {
-    $ts = strtotime($e['date'] . ' ' . ($e['time'] ?? '00:00'));
-    return $ts !== false && $ts >= $now;
-}));
-$upcomingStrip = array_slice($upcomingStrip, 0, 6);
-
 // Mitglied-werden Block: heading + lead + CTA kommen aus \$mitgliedHeading /
 // \$mitgliedLead / \$mitgliedCtaLabel — siehe redaktionelle Konfiguration.
 $mitgliedHeading = null; // Fallback: 'Mitgliedschaft'
@@ -58,8 +53,6 @@ $mitgliedCtaLabel = 'Mitgliedschaft anfragen';
 
 // Section-Überschriften auf der Startseite — bleiben leer, bis die
 // Redaktion konkrete Wording-Vorgaben liefert.
-$upcomingHeading = null; // Fallback: visuell versteckt; Eyebrow "Nächste Vorstellungen" bleibt sichtbar.
-$upcomingLead = '15 Vorstellungen in der laufenden Spielzeit — Tickets und Termine im Überblick, tagesaktuell von Ticket-Regional.';
 $spielzeitHeading = null; // Fallback: visuell versteckt; Eyebrow "Aktuelle Spielzeit" bleibt sichtbar.
 $spielzeitLead = 'Saisonstück und Weihnachtsmärchen: zwei Inszenierungen, zwei Spielstätten — die Volksbühne live in Worms.';
 $vereinHeading = null; // Fallback: 'Seit 1908 auf der Bühne.'
@@ -176,10 +169,8 @@ $itemListSchema = [
     'itemListElement' => $spielzeitItems,
 ];
 
-// Schema.org Event JSON-LD is now sourced from the per-row microdata
-// on /tickets-kaufen/ (Playwright-verified). Home page only emits the
-// Organization + WebSite + Breadcrumb + ItemList(ItemList of items
-// with #termin-N deep-links) blocks below.
+// Schema.org JSON-LD: Home page only emits the
+// Organization + WebSite + Breadcrumb + ItemList blocks below.
 
 $structuredData = [
     '@context' => 'https://schema.org',
@@ -188,19 +179,6 @@ $structuredData = [
         $websiteSchema,
         $breadcrumbSchema,
         $itemListSchema,
-        count($upcomingSorted) > 0 ? [
-            '@type' => 'ItemList',
-            'name' => 'Nächste Vorstellungen',
-            'itemListElement' => array_values(array_map(function ($evt, $globalIdx) {
-                return [
-                    '@type' => 'ListItem',
-                    'position' => $globalIdx + 1,
-                    'name' => $evt['title'] . ' — ' . ($evt['subtitle'] ?? ''),
-                    'startDate' => iso_local((string) $evt['date'], (string) ($evt['time'] ?? '18:00')),
-                    'url' => absolute_url('/tickets-kaufen/#termin-' . ($globalIdx + 1)),
-                ];
-            }, $upcomingSorted, array_keys($upcomingSorted))),
-        ] : null,
     ])),
 ];
 
@@ -267,7 +245,7 @@ require __DIR__ . '/partials/layout-start.php';
                     <?php endif; ?>
 
                     <div class="actions">
-                        <a class="btn btn-primary btn-lg" href="<?= e(site_url('/tickets-kaufen/#alle-termine')) ?>">
+                        <a class="btn btn-primary btn-lg" href="<?= e($siteConfig['maerchen_ticket_url']) ?>" rel="noopener">
                             Tickets bestellen
                             <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M5 12h14M13 5l7 7-7 7"/>
@@ -289,58 +267,6 @@ require __DIR__ . '/partials/layout-start.php';
                         Die Bremer Stadtmusikanten — ab 1. Dezember 2026, Das Wormser
                     </span>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="section" aria-labelledby="upcoming-title">
-        <div class="container">
-            <div class="section-head" data-reveal>
-                <p class="eyebrow">Nächste Vorstellungen</p>
-                <?php if (!empty($upcomingHeading)) : ?>
-                    <h2 id="upcoming-title"><?= e($upcomingHeading) ?></h2>
-                <?php else : ?>
-                    <h2 id="upcoming-title" class="visually-hidden">Nächste Vorstellungen</h2>
-                <?php endif; ?>
-                <?php if (!empty($upcomingLead)) : ?>
-                    <p class="lead-compact"><?= e($upcomingLead) ?></p>
-                <?php endif; ?>
-            </div>
-
-            <?php if (!empty($upcomingStrip)) : ?>
-                <div class="upcoming-strip" role="list">
-                    <?php foreach ($upcomingStrip as $i => $evt) : ?>
-                        <?php
-                        $eventIdx = array_search($evt, $upcomingSorted, true);
-                        $deepLink = $eventIdx !== false
-                            ? site_url('/tickets-kaufen/#termin-' . ($eventIdx + 1))
-                            : site_url('/tickets-kaufen/');
-                        ?>
-                        <a class="upcoming-item"
-                           href="<?= e($deepLink) ?>"
-                           role="listitem">
-                            <div class="upcoming-item__date" aria-hidden="true">
-                                <span class="day"><?= e(date('d', strtotime($evt['date']))) ?></span>
-                                <span class="month"><?= e(month_short_de($evt['date'])) ?></span>
-                            </div>
-                            <div>
-                                <span class="upcoming-item__title">
-                                    <?= e($evt['title']) ?>
-                                </span>
-                                <span class="upcoming-item__meta">
-                                    <?= e(weekday_short_de($evt['date'])) ?>, <?= e($evt['time']) ?><?= !empty($evt['venue']) ? ' · ' . e($evt['venue']) : '' ?>
-                                </span>
-                            </div>
-                            <div class="upcoming-item__cta">
-                                <?= render_status_chip($evt['status'] ?? 'tickets') ?>
-                            </div>
-                        </a>
-                    <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
-
-            <div class="actions" style="margin-top: var(--space-xl); justify-content: center;" data-reveal>
-                <a class="btn btn-ghost" href="<?= e(site_url('/tickets-kaufen/')) ?>">Alle Termine &amp; Tickets →</a>
             </div>
         </div>
     </section>

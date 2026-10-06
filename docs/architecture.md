@@ -109,7 +109,7 @@ Zusätzlich:
 Falls ein Hoster alle Requests auf `index.php` leitet, erkennt die Datei bekannte Pfade über einen Regex und lädt die passende Zielseite. Externe Redirects (z. B. `/tickets-kaufen/`) werden vorab per 301 an den externen Dienst weitergeleitet:
 
 ```php
-preg_match('~(?:^|/)(weihnachtsmaerchen|impressum|datenschutz)(?:\.php)?/?$~i', $requestPath, $matches)
+preg_match('~(?:^|/)(tickets-kaufen|spielzeit|verein|kontakt|weihnachtsmaerchen|impressum|datenschutz)(?:\.php)?/?$~i', $requestPath, $matches)
 ```
 
 ### Ebene 3: Lokal/CI (`router.php` bzw. `scripts/ci-router.php`)

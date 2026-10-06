@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
 
+Disallow: /tickets-kaufen/
+
 Sitemap: https://www.volksbuehne-worms.de/sitemap.xml

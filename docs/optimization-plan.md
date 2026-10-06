@@ -76,8 +76,8 @@ Dieser Dokumentiert den Umsetzungsstand der Optimierungen für die Volksbühne W
 |----------|-----------|-------------|
 | AVIF-Unterstützung | Niedrig | AVIF als zusätzliches Bildformat neben WebP |
 | Trust-Elemente | Mittel | Testimonials, "Ausverkauft"-Hinweise, Social Proof — Status-Chips + EventStatus vorhanden, Q&A und Pressestimmen redaktionell zu füllen |
-| Sitemap.xml | ✅ Umgesetzt (Sep 2026) | Statisches `/sitemap.xml` mit allen 7 Routen |
-| robots.txt | ✅ Umgesetzt | `/robots.txt` mit Sitemap-Verweis, disallow `/tickets-kaufen/` |
+| Sitemap.xml | ✅ Umgesetzt (Sep 2026) | Statisches `/sitemap.xml` mit allen 6 Routen |
+| robots.txt | ✅ Umgesetzt | `/robots.txt` mit Sitemap-Verweis, disallow `/tickets-kaufen/` (301-Redirect-URL) |
 | Erweiterte A11y | ✅ Umgesetzt | `:focus-visible` global, `prefers-contrast`, Mobile-Nav-`<dialog>`, FAQ-`<details>` |
 | Lighthouse-Audit | Niedrig | Baseline-Metriken dokumentieren und überwachen |
 | Performance-Budget | Niedrig | Definierte Schwellwerte für LCP, FID, CLS |
