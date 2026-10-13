@@ -246,28 +246,6 @@ require __DIR__ . '/partials/layout-start.php';
                     Das Wormser statt, Rathenaustraße 11 in 67549 Worms.
                 </p>
             </div>
-
-            <div class="map-card" data-reveal>
-                <div class="map-card__image" aria-hidden="true">
-                    <img src="<?= e(asset('/assets/img/map-wormser.svg')) ?>"
-                         width="800" height="450"
-                         alt=""
-                         loading="lazy"
-                         decoding="async">
-                </div>
-                <div class="map-card__body">
-                    <h3 class="map-card__title">Das Wormser</h3>
-                    <address class="map-card__address">
-                        Rathenaustraße 11<br>
-                        67549 Worms
-                    </address>
-                    <p style="margin: 0;">
-                        <a class="btn btn-secondary btn-sm" href="<?= e(site_url('/kontakt/')) ?>">
-                            Kontakt &amp; Anfahrt →
-                        </a>
-                    </p>
-                </div>
-            </div>
         </div>
     </section>
 
