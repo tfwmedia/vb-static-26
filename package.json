@@ -1,28 +1,33 @@
 {
   "name": "vb-static-26",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "directories": {
-    "doc": "docs"
-  },
+  "version": "2.0.0",
+  "description": "Volksbühne Worms 1908 e. V. — statische Website (Astro)",
+  "type": "module",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "sync:legal": "node scripts/sync-legal-content.mjs"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tfwmedia/vb-static-26.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/tfwmedia/vb-static-26/issues"
+  "author": "satware AG",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "astro": "^5.14.0"
   },
-  "homepage": "https://github.com/tfwmedia/vb-static-26#readme",
   "devDependencies": {
-    "esbuild": "^0.28.0",
-    "playwright": "^1.59.1"
+    "@astrojs/check": "^0.9.0",
+    "typescript": "^5.9.0"
+  },
+  "allowScripts": {
+    "esbuild@0.27.7": true,
+    "esbuild@0.25.12": true,
+    "sharp@0.34.5": true,
+    "fsevents@2.3.2": true
   }
 }
