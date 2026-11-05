@@ -141,6 +141,12 @@ jobs:
           check "/tickets-kaufen/" "url=https://www.ticket-regional.de/events.php" "Ticket-Redirect-Fallback (Meta-Refresh)"
           check "/tickets-kaufen/" "mysearchSpecificID=1883" "Ticket-Redirect-Ziel (Eventtyp 1883)"
 
+      - name: Install Playwright (chromium)
+        run: npx playwright install --with-deps chromium
+
+      - name: SEO + Responsive Audit
+        run: node scripts/audit-seo-responsive.mjs "http://127.0.0.1:8080"
+
       - name: Upload static server log on failure
         if: failure()
         uses: actions/upload-artifact@v4

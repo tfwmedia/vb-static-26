@@ -70,7 +70,7 @@ export const metaDefaults = {
   themeColor: '#c31e2e',
   ogLocale: 'de_DE',
   ogType: 'website',
-  ogImage: '/assets/img/og-image.svg',
+  ogImage: '/assets/img/og-image.png',
   ogImageWidth: '1200',
   ogImageHeight: '630',
   robots: 'index, follow, max-image-preview:large, max-snippet:-1',

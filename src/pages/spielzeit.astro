@@ -8,7 +8,7 @@ import { upcomingEvents, type VbEvent } from '../data/events';
 import { slugify } from '../lib/format';
 
 const description =
-  'Aktuelle Produktionen der Volksbühne Worms: das Saisonstück "Die Löffelliste" und das Weihnachtsmärchen "Die Bremer Stadtmusikanten" — Tickets direkt über Ticket-Regional.';
+  'Spielzeit 2026 der Volksbühne Worms: das Saisonstück "Die Löffelliste" und das Weihnachtsmärchen "Die Bremer Stadtmusikanten" — Tickets über Ticket-Regional.';
 
 // Termine je Produktion gruppieren (Reihenfolge = Datenreihenfolge, 1:1)
 const groups = productions.map((p) => ({
@@ -58,7 +58,7 @@ const structuredData = {
     title: `Spielzeit 2026 | ${site.name}`,
     description,
     canonicalPath: '/spielzeit/',
-    ogImage: '/assets/img/og-spielzeit.svg',
+    ogImage: '/assets/img/og-spielzeit.png',
     ogImageAlt: 'Spielzeit 2026 — Volksbühne Worms',
   }}
   activeNav="spielzeit"
