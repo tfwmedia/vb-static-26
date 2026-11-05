@@ -35,28 +35,33 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          php-version: "8.3"
+          node-version: 22
+          cache: npm
 
-      - name: PHP syntax check (all .php files)
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check (astro check)
+        run: npm run check
+
+      - name: Build
+        run: npm run build
+
+      - name: Serve dist
         run: |
           set -euo pipefail
-          find . -name "*.php" -not -path "./.git/*" -print0 | xargs -0 -n1 php -l
-
-      - name: Start PHP dev server
-        run: php -S 127.0.0.1:8080 scripts/ci-router.php > /tmp/php-server.log 2>&1 &
-
-      - name: Wait for server to be ready
-        run: |
+          cd dist
+          nohup python3 -m http.server 8080 > /tmp/static-server.log 2>&1 &
           for i in $(seq 1 20); do
             curl -sf http://127.0.0.1:8080/ > /dev/null 2>&1 && echo "✓ Server ready" && exit 0
             echo "  waiting... ($i)"
             sleep 1
           done
-          echo "::error::PHP dev server did not start in time."
-          cat /tmp/php-server.log || true
+          echo "::error::Static server did not start in time."
+          cat /tmp/static-server.log || true
           exit 1
 
       - name: Check all routes return HTTP 200
@@ -71,6 +76,7 @@ jobs:
             "/kontakt/"
             "/impressum/"
             "/datenschutz/"
+            "/404.html"
             "/sitemap.xml"
             "/robots.txt"
           )
@@ -85,35 +91,16 @@ jobs:
           done
           [ $ERROR -eq 0 ] || exit 1
 
-      - name: Check external redirect returns HTTP 301
-        run: |
-          set -euo pipefail
-          ERROR=0
-          redirect_routes=(
-            "/tickets-kaufen/"
-          )
-          for route in "${redirect_routes[@]}"; do
-            status=$(curl -o /dev/null -s -w "%{http_code}" "http://127.0.0.1:8080$route")
-            if [ "$status" = "301" ]; then
-              echo "  ✓ $route → $status"
-            else
-              echo "::error::Route $route returned HTTP $status (expected 301)"
-              ERROR=1
-            fi
-          done
-          [ $ERROR -eq 0 ] || exit 1
+      # Hinweis: Der 301-Redirect /tickets-kaufen/ → Ticket-Regional liegt in
+      # public/.htaccess (Apache) und ist daher erst auf dem Live-Server wirksam.
 
       - name: Check critical assets are reachable
         run: |
           set -euo pipefail
           ERROR=0
           assets=(
-            "/assets/css/main.css"
-            "/assets/js/main.js"
             "/assets/img/vb-logo.png"
             "/assets/img/vb-icon.png"
-            "/assets/img/vorhang.jpg"
-            "/assets/img/weihnachtsmaerchen-2025.jpeg"
             "/assets/img/loeffelliste.webp"
             "/assets/img/bsm.webp"
             "/assets/img/map-wormser.svg"
@@ -122,6 +109,7 @@ jobs:
             "/assets/img/og-verein.svg"
             "/assets/img/og-kontakt.svg"
             "/assets/img/og-maerchen.svg"
+            "/assets/fonts/InterVariable.woff2"
           )
           for asset in "${assets[@]}"; do
             status=$(curl -o /dev/null -s -w "%{http_code}" "http://127.0.0.1:8080$asset")
@@ -134,27 +122,33 @@ jobs:
           done
           [ $ERROR -eq 0 ] || exit 1
 
-      - name: Check 404 handling
+      - name: Check content integrity (Termine + Rechtstexte)
         run: |
           set -euo pipefail
-          status=$(curl -o /dev/null -s -w "%{http_code}" "http://127.0.0.1:8080/diese-seite-gibt-es-nicht")
-          if [ "$status" = "404" ]; then
-            echo "  ✓ 404 handling works → $status"
-          else
-            echo "::error::Expected HTTP 404 for unknown route, got $status"
-            exit 1
-          fi
+          check() {
+            local file="$1" needle="$2" label="$3"
+            if curl -s "http://127.0.0.1:8080$file" | grep -qF "$needle"; then
+              echo "  ✓ $label"
+            else
+              echo "::error::Content check failed: $label (needle '$needle' not in $file)"
+              exit 1
+            fi
+          }
+          check "/spielzeit/" "2026-12-01" "Spielplan: Weihnachtsmärchen-Termine"
+          check "/spielzeit/" "2026-10-03" "Spielplan: Premiere Löffelliste"
+          check "/impressum/" "VR 10302" "Impressum: Vereinsregister"
+          check "/datenschutz/" "Datenschutz-Grundverordnung" "Datenschutz: DSGVO-Erklärung"
 
-      - name: Upload PHP server log on failure
+      - name: Upload static server log on failure
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: php-server-log
-          path: /tmp/php-server.log
+          name: static-server-log
+          path: /tmp/static-server.log
           retention-days: 7
 
   deploy:
-    name: Deploy to FTP
+    name: Deploy dist/ to FTP
     runs-on: ubuntu-latest
     needs: test
     if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
@@ -164,10 +158,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          php-version: "8.3"
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies & build
+        run: |
+          npm ci
+          npm run build
 
       - name: Validate required secrets
         run: |
@@ -176,54 +176,10 @@ jobs:
           [ -n "${{ secrets.FTP_USERNAME }}" ] || (echo "::error::Missing secret FTP_USERNAME" && exit 1)
           [ -n "${{ secrets.FTP_PASSWORD }}" ] || (echo "::error::Missing secret FTP_PASSWORD" && exit 1)
 
-      - name: PHP syntax check
-        run: |
-          set -euo pipefail
-          find . -name "*.php" -not -path "./.git/*" -print0 | xargs -0 -n1 php -l
-
-      - name: Install image optimization tools
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends \
-            libjpeg-turbo-progs \
-            optipng
-
-      - name: Optimize JPEGs (lossless)
-        run: |
-          if [ -d assets/img ]; then
-            find assets/img -type f \( -iname "*.jpg" -o -iname "*.jpeg" \) | while read -r f; do
-              jpegtran -copy none -optimize -progressive -outfile "$f" "$f" && echo "  ✓ $f"
-            done
-          fi
-
-      - name: Optimize PNGs (lossless)
-        run: |
-          if [ -d assets/img ]; then
-            find assets/img -type f -iname "*.png" | while read -r f; do
-              optipng -o6 -strip all -quiet "$f" && echo "  ✓ $f"
-            done
-          fi
-
-      - name: Setup Node.js for CSS minification
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Install clean-css-cli
-        run: npm install -g clean-css-cli
-
-      - name: Minify CSS
-        run: |
-          if [ -d assets/css ]; then
-            find assets/css -name "*.css" | while read -r f; do
-              cleancss -o "$f" "$f" && echo "  ✓ $f"
-            done
-          fi
-
-      - name: Deploy to FTP server (attempt 1)
+      - name: Deploy dist/ to FTP server (attempt 1)
         id: deploy_attempt_1
         continue-on-error: true
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
@@ -232,29 +188,21 @@ jobs:
           protocol: ${{ secrets.FTP_PROTOCOL != '' && secrets.FTP_PROTOCOL || 'ftp' }}
           security: ${{ secrets.FTP_SECURITY != '' && secrets.FTP_SECURITY || 'loose' }}
           timeout: ${{ secrets.FTP_TIMEOUT != '' && secrets.FTP_TIMEOUT || 120000 }}
+          local-dir: dist/
           state-name: ${{ secrets.FTP_STATE_NAME != '' && secrets.FTP_STATE_NAME || 'ftp-deploy-sync-state.json' }}
           log-level: ${{ secrets.FTP_LOG_LEVEL != '' && secrets.FTP_LOG_LEVEL || 'standard' }}
           server-dir: ${{ secrets.FTP_SERVER_DIR != '' && secrets.FTP_SERVER_DIR || '/' }}
           dangerous-clean-slate: ${{ github.event_name == 'workflow_dispatch' && inputs.clean_slate }}
           dry-run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
           exclude: |
-            **/.git*
-            **/.git*/**
-            **/.github/**
-            **/.idea/**
-            **/.claude/**
-            **/.cline/**
-            docs/**
-            scripts/**
             **/.DS_Store
             **/*.map
-            **/README.md
 
       - name: Deploy retry (attempt 2, same protocol)
         id: deploy_attempt_2
         if: steps.deploy_attempt_1.outcome == 'failure'
         continue-on-error: true
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
@@ -263,29 +211,21 @@ jobs:
           protocol: ${{ secrets.FTP_PROTOCOL != '' && secrets.FTP_PROTOCOL || 'ftp' }}
           security: ${{ secrets.FTP_SECURITY != '' && secrets.FTP_SECURITY || 'loose' }}
           timeout: ${{ secrets.FTP_TIMEOUT != '' && secrets.FTP_TIMEOUT || 120000 }}
+          local-dir: dist/
           state-name: ${{ secrets.FTP_STATE_NAME != '' && secrets.FTP_STATE_NAME || 'ftp-deploy-sync-state.json' }}
           log-level: verbose
           server-dir: ${{ secrets.FTP_SERVER_DIR != '' && secrets.FTP_SERVER_DIR || '/' }}
           dangerous-clean-slate: ${{ github.event_name == 'workflow_dispatch' && inputs.clean_slate }}
           dry-run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
           exclude: |
-            **/.git*
-            **/.git*/**
-            **/.github/**
-            **/.idea/**
-            **/.claude/**
-            **/.cline/**
-            docs/**
-            scripts/**
             **/.DS_Store
             **/*.map
-            **/README.md
 
       - name: Deploy fallback (attempt 3, alternate protocol)
         id: deploy_attempt_3
         if: steps.deploy_attempt_1.outcome == 'failure' && steps.deploy_attempt_2.outcome == 'failure'
         continue-on-error: true
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
@@ -294,23 +234,15 @@ jobs:
           protocol: ${{ secrets.FTP_FALLBACK_PROTOCOL != '' && secrets.FTP_FALLBACK_PROTOCOL || 'ftps-legacy' }}
           security: ${{ secrets.FTP_SECURITY != '' && secrets.FTP_SECURITY || 'loose' }}
           timeout: ${{ secrets.FTP_TIMEOUT != '' && secrets.FTP_TIMEOUT || 120000 }}
+          local-dir: dist/
           state-name: ${{ secrets.FTP_STATE_NAME != '' && secrets.FTP_STATE_NAME || 'ftp-deploy-sync-state.json' }}
           log-level: verbose
           server-dir: ${{ secrets.FTP_SERVER_DIR != '' && secrets.FTP_SERVER_DIR || '/' }}
           dangerous-clean-slate: ${{ github.event_name == 'workflow_dispatch' && inputs.clean_slate }}
           dry-run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
           exclude: |
-            **/.git*
-            **/.git*/**
-            **/.github/**
-            **/.idea/**
-            **/.claude/**
-            **/.cline/**
-            docs/**
-            scripts/**
             **/.DS_Store
             **/*.map
-            **/README.md
 
       - name: Fail workflow if deploy never succeeded
         if: steps.deploy_attempt_1.outcome == 'failure' && steps.deploy_attempt_2.outcome == 'failure' && steps.deploy_attempt_3.outcome == 'failure'

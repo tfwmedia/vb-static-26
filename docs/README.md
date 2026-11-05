@@ -1,5 +1,7 @@
 # Volksbühne Worms 1908 e. V. — Projektdokumentation
 
+> **Hinweis (2026):** Diese Dokumentation beschreibt die **Vorgänger-Version v1 (PHP)** der Website. Die aktuelle Version ist ein Astro-Rebuild — siehe [README.md im Repo-Root](../README.md). Diese Docs bleiben als Architektur-Referenz für den Stand `91c9d6a` bestehen; alle PHP-Pfade (`includes/`, `partials/`, `*.php`) existieren nicht mehr.
+
 Technische Dokumentation der Website **vb-static-26**: eine schlanke, serverseitig gerenderte PHP-Website für den Theaterverein Volksbühne Worms 1908 e. V.
 
 ## Projektübersicht
