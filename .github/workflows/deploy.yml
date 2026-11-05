@@ -103,12 +103,11 @@ jobs:
             "/assets/img/vb-icon.png"
             "/assets/img/loeffelliste.webp"
             "/assets/img/bsm.webp"
-            "/assets/img/map-wormser.svg"
-            "/assets/img/og-home.svg"
-            "/assets/img/og-spielzeit.svg"
-            "/assets/img/og-verein.svg"
-            "/assets/img/og-kontakt.svg"
-            "/assets/img/og-maerchen.svg"
+            "/assets/img/og-home.png"
+            "/assets/img/og-spielzeit.png"
+            "/assets/img/og-verein.png"
+            "/assets/img/og-kontakt.png"
+            "/assets/img/og-maerchen.png"
             "/assets/fonts/InterVariable.woff2"
           )
           for asset in "${assets[@]}"; do
