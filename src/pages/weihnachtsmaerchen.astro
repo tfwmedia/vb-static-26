@@ -64,9 +64,8 @@ const structuredData = {
       location: { '@type': 'Place', name: 'Das Wormser', address: wormserAddress },
       organizer: { '@type': 'Organization', name: site.name, url: absoluteUrl('/') },
       offers: {
-        '@type': 'AggregateOffer',
-        lowPrice: '12.00',
-        highPrice: '14.00',
+        '@type': 'Offer',
+        price: '12.00',
         priceCurrency: 'EUR',
         url: site.maerchenTicketUrl,
         availability: 'https://schema.org/InStock',
@@ -138,17 +137,19 @@ const structuredData = {
           <dd>Das Wormser,<br />Rathenaustraße 11, 67549 Worms</dd>
         </div>
         <div>
-          <dt>Vorverkauf</dt>
-          <dd><strong>12,00 €</strong> <small>Vorverkaufspreis</small></dd>
-        </div>
-        <div>
-          <dt>Abendkasse</dt>
-          <dd><strong>14,00 €</strong> <small>Tagespreis</small></dd>
+          <dt>Tickets</dt>
+          <dd><strong>12,00 €</strong></dd>
         </div>
         <div class="event-strip__cta">
           <a class="btn btn-primary" href={site.maerchenTicketUrl} rel="noopener">Tickets bestellen</a>
         </div>
       </dl>
+      <p class="strip-note" data-reveal>
+        Der Vorverkauf gilt für die frei verkäuflichen Vorstellungen am
+        01. und 02.12.2026. Geschlossene Vorstellungen für Schulklassen und
+        Kindergärten sind darin nicht enthalten — Informationen dazu finden Sie
+        <a href="#schulvorstellungen">weiter unten auf dieser Seite</a>.
+      </p>
     </div>
   </section>
 
@@ -171,7 +172,28 @@ const structuredData = {
     </div>
   </section>
 
-  <section class="section section--alt" id="mitwirkende" aria-labelledby="mitwirkende-title">
+  <section class="section section--alt" id="schulvorstellungen" aria-labelledby="schulen-title">
+    <div class="container container--narrow">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Für Schulklassen &amp; Kindergärten</p>
+        <h2 id="schulen-title">Geschlossene Vorstellungen ab Montagvormittag</h2>
+        <p class="lead-compact">
+          Ab Montagvormittag spielen wir täglich zwei geschlossene Vorstellungen
+          des Weihnachtsmärchens für Schulklassen und Kindergärten. Diese
+          Vorstellungen sind nicht frei verkäuflich — Karten gibt es ausschließlich
+          über die Anmeldung bei unserem Märchen-Team.
+        </p>
+      </div>
+      <div class="actions" data-reveal>
+        <a class="btn btn-primary" href={`mailto:${site.maerchenContactEmail}?subject=${encodeURIComponent('Anfrage Schulvorstellung Weihnachtsmärchen 2026')}`}>
+          Schulvorstellung anfragen
+        </a>
+        <a class="btn btn-tertiary" href={`tel:${site.maerchenContactPhoneHref}`}>Anrufen: {site.maerchenContactPhoneDisplay}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="mitwirkende" aria-labelledby="mitwirkende-title">
     <div class="container container--narrow">
       <div class="section-head" data-reveal>
         <p class="eyebrow">Mitwirkende</p>

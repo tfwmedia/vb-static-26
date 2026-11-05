@@ -858,7 +858,7 @@ p {
    ===================================================================== */
 .event-strip {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1px;
   background: var(--line);
   border: 1px solid var(--line);
@@ -916,6 +916,15 @@ p {
 
 .event-strip__cta .btn {
   width: 100%;
+}
+
+/* Klarstellender Hinweis unter dem Ticket-Streifen */
+.strip-note {
+  margin-top: var(--space-md);
+  font-size: var(--text-xs);
+  line-height: 1.65;
+  color: var(--ink-muted);
+  max-width: 75ch;
 }
 @media (max-width: 1000px) {
   .event-strip {
