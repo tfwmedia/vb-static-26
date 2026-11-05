@@ -1,240 +1,109 @@
 # Architektur
 
-## Überblick
+## Stack
 
-Die Website ist als **klassische PHP-Multi-Page-Anwendung** aufgebaut — bewusst ohne Framework, ohne Composer, ohne Datenbank. Jede Seite rendert serverseitig HTML und nutzt gemeinsame Includes für Konfiguration, Helper-Funktionen und Layout.
+| Layer | Technologie |
+|-------|-------------|
+| Framework | Astro 5.18, `build.format: 'directory'` (→ `/route/index.html`) |
+| Typisierung | TypeScript strict (`tsconfig` extends `astro/tsconfigs/strict`), `npm run check` |
+| Client-JS | 2 kleine Vanilla-Dateien in `public/js/` (`site.js`, `countdown.js`), per `<script is:inline src defer>` eingebunden — kein Bundling nötig, CSP-kompatibel |
+| Styling | `src/styles/global.css`, wird von Astro gebündelt nach `dist/_astro/*.css` |
+| Bilder/Fonts | statisch in `public/assets/` (bereits optimierte WebP/PNG, Inter-Variable-Font, OFL) |
 
-Architekturziele:
-
-- Einfache Wartbarkeit durch klare Struktur
-- Geringe Komplexität, keine Framework-Abhängigkeiten
-- SEO-freundliche, saubere URLs
-- Klare Trennung zwischen Seiteninhalten und wiederverwendbarem Layout
+Site-Konstante: `https://www.volksbuehne-worms.de` (`astro.config.mjs` → `site`, `src/data/site.ts` → `ORIGIN`).
 
 ## Verzeichnisstruktur
 
-```text
-.
-├── .github/workflows/
-│   └── deploy.yml                  # CI/CD Pipeline (GitHub Actions)
-├── assets/
-│   ├── css/
-│   │   ├── main.css                # Quelldatei (756 Zeilen)
-│   │   └── main.min.css            # Minifizierte Version (esbuild)
-│   ├── fonts/                      # 8 WOFF2-Dateien (Playfair Display)
-│   │   ├── playfair-display-italic-cyrillic.woff2
-│   │   ├── playfair-display-italic-latin-ext.woff2
-│   │   ├── playfair-display-italic-latin.woff2
-│   │   ├── playfair-display-italic-vietnamese.woff2
-│   │   ├── playfair-display-normal-cyrillic.woff2
-│   │   ├── playfair-display-normal-latin-ext.woff2
-│   │   ├── playfair-display-normal-latin.woff2
-│   │   └── playfair-display-normal-vietnamese.woff2
-│   ├── img/                        # 16 Bilddateien (JPEG, PNG, WebP, SVG)
-│   └── js/
-│       ├── main.js                 # Quelldatei (73 Zeilen)
-│       └── main.min.js             # Minifizierte Version (esbuild)
-├── content/
-│   └── legal/
-│       ├── impressum.html          # HTML-Fragment
-│       └── datenschutz.html        # HTML-Fragment
-├── docs/                           # Projektdokumentation (9 Markdown-Dateien)
-├── includes/
-│   ├── bootstrap.php               # Autoloader: Config + Helpers
-│   ├── helpers.php                 # 8 Helper-Funktionen
-│   └── site-config.php             # Zentrale Konfiguration
-├── partials/
-│   ├── layout-start.php            # HTML-Head, Header, Navigation
-│   └── layout-end.php              # Footer, Dokumentende
-├── scripts/
-│   ├── build.js                    # esbuild-Build (CSS/JS/WebP)
-│   ├── ci-router.php               # Router für CI/lokalen Dev-Server
-│   ├── playwright-test.js          # Visuelle Tests (Playwright)
-│   └── sync-legal-content.php      # Rechtstext-Sync von Live-Seite
-├── .gitignore
-├── .htaccess                       # Apache: URL-Rewriting + Security Header
-├── datenschutz.php                 # Seite: Datenschutz
-├── impressum.php                   # Seite: Impressum
-├── index.php                       # Startseite + Fallback-Router
-├── package.json                    # npm-Manifest (esbuild, playwright)
-├── package-lock.json
-├── router.php                      # Lokaler Entwicklungsrouter
-└── weihnachtsmaerchen.php          # Seite: Weihnachtsmärchen
+```
+src/
+  data/           Alle Inhalte (Quelle der Wahrheit)
+    site.ts       Site-Konfiguration: Name, Kontakte, Adressen, Bank, Navigation, Meta-Defaults, ORIGIN
+    events.ts     15 Termine (Titel, Datum, Zeit, Spielstätte, Ticket-URL, Status) + nextUpcomingEvent()
+    productions.ts  2 Produktionen (Löffelliste, Bremer Stadtmusikanten) mit Volltexten
+    vorstand.ts   Vorstand (3 Personen) + chronik (leer bis redaktionell gepflegt)
+  lib/
+    format.ts     Deutsche Datums-/Text-Formatter (Port der PHP-Helper): formatDateDe,
+                  weekdayFullDe, monthShortDe, dayPaddedDe, isoLocal (CET/CEST-Regel),
+                  personInitials, slugify, truncateText
+    legal.ts      Lädt content/legal/*.html zur Build-Zeit (fs, cwd-basiert)
+  layouts/
+    BaseLayout.astro  Komplettes Head-Setup (Meta, OG, Canonical, hreflang, JSON-LD,
+                      Favicon, Preloads) + Skip-Link + Header/Footer-Einbindung
+  components/
+    SiteHeader.astro    Sticky Header, Desktop-Nav, native-<dialog>-Mobile-Menü
+    SiteFooter.astro    4-spaltiger Footer inkl. Newsletter-Mailto
+    Breadcrumbs.astro   <nav><ol> mit aria-current
+    Countdown.astro     Serverseitig gerendertes Ziel-Datum, clientseitig weitergeführt
+    ScheduleList.astro  Spielplan-Tabelle, gruppiert je Produktion
+    ProductionCard.astro  Produktions-Karte (Spielzeit-Seite, mit vollständigen Fakten)
+    StatusChip.astro    tickets/sold_out/premiere/few_left
+  pages/          9 Routen (siehe content-workflow.md)
+  styles/global.css  Design-System (siehe design-system.md)
+public/
+  assets/img/     Bilder + og-*.png Social Cards (Quell-SVGs liegen daneben)
+  assets/fonts/   InterVariable.woff2 (+Italic)
+  js/             site.js (Header/Nav/Reveal), countdown.js
+  .htaccess       Tickets-301, 404, Security-Header
+  robots.txt      Disallow /tickets-kaufen/, Sitemap-Verweis
+  sitemap.xml     statisch, 7 Index-Routen
+content/
+  legal/          impressum.html, datenschutz.html (1:1-Fragmente der Rechtstexte)
+scripts/
+  sync-legal-content.mjs   Zieht Rechtstexte von der Live-Site in content/legal/
+  screenshots.mjs          Visueller Smoke-Test (Desktop + Mobile, alle Routen)
+  audit-seo-responsive.mjs SEO/Responsive-Audit (CI-Gate)
+docs/            Diese Dokumentation (git-only, nie deployed)
 ```
 
-## Rendering-Fluss
-
-Jede Seite folgt demselben Ablauf:
+## Rendering-Datenfluss
 
 ```
-1. Seiten-Datei (z.B. index.php)
-   │
-   ├── require_once 'includes/bootstrap.php'
-   │       ├── header('Content-Type: text/html; charset=UTF-8')
-   │       ├── require 'site-config.php'  → $siteConfig, $metaDefaults, $navigation
-   │       └── require 'helpers.php'      → e(), site_url(), asset(), ...
-   │
-   ├── $meta = meta([...])                  // Seiten-spezifische Meta-Daten
-   ├── $activeNav = 'home'                  // Aktiver Navigationspunkt
-   ├── $bodyClass = 'page-home'             // CSS-Klasse für <body>
-   ├── $structuredData = [...]              // JSON-LD Schema.org Daten
-   │
-   ├── require 'partials/layout-start.php'  // <head>, Header, <nav>
-   │
-   ├── <main> ... </main>                   // Individueller Seiteninhalt
-   │
-   └── require 'partials/layout-end.php'    // Footer, </body>, </html>
+src/data/*.ts ──> pages/*.astro (Frontmatter: Daten selektieren, JSON-LD bauen)
+                     │
+                     ├─> BaseLayout.astro  (Meta aus PageMeta + metaDefaults,
+                     │                      structuredData als JSON.stringify → set:html)
+                     └─> Components (props rein, HTML raus)
+content/legal/*.html ──> impressum/datenschutz via set:html (1:1, keine Änderung)
+public/*            ──> unverändert nach dist/
 ```
 
-## Routing
+Build: `astro build` → `dist/` mit `/route/index.html` pro Seite, `/_astro/*.css` (gebündeltes CSS), statische Assets 1:1.
 
-### Ebene 1: Produktion (`.htaccess`)
+## Meta-System
 
-Apache `mod_rewrite` mappt saubere URLs auf PHP-Dateien:
+`PageMeta` (src/data/site.ts) + `metaDefaults`: jede Seite übergibt `title`, `description`, `canonicalPath`, optional `ogType`/`ogImage`/`ogImageAlt`/`robots`. BaseLayout leitet daraus ab:
 
-| Kanonische URL | Ziel |
-|----------------|------|
-| `/` | `index.php` |
-| `/weihnachtsmaerchen/` | `weihnachtsmaerchen.php` |
-| `/impressum/` | `impressum.php` |
-| `/datenschutz/` | `datenschutz.php` |
-| `/tickets-kaufen/` | 301 → `https://www.ticket-regional.de/events.php?mysearchSpecificType=eventtype&mysearchSpecificID=1883` |
+- `<title>`, description, canonical (absolut via `absoluteUrl`)
+- hreflang `de` + `x-default` (beide auf canonical)
+- OG/Twitter-Set (og:image default `/assets/img/og-image.png`, 1200×630, **PNG** — SVG wird von Social-Plattformen nicht gerendert)
+- robots default `index, follow, max-image-preview:large, max-snippet:-1`
 
-Zusätzlich:
-- Vorhandene Dateien/Ordner werden direkt ausgeliefert (Assets, Fonts)
-- Direkte `.php`-Aufrufe werden per 301 auf die saubere URL umgeleitet
+## Strukturierte Daten
 
-### Ebene 2: Fallback in `index.php`
+Pro Seite als `structuredData`-Prop (`@graph`). Vorhandene Knoten:
 
-Falls ein Hoster alle Requests auf `index.php` leitet, erkennt die Datei bekannte Pfade über einen Regex und lädt die passende Zielseite. Externe Redirects (z. B. `/tickets-kaufen/`) werden vorab per 301 an den externen Dienst weitergeleitet:
+| Seite | Typen |
+|-------|-------|
+| / | Organization (`#organization`), WebSite (`#website`), BreadcrumbList, ItemList |
+| /spielzeit/ | CollectionPage, BreadcrumbList, ItemList |
+| /weihnachtsmaerchen/ | PerformingGroup, BreadcrumbList, EventSeries mit 2 SubEvents (01./02.12., Offer 12.00 EUR), Breadcrumb |
+| /verein/ | AboutPage, BreadcrumbList, Organization |
+| /kontakt/ | ContactPage, BreadcrumbList |
+| /impressum/, /datenschutz/ | BreadcrumbList |
 
-```php
-preg_match('~(?:^|/)(tickets-kaufen|spielzeit|verein|kontakt|weihnachtsmaerchen|impressum|datenschutz)(?:\.php)?/?$~i', $requestPath, $matches)
-```
+Konventionen: `#organization`/`#website` @ids verweisen auf `/`; Vorstellungen im Schema sind nur die **frei verkäuflichen** (01./02.12.) — geschlossene Schulvorstellungen bewusst nicht als buchbare Events ausweisen.
 
-### Ebene 3: Lokal/CI (`router.php` bzw. `scripts/ci-router.php`)
+## Client-JS-Verhalten
 
-Beide Router nutzen den eingebauten PHP-Dev-Server:
+- `site.js`: Scroll-Schatten am Header, `<dialog>`-Mobile-Menü (open/close/backdrop-click), IntersectionObserver-Reveal (`[data-reveal]`, `--reveal-delay`-Staffelung)
+- `countdown.js`: liest `data-countdown`-Attribut, Sekundentakt (bei `prefers-reduced-motion` nur Minuten), aria-live-Updates
+- Beide IIFE, strikt CSP-konform (`script-src 'self'`, kein Inline-JS im Build)
 
-- `router.php` — für lokale Entwicklung (`php -S 127.0.0.1:8080 router.php`)
-- `scripts/ci-router.php` — für CI-Umgebung, mit explizitem 404-Handling und `Content-Type`-Header
+## Bekannte Grenzen/Bewusste Entscheidungen
 
-## Konfiguration (`includes/site-config.php`)
-
-Drei globale Variablen:
-
-### `$siteConfig`
-
-```php
-[
-    'name' => 'Volksbühne Worms 1908 e. V.',
-    'email' => 'info@volksbuehne-worms.de',
-    'phone_display' => '06241 51429',
-    'phone_href' => '+49624151429',
-    'maerchen_contact_email' => 'kontakt@volksbuehne-worms.de',
-    'maerchen_contact_phone_display' => '0152 57204453',
-    'maerchen_contact_phone_href' => '+4915257204453',
-    'address' => [
-        'name' => 'Volksbühne Worms 1908 e. V.',
-        'street' => 'Würdtweinstraße 11',
-        'postal_city' => '67549 Worms',
-    ],
-]
-```
-
-### `$metaDefaults`
-
-```php
-[
-    'title' => 'Volksbühne Worms 1908 e. V.',
-    'description' => 'Theater seit 1908: Spielzeit, Weihnachtsmärchen und Kultur für Worms und die Region.',
-    'canonical' => '/',
-    'og_type' => 'website',
-    'og_locale' => 'de_DE',
-    'og_image' => '/assets/img/vorhang.webp',
-]
-```
-
-### `$navigation`
-
-```php
-[
-    ['key' => 'home', 'label' => 'Start', 'href' => '/'],
-    ['key' => 'maerchen', 'label' => 'Weihnachtsmärchen', 'href' => '/weihnachtsmaerchen/'],
-]
-```
-
-## Helper-Funktionen (`includes/helpers.php`)
-
-| Funktion | Signatur | Beschreibung |
-|----------|----------|-------------|
-| `e()` | `e(mixed $value): string` | HTML-Escaping via `htmlspecialchars($value, ENT_QUOTES \| ENT_SUBSTITUTE, 'UTF-8')` |
-| `site_origin()` | `site_origin(): string` | Ermittelt die Origin (`https://host`) aus `$_SERVER`, bereinigt den Host |
-| `site_url()` | `site_url(string $path = '/'): string` | Normalisiert interne Pfade (führendes `/`, kein doppelter Slash) |
-| `asset()` | `asset(string $path): string` | Gibt den Asset-Pfad mit Cache-Busting-Parameter zurück (`?v=filemtime`) |
-| `asset_url()` | `asset_url(string $path): string` | Kombiniert `site_url()` und `asset()` für absolute Asset-URLs |
-| `absolute_url()` | `absolute_url(string $urlOrPath): string` | Macht relative URLs absolut, lässt bereits absolute URLs unverändert |
-| `meta()` | `meta(array $pageMeta): array` | Merged Seiten-Meta mit `$metaDefaults`, setzt `canonical` und `og_image` auf absolute URLs |
-| `sanitize_legal_html()` | `sanitize_legal_html(string $html): string` | Bereinigt HTML-Fragmente: entfernt gefährliche Tags, normalisiert `h1` → `h2`, filtert Attribute |
-| `json_ld()` | `json_ld(array $schema): string` | JSON-kodiert Schema.org-Daten (`JSON_UNESCAPED_SLASHES \| JSON_PRETTY_PRINT`) |
-
-## Layout-System
-
-### `partials/layout-start.php`
-
-Rendert den HTML-Kopf:
-
-1. `<!doctype html>`, `<html lang="de">`, `<head>`
-2. Charset, Viewport, Title, Description, Canonical
-3. Open Graph Meta-Tags (`og:site_name`, `og:title`, `og:description`, `og:type`, `og:url`, `og:image`, `og:locale`)
-4. Twitter Card Meta-Tags (`twitter:card`, `twitter:title`, `twitter:description`, `twitter:image`)
-5. Favicon und Apple Touch Icon (mit Cache-Busting)
-6. CSS-Stylesheet (`main.min.css`, mit `<link rel="preload">`)
-7. JavaScript (`main.min.js`, mit `defer`)
-8. JSON-LD strukturierte Daten (wenn `$structuredData` gesetzt)
-9. Skip-Link (`<a href="#main-content">`)
-10. Header mit Logo, Navigation und Kontakt-Button
-
-### `partials/layout-end.php`
-
-Rendert das HTML-Ende:
-
-1. Footer mit drei Spalten: Kontakt, Adresse, Links
-2. Copyright-Zeile (dynamisches Jahr)
-3. `</body>`, `</html>`
-
-## Strukturierte Daten (JSON-LD)
-
-Jede Seite kann `$structuredData` setzen. Die Daten werden in `layout-start.php` per `json_ld()` ausgegeben.
-
-### Startseite (`index.php`)
-
-- `PerformingGroup` mit `additionalType: LocalBusiness`
-- `WebSite`
-
-### Weihnachtsmärchen (`weihnachtsmaerchen.php`)
-
-- `PerformingGroup` mit `additionalType: LocalBusiness`
-- `EventSeries` mit:
-  - `OfflineEventAttendanceMode`
-  - `Place`: Das Wormser
-  - `AggregateOffer` (12,00 € – 14,00 €)
-  - `subEvent`: Zwei einzelne `Event`-Einträge (01.12. und 02.12.2026)
-
-### Impressum / Datenschutz
-
-`$structuredData = null` — keine strukturierten Daten.
-
-## Rechtstext-System
-
-1. `content/legal/impressum.html` und `content/legal/datenschutz.html` enthalten HTML-Fragmente
-2. Die jeweilige PHP-Seite lädt den Inhalt per `file_get_contents()`
-3. Bei Fehlschlagen wird eine Fallback-Meldung angezeigt
-4. Der HTML-Inhalt wird durch `sanitize_legal_html()` bereinigt:
-   - Blockierte Tags: `script`, `style`, `iframe`, `object`, `embed`, `form`, `input`, `button`
-   - Erlaubte Tags: `p`, `br`, `strong`, `em`, `b`, `i`, `u`, `small`, `ul`, `ol`, `li`, `a`, `h2`, `h3`, `h4`, `address`
-   - `h1` wird zu `h2` normalisiert
-   - Bei `<a>`-Tags werden nur sichere `href`-Schemata erlaubt (`https://`, `mailto:`, `tel:`, `/`)
-   - Externe Links erhalten `rel="noopener noreferrer"`
-   - Alle anderen Attribute werden entfernt
-5. Nach leerem Ergebnis wird ebenfalls eine Fallback-Meldung angezeigt
+| Thema | Entscheidung |
+|-------|--------------|
+| Helvetica Neue | Lizenzpflichtig, nicht einbettbar — Headings nutzen lokal installiertes HelveticaNeue (Gewicht 800), Fallback Inter ExtraBold (self-hosted, OFL) |
+| `isoLocal()` | DST-Grenze per EU-Regel (letzter Sonntag März/Oktober) — alle Vorstellungen abends, Sprungstunde irrelevant |
+| Rechtstext-Fragmente | Mit `<br>`-Struktur aus WordPress/Elementor importiert; wird per `.legal`-CSS lesbar formatiert, Inhalt bewusst unangetastet |
+| Such-Action | Die SearchAction der Vorgängersite wurde entfernt (statische Site hat keine `?s=`-Suche) |

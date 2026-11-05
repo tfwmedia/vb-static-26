@@ -1,132 +1,65 @@
 # Content-Workflow
 
-## Überblick
+Alle redaktionellen Inhalte liegen in `src/data/`. Regel: **Texte 1:1 pflegen**, nichts umformulieren — Änderungen kommen vom Verein (Mail/Telefon) oder aus der Live-Site.
 
-Inhalte werden im Projekt bewusst simpel gepflegt:
+## Termine ändern (häufigster Fall)
 
-- Seitentexte direkt in den jeweiligen PHP-Seiten
-- Rechtstexte als externe HTML-Fragmente unter `content/legal/`
-- Bilder und Medien unter `assets/img/`
+Datei: `src/data/events.ts`
 
-## Weihnachtsmärchen aktualisieren
+Ein Eintrag:
 
-Die Seite `weihnachtsmaerchen.php` enthält alle veranstaltungsspezifischen Inhalte direkt im PHP-Template. Bei einem Jahreswechsel oder neuer Inszenierung müssen folgende Stellen angepasst werden:
+```ts
+{
+  title: 'Die Löffelliste',            // exakter Produktionstitel (gruppiert den Spielplan)
+  subtitle: 'Saisonstück 2026',        // Zeile im Spielplan + Karten-Eyebrow
+  date: '2026-10-09',                  // ISO
+  time: '20:00',
+  venue: 'Volksbühne — kleines Theater', // oder 'Das Wormser'
+  ticketUrl: 'https://www.ticket-regional.de/stage_7698.php?timeID=1139633', // null = ausverkauft/kein VVK
+  price: '25,00 €',
+  priceNote: 'VVK',
+  status: 'tickets',                   // 'tickets' | 'sold_out' | 'premiere' | 'few_left'
+}
+```
 
-### 1. `weihnachtsmaerchen.php`
+Auswirkung: Startseite (Countdown nimmt automatisch die nächste künftige Vorstellung), Spielplan-Tabelle auf `/spielzeit/`, JSON-LD bleibt unberührt (Märchen-SubEvents stehen separat in `weihnachtsmaerchen.astro`).
 
-- **Titel und Untertitel**: `<h1>` und `.eyebrow` Text
-- **Inszenierung**: Name des Regisseurs
-- **Termine**: `<ul>` im `.event-meta` Bereich, inklusive Wochentage und Uhrzeiten
-- **Preise**: Vorverkauf und Abendkasse
-- **Inhaltsbeschreibung**: `<div class="prose">` Bereich
-- **Strukturierte Daten** (`$structuredData`):
-  - `EventSeries.name`
-  - `EventSeries.subEvent` (Startdatum, ISO 8601 Format)
-  - `AggregateOffer.lowPrice` / `highPrice`
+Reihenfolge: aufsteigend nach Datum halten.
 
-### 2. `index.php`
+## Produktionen / Weihnachtsmärchen
 
-- **Highlight-Block** (`section-highlight`): Titel, Beschreibung, Termine, Preise
-- **Strukturierte Daten**: ggf. anpassen
+- `src/data/productions.ts`: Titel, Lead (Volltext), Autor, Regie, Bilder, Ticket-URLs
+- Weihnachtsmärchen-Seitentexte (Inhalt-Prosa, Schulvorstellungen-Hinweis, Gruppen-Kontakt) stehen direkt in `src/pages/weihnachtsmaerchen.astro` — dort ändern
+- Wichtig: Ticket-Link der Märchen-Seite gilt nur für die **Freiverkaufsvorstellungen** (01./02.12.); geschlossene Schulvorstellungen (ab Montagvormittag, täglich 2, nicht frei verkäuflich) werden im Abschnitt `#schulvorstellungen` kommuniziert und laufen über den Märchen-Kontakt
 
-### 3. Bilder
+## Vorstand / Verein
 
-- Neues Poster in `assets/img/` ablegen (JPEG + WebP)
-- Bildreferenzen in beiden PHP-Dateien aktualisieren
-- Nach dem Hinzufügen neuer Bilder den Build ausführen: `node scripts/build.js`
+`src/data/vorstand.ts`: Rolle, Name, Notiz, optional `photo` (dann Initialen-Avatar statt Kürzel). Chronik-Einträge ergänzen, sobald der Verein eine Liste liefert (`chronik`-Array, Rendering automatisch sichtbar).
 
-### 4. Meta-Daten
+## Bankverbindungen / Kontaktdaten
 
-In beiden Seiten die `$meta`-Variablen prüfen:
-
-- `title`: Seitentitel
-- `description`: Meta-Description
-- `og_image`: Pfad zum neuen Poster
+`src/data/site.ts` (`vereinBank`, `email`, `phone*`, `address`, `social`). Änderungen wirken global (Footer, Kontakt-Seite, Verein-Seite, JSON-LD).
 
 ## Rechtstexte (Impressum/Datenschutz)
 
-### Speicherort
+Quelle: `content/legal/*.html` (1:1-Fragmente). Zwei Wege:
 
-```
-content/legal/
-├── impressum.html
-└── datenschutz.html
-```
+1. **Von der Live-Site ziehen**: `npm run sync:legal` (lädt volksbuehne-worms.de/impressum + /datenschutz, extrahiert den Text-Container, macht interne Links relativ).
+   Achtung: Überschreibt lokale Korrekturen. Beispiel: "Postfach 2317" wurde 2026-11 lokal entfernt — wenn die Live-Quelle es noch enthält, kommt es beim Sync zurück (also vorher auf der Live-Quelle korrigieren).
+2. **Direkt editieren**: `content/legal/impressum.html` bzw. `datenschutz.html` anpassen (HTML mit `<br>`-Struktur, Erlaubt-Filter siehe `src/lib/legal.ts`-Kommentar).
 
-Diese HTML-Fragmente werden in `impressum.php` und `datenschutz.php` geladen und durch `sanitize_legal_html()` bereinigt.
+Rendering: `set:html` in den Legal-Seiten, Absicherung über erlaubte Tags/Hrefs ist bewusst einfach gehalten (Quelle ist der Verein selbst).
 
-### Manuelles Bearbeiten
+## Neue Seite anlegen
 
-Die Dateien können direkt mit einem Texteditor bearbeitet werden. Es sind reine HTML-Fragmente (kein vollständiges HTML-Dokument).
+1. `src/pages/slug.astro` anlegen (build.format `directory` → `/slug/` + `index.html`)
+2. BaseLayout nutzen, `PageMeta` füllen (title ≤ 60 Zeichen, description 120-160, canonicalPath mit trailing slash)
+3. JSON-LD: BreadcrumbList mindestens; weitere Typen nach Bedarf
+4. `public/sitemap.xml`: Route ergänzen
+5. `scripts/audit-seo-responsive.mjs` → `ROUTES` ergänzen
+6. Navigation (`src/data/site.ts` → `navigation`) und Footer-Links prüfen
+7. `npm run build && npm run audit:see development.md` — Audit muss Exit 0 liefern
 
-Erlaubte HTML-Elemente:
+## Bilder
 
-| Tags | Verwendung |
-|------|-----------|
-| `p`, `br` | Absätze, Zeilenumbrüche |
-| `strong`, `em`, `b`, `i`, `u`, `small` | Textauszeichnung |
-| `ul`, `ol`, `li` | Listen |
-| `a` | Links (nur `https://`, `mailto:`, `tel:`, `/` Pfade) |
-| `h2`, `h3`, `h4` | Überschriften (`h1` wird automatisch zu `h2`) |
-| `address` | Adressangaben |
-
-Blockierte Elemente: `script`, `style`, `iframe`, `object`, `embed`, `form`, `input`, `button`.
-
-### Sync aus Live-Quelle
-
-Das Script `scripts/sync-legal-content.php` lädt die aktuellen Rechtstexte von der bestehenden Live-Website:
-
-```bash
-php scripts/sync-legal-content.php
-```
-
-#### Funktionsweise
-
-1. **Quell-URLs**:
-   - Impressum: `https://volksbuehne-worms.de/impressum/`
-   - Datenschutz: `https://volksbuehne-worms.de/datenschutz/`
-
-2. **Download-Reihenfolge** (mit Fallbacks):
-   - Zuerst: `/tmp/vb-{slug}.html` (lokaler Cache)
-   - Dann: `file_get_contents($url)` (direkter Download)
-   - Dann: `wget -qO- $url` (Shell-Fallback)
-   - Bei Fehler: Script bricht mit Exit-Code 1 ab
-
-3. **DOM-Extraktion**:
-   - Das Script sucht den ersten `elementor-widget-text-editor` Container
-   - Extrahiert den Inhalt des `elementor-widget-container` div
-   - Entfernt die erste `<h1>` (da die Seite bereits eine eigene H1 hat)
-
-4. **Link-Normalisierung**:
-   - Interne absolute Links (`https://volksbuehne-worms.de/...`) werden zu relativen Pfaden (`/...`)
-   - Externe Links bleiben unverändert
-
-5. **Speicherung**:
-   - Fragment wird als HTML in `content/legal/{slug}.html` gespeichert
-   - Konsolenausgabe: `Synced {slug} -> {pfad}`
-
-## Redaktionsablauf (Checkliste)
-
-Vor jedem Content-Update:
-
-- [ ] Inhalte lokal aktualisieren (oder Legal-Sync ausführen)
-- [ ] Lokal im Browser prüfen: `php -S 127.0.0.1:8080 scripts/ci-router.php`
-- [ ] Rechtschreibung und Typografie kontrollieren
-- [ ] Datums- und Preisangaben verifizieren
-- [ ] Kontaktinformationen auf Aktualität prüfen
-- [ ] Interne Links auf Funktion testen
-- [ ] Mobile Darstellung prüfen (Responsive)
-- [ ] Änderungen committen und deployen
-
-## Bei Jahreswechsel
-
-Folgende Punkte sollten bei einem Jahreswechsel oder neuer Spielzeit überprüft und angepasst werden:
-
-1. **Weihnachtsmärchen**: Alle Inhalte in `weihnachtsmaerchen.php` (siehe oben)
-2. **Startseite**: Highlight-Block in `index.php`
-3. **Bilder**: Neues Poster/Visuals in `assets/img/`
-4. **Meta-Daten**: Title, Description, og_image in beiden Seiten
-5. **Strukturierte Daten**: EventSeries mit neuen Daten
-6. **Rechtstexte**: Sync prüfen (`php scripts/sync-legal-content.php`)
-7. **Copyright-Jahr**: Wird automatisch per `date('Y')` gesetzt
-8. **Build**: `node scripts/build.js` für neue WebP-Bilder ausführen
+Neue Motive nach `public/assets/img/` (bereits optimiert: WebP für Fotos, PNG für Logos/Social Cards). `<img>` immer mit `width`/`height` + `alt` (deko: `alt=""`). Hero-Bilder der Startseite: `preloadHero`-Prop in BaseLayout.

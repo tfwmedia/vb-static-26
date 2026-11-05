@@ -41,6 +41,10 @@ Wichtig für den Live-Betrieb (Apache):
 
 Keine externen Requests der Seite selbst: Fonts selbstgehostet (Inter, OFL), keine Tracker/Analytics, keine Einbindungen (Maps nur als eigenes SVG + Link). Rechtstexte 1:1 vom Verein. CSP `default-src 'self'`.
 
+## Dokumentation
+
+Die vollständige Projektdokumentation liegt unter [`docs/`](./docs/README.md) (nur im Repository, nicht Teil des Deployments): Architektur, Content-Workflow, Design-System, Development, Deployment, SEO/Responsive-Audit.
+
 ## Historie
 
-Die Dokumentation der Vorgänger-Version (PHP) liegt unter `docs/`; sie beschreibt die Architektur bis zum Redesign 2026 (Git-Stand `91c9d6a`) und dient als Referenz.
+Die Vorgängerversion (serverseitig gerendertes PHP, Git-Stand `91c9d6a`) ist unter [`docs/legacy/`](./docs/legacy/README.md) dokumentiert — Architektur-Referenz, die beschriebenen PHP-Pfade existieren nicht mehr.
