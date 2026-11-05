@@ -690,12 +690,17 @@ p {
 }
 
 .hero h1 {
-  margin-bottom: var(--space-lg);
+  margin-bottom: var(--space-sm);
 }
 
-.hero h1 em {
-  font-style: normal;
+.hero__tagline {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.25rem, 1.1rem + 0.8vw, 1.75rem);
+  letter-spacing: -0.01em;
   color: var(--brand);
+  margin-bottom: var(--space-lg);
+  max-width: none;
 }
 
 /* Countdown-Leiste: Meta-Zeile oben, Einheiten darunter */
