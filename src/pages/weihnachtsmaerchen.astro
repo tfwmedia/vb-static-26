@@ -1,0 +1,253 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { absoluteUrl, site } from '../data/site';
+
+const description =
+  'Die Bremer Stadtmusikanten: Weihnachtsmärchen 2026 der Volksbühne Worms am 01.12. und 02.12.2026 in Das Wormser.';
+
+const wormserAddress = {
+  '@type': 'PostalAddress',
+  streetAddress: 'Rathenaustraße 11',
+  postalCode: '67549',
+  addressLocality: 'Worms',
+  addressCountry: 'DE',
+};
+
+const subEvent = (date: string) => ({
+  '@type': 'Event',
+  name: 'Die Bremer Stadtmusikanten — Vorstellung',
+  startDate: `${date}T18:00:00+01:00`,
+  endDate: `${date}T20:30:00+01:00`,
+  location: { '@type': 'Place', name: 'Das Wormser', address: wormserAddress },
+  eventStatus: 'https://schema.org/EventScheduled',
+  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  offers: {
+    '@type': 'Offer',
+    url: site.maerchenTicketUrl,
+    price: '12.00',
+    priceCurrency: 'EUR',
+    availability: 'https://schema.org/InStock',
+  },
+  performer: { '@type': 'PerformingGroup', name: site.name },
+});
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'PerformingGroup',
+      name: site.name,
+      url: absoluteUrl('/'),
+      additionalType: 'LocalBusiness',
+      email: site.email,
+      telephone: site.phoneDisplay,
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: site.address.street,
+        postalCode: '67549',
+        addressLocality: 'Worms',
+        addressCountry: 'DE',
+      },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Start', item: absoluteUrl('/') },
+        { '@type': 'ListItem', position: 2, name: 'Spielzeit', item: absoluteUrl('/spielzeit/') },
+        { '@type': 'ListItem', position: 3, name: 'Weihnachtsmärchen 2026', item: absoluteUrl('/weihnachtsmaerchen/') },
+      ],
+    },
+    {
+      '@type': 'EventSeries',
+      name: 'Weihnachtsmärchen 2026: Die Bremer Stadtmusikanten',
+      eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+      location: { '@type': 'Place', name: 'Das Wormser', address: wormserAddress },
+      organizer: { '@type': 'Organization', name: site.name, url: absoluteUrl('/') },
+      offers: {
+        '@type': 'AggregateOffer',
+        lowPrice: '12.00',
+        highPrice: '14.00',
+        priceCurrency: 'EUR',
+        url: site.maerchenTicketUrl,
+        availability: 'https://schema.org/InStock',
+        validFrom: '2026-08-01T00:00:00+02:00',
+      },
+      subEvent: [subEvent('2026-12-01'), subEvent('2026-12-02')],
+    },
+  ],
+};
+---
+
+<BaseLayout
+  meta={{
+    title: 'Weihnachtsmärchen 2026 | Die Bremer Stadtmusikanten',
+    description,
+    canonicalPath: '/weihnachtsmaerchen/',
+    ogType: 'article',
+    ogImage: '/assets/img/og-maerchen.svg',
+    ogImageAlt: 'Weihnachtsmärchen 2026 — Die Bremer Stadtmusikanten',
+  }}
+  activeNav="maerchen"
+  bodyClass="page-maerchen"
+  breadcrumbs={[
+    { label: 'Start', href: '/' },
+    { label: 'Spielzeit', href: '/spielzeit/' },
+    { label: 'Weihnachtsmärchen 2026' },
+  ]}
+  structuredData={structuredData}
+>
+  <section class="hero-inner" aria-labelledby="maerchen-h1">
+    <div class="container hero-grid hero-grid--side">
+      <div data-reveal>
+        <p class="eyebrow">Weihnachtsmärchen 2026</p>
+        <h1 id="maerchen-h1">Die Bremer Stadtmusikanten</h1>
+        <p class="lead">
+          Ein Märchen der Brüder Grimm.<br />
+          In einer Inszenierung von Peter Schmitt.
+        </p>
+        <div class="actions" style="margin-top: var(--space-lg);">
+          <a class="btn btn-primary" href={site.maerchenTicketUrl} rel="noopener">Tickets bestellen</a>
+          <a class="btn btn-secondary" href={`mailto:${site.maerchenContactEmail}`}>Kontakt für Gruppen</a>
+          <a class="btn btn-tertiary" href={`tel:${site.maerchenContactPhoneHref}`}>Anrufen: {site.maerchenContactPhoneDisplay}</a>
+        </div>
+      </div>
+      <aside class="event-meta" aria-label="Veranstaltungsdetails" data-reveal style="--reveal-delay: 1;">
+        <figure class="poster-frame" style="margin: 0 0 var(--space-lg);">
+          <img
+            src="/assets/img/bsm.webp"
+            width="1024"
+            height="1536"
+            alt="Titelmotiv des Weihnachtsmärchens 2026: Die Bremer Stadtmusikanten"
+            loading="lazy"
+            decoding="async"
+            style="--reveal-delay: 1;"
+          />
+        </figure>
+        <dl class="facts" style="background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-md); padding: var(--space-lg);">
+          <div>
+            <dt>Vorstellungen 2026</dt>
+            <dd>
+              <time datetime="2026-12-01">Dienstag, 01.12.2026</time>, 18:00 Uhr<br />
+              <time datetime="2026-12-02">Mittwoch, 02.12.2026</time>, 18:00 Uhr
+            </dd>
+          </div>
+          <div>
+            <dt>Ort</dt>
+            <dd>Das Wormser, Rathenaustraße 11, 67549 Worms</dd>
+          </div>
+          <div>
+            <dt>Vorverkauf</dt>
+            <dd><strong>12,00 €</strong> <small style="color: var(--ink-muted);">Vorverkaufspreis</small></dd>
+          </div>
+          <div>
+            <dt>Abendkasse</dt>
+            <dd><strong>14,00 €</strong> <small style="color: var(--ink-muted);">Tagespreis</small></dd>
+          </div>
+        </dl>
+        <div class="actions" style="margin-top: var(--space-md);">
+          <a class="btn btn-primary" href={site.maerchenTicketUrl} rel="noopener">Tickets bestellen</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container prose" data-reveal>
+      <h2>Inhalt</h2>
+      <p>
+        In dem Märchen "Die Bremer Stadtmusikanten" schließen sich ein alter Esel, ein Hund,
+        eine Katze und ein Hahn zusammen, nachdem ihre Besitzer sie loswerden wollen.
+        Gemeinsam machen sie sich auf den Weg nach Bremen, um dort Stadtmusikanten zu werden.
+      </p>
+      <p>
+        Unterwegs vertreiben sie mit Mut und Zusammenhalt eine Räuberbande aus einem Haus im Wald
+        und finden dort schließlich ein neues Zuhause - und eine starke Freundschaft.
+      </p>
+      <p>
+        Die Volksbühne Worms 1908 e. V. freut sich, in der Vorweihnachtszeit wieder ein
+        Märchen für Groß und Klein auf die Bühne zu bringen.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--alt" id="mitwirkende" aria-labelledby="mitwirkende-title">
+    <div class="container container--narrow">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Mitwirkende</p>
+        <h2 id="mitwirkende-title">Wer mitwirkt</h2>
+      </div>
+      <dl class="facts" data-reveal style="background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-md); padding: var(--space-lg);">
+        <div>
+          <dt>Inszenierung</dt>
+          <dd>Peter Schmitt</dd>
+        </div>
+        <div>
+          <dt>Vorlage</dt>
+          <dd>Brüder Grimm</dd>
+        </div>
+        <div>
+          <dt>Aufführungsrechte</dt>
+          <dd>Volkstheater-Verlag</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="section" id="anfahrt" aria-labelledby="anfahrt-title">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Anfahrt</p>
+        <h2 id="anfahrt-title">Das Wormser in Worms</h2>
+        <p class="lead-compact">
+          Alle Vorstellungen des Weihnachtsmärchens finden im Kulturzentrum
+          Das Wormser statt, Rathenaustraße 11 in 67549 Worms.
+        </p>
+      </div>
+      <div class="card-grid card-grid--featured" data-reveal>
+        <article class="place-card">
+          <div class="place-card__image">
+            <img src="/assets/img/map-wormser.svg" width="800" height="450" alt="" loading="lazy" decoding="async" />
+          </div>
+          <div class="place-card__body">
+            <p class="eyebrow" style="margin-bottom: 0;">Kulturzentrum</p>
+            <h3 class="place-card__title">Das Wormser</h3>
+            <address class="place-card__address">Rathenaustraße 11<br />67549 Worms</address>
+          </div>
+        </article>
+        <article class="place-card">
+          <div class="place-card__body">
+            <p class="eyebrow" style="margin-bottom: 0;">Hinweis</p>
+            <h3 class="place-card__title">Karten &amp; Gruppen</h3>
+            <p class="place-card__note">
+              Tickets gibt es online über Ticket-Regional. Gruppenanfragen für
+              Kindergärten und Schulklassen nimmt unser Märchen-Team direkt entgegen.
+            </p>
+            <div class="actions" style="margin-top: var(--space-sm);">
+              <a class="btn btn-primary btn-sm" href={site.maerchenTicketUrl} rel="noopener">Tickets bestellen</a>
+              <a class="btn btn-secondary btn-sm" href={`mailto:${site.maerchenContactEmail}`}>Gruppenanfrage</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--surface" aria-labelledby="gruppe-title">
+    <div class="container container--narrow">
+      <div class="contact-card" data-reveal>
+        <div>
+          <p class="eyebrow">Sie möchten mit einer Gruppe kommen?</p>
+          <h2 id="gruppe-title">Wir helfen gerne weiter.</h2>
+          <p>
+            Kontakt für Kindergärten und Schulklassen: {site.maerchenContactEmail},
+            {site.maerchenContactPhoneDisplay}.
+          </p>
+        </div>
+        <div class="actions">
+          <a class="btn btn-primary" href={`mailto:${site.maerchenContactEmail}`}>E-Mail senden</a>
+          <a class="btn btn-tertiary" href={`tel:${site.maerchenContactPhoneHref}`}>Anrufen</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

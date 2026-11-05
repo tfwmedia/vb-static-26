@@ -1,0 +1,74 @@
+---
+import { navigation, site, type NavKey } from '../data/site';
+
+interface Props {
+  activeNav?: string;
+}
+
+const { activeNav = '' } = Astro.props;
+const isActive = (key: NavKey) => key === activeNav;
+---
+
+<header class="site-header" data-header>
+  <div class="container header-shell">
+    <a class="brand" href="/" aria-label={`Startseite ${site.shortName}`}>
+      <img class="brand-mark" src="/assets/img/vb-logo.png" width="432" height="324" alt="Logo der Volksbühne Worms" loading="eager" decoding="async" />
+      <span class="brand-text">
+        <strong>{site.shortName}</strong>
+        <span>{site.tagline}</span>
+      </span>
+    </a>
+
+    <nav class="site-nav-desktop" aria-label="Hauptnavigation">
+      <ul>
+        {navigation.map((item) => (
+          <li>
+            <a href={item.href} aria-current={isActive(item.key) ? 'page' : undefined}>
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="header-controls">
+      <a class="btn btn-primary btn-sm header-cta--header" href={site.spielzeitTicketUrl} rel="noopener">
+        Tickets kaufen
+      </a>
+      <button class="nav-toggle" type="button" data-nav-open aria-expanded="false" aria-controls="primary-navigation" aria-label="Menü öffnen">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none">
+          <line x1="4" y1="7" x2="20" y2="7" />
+          <line x1="4" y1="12" x2="20" y2="12" />
+          <line x1="4" y1="17" x2="20" y2="17" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <dialog class="site-nav-dialog" id="primary-navigation" data-nav-dialog aria-label="Hauptnavigation mobil">
+    <div class="site-nav-dialog__inner">
+      <div class="site-nav-dialog__head">
+        <span class="site-nav-dialog__title">Menü</span>
+        <button class="nav-toggle" type="button" data-nav-close aria-label="Menü schließen">
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" width="22" height="22">
+            <line x1="6" y1="6" x2="18" y2="18" />
+            <line x1="18" y1="6" x2="6" y2="18" />
+          </svg>
+        </button>
+      </div>
+      <ul>
+        {navigation.map((item) => (
+          <li>
+            <a href={item.href} aria-current={isActive(item.key) ? 'page' : undefined}>
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+      <div class="site-nav-dialog__footer">
+        <a class="btn btn-primary" href={site.spielzeitTicketUrl} rel="noopener">Tickets kaufen</a>
+        <a class="btn btn-secondary" href={`mailto:${site.email}`}>Kontakt</a>
+      </div>
+    </div>
+  </dialog>
+</header>

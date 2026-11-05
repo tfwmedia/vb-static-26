@@ -1,0 +1,44 @@
+---
+import { weekdayFullDe, dayPaddedDe, monthShortDe } from '../lib/format';
+import type { VbEvent } from '../data/events';
+import StatusChip from './StatusChip.astro';
+
+interface Props {
+  /** Vorstellungen, gruppiert je Produktion. */
+  groups: Array<{ title: string; venue: string; events: VbEvent[] }>;
+}
+
+const { groups } = Astro.props;
+---
+
+<div class="schedule">
+  {groups.map((group) => (
+    <section class="schedule-group" aria-label={`${group.title} — ${group.venue}`}>
+      <header class="schedule-group__head">
+        <h3 class="schedule-group__title">{group.title}</h3>
+        <span class="schedule-group__venue">{group.venue}</span>
+      </header>
+      {group.events.map((evt) => (
+        <div class="schedule-row">
+          <span class="schedule-row__date">
+            <span class="schedule-row__day">{dayPaddedDe(evt.date)}.</span>
+            <span class="schedule-row__month">{monthShortDe(evt.date)} {evt.date.slice(0, 4)}</span>
+          </span>
+          <span class="schedule-row__meta">
+            <span class="visually-hidden">{weekdayFullDe(evt.date)}</span>
+            <time datetime={evt.date}>{weekdayFullDe(evt.date)}</time>
+            <time datetime={`${evt.date}T${evt.time}`}>{evt.time} Uhr</time>
+            {evt.subtitle !== group.title && <span>{evt.subtitle}</span>}
+          </span>
+          <span class="schedule-row__cta">
+            {evt.ticketUrl ? (
+              <a class="btn btn-primary btn-sm" href={evt.ticketUrl} rel="noopener">Tickets</a>
+            ) : (
+              <StatusChip status={evt.status} />
+            )}
+          </span>
+        </div>
+      ))}
+    </section>
+  ))}
+</div>

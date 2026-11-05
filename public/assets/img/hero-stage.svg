@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 860" role="img" aria-labelledby="title desc">
+  <title id="title">Theaterbühne Illustration</title>
+  <desc id="desc">Warme Bühnenillustration mit Vorhang und Lichtstimmung</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f2832"/>
+      <stop offset="100%" stop-color="#1d3944"/>
+    </linearGradient>
+    <linearGradient id="curtain" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#c7492f"/>
+      <stop offset="100%" stop-color="#8f2f1f"/>
+    </linearGradient>
+    <radialGradient id="light" cx="50%" cy="22%" r="48%">
+      <stop offset="0%" stop-color="#f9d7a1" stop-opacity="0.92"/>
+      <stop offset="100%" stop-color="#f9d7a1" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1280" height="860" fill="url(#bg)"/>
+  <rect x="90" y="90" width="1100" height="660" rx="44" fill="#0b1b24"/>
+  <path d="M140 120h260l-52 560H120zM1140 120H880l52 560h228z" fill="url(#curtain)"/>
+  <path d="M330 120h620v560H330z" fill="#142e39"/>
+  <ellipse cx="640" cy="255" rx="355" ry="235" fill="url(#light)"/>
+  <ellipse cx="640" cy="660" rx="300" ry="85" fill="#132731"/>
+  <path d="M350 654c96-58 484-58 580 0" fill="none" stroke="#f4d8ae" stroke-width="10" stroke-linecap="round" opacity=".8"/>
+  <circle cx="640" cy="470" r="45" fill="#f4d8ae" opacity=".84"/>
+  <circle cx="560" cy="514" r="30" fill="#f4d8ae" opacity=".65"/>
+  <circle cx="722" cy="514" r="30" fill="#f4d8ae" opacity=".65"/>
+</svg>

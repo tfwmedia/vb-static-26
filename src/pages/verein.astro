@@ -1,0 +1,238 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { absoluteUrl, site, yearsActive } from '../data/site';
+import { vorstand, chronik } from '../data/vorstand';
+import { personInitials } from '../lib/format';
+
+const years = yearsActive();
+
+const description = `Über die Volksbühne Worms 1908 e. V.: Vorstand, Geschichte und Mitgliedschaft. Eingetragener Verein seit ${site.foundingYear}.`;
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'AboutPage',
+      name: 'Verein',
+      description,
+      url: absoluteUrl('/verein/'),
+      isPartOf: { '@id': absoluteUrl('/') + '#website' },
+      publisher: { '@id': absoluteUrl('/') + '#organization' },
+      mainEntity: { '@id': absoluteUrl('/') + '#organization' },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Start', item: absoluteUrl('/') },
+        { '@type': 'ListItem', position: 2, name: 'Verein', item: absoluteUrl('/verein/') },
+      ],
+    },
+    {
+      '@type': 'Organization',
+      '@id': absoluteUrl('/') + '#organization',
+      name: site.name,
+      url: absoluteUrl('/'),
+      logo: absoluteUrl('/assets/img/vb-logo.png'),
+      foundingDate: String(site.foundingYear),
+      email: site.email,
+      telephone: site.phoneDisplay,
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: site.address.street,
+        postalCode: '67549',
+        addressLocality: 'Worms',
+        addressCountry: site.address.country,
+      },
+      member: {
+        '@type': 'QuantitativeValue',
+        value: site.memberCount,
+        unitText: 'Mitglieder',
+      },
+      subOrganization: {
+        '@type': 'OrganizationRole',
+        roleName: 'Eingetragener Verein (e. V.)',
+      },
+    },
+  ],
+};
+---
+
+<BaseLayout
+  meta={{
+    title: `Verein | ${site.name}`,
+    description,
+    canonicalPath: '/verein/',
+    ogImage: '/assets/img/og-verein.svg',
+    ogImageAlt: 'Verein — Volksbühne Worms',
+  }}
+  activeNav="verein"
+  bodyClass="page-verein"
+  breadcrumbs={[
+    { label: 'Start', href: '/' },
+    { label: 'Verein' },
+  ]}
+  structuredData={structuredData}
+>
+  <section class="hero-inner" aria-labelledby="verein-h1">
+    <div class="container container--narrow" data-reveal>
+      <p class="eyebrow">Verein</p>
+      <h1 id="verein-h1">Volksbühne Worms 1908 e. V.</h1>
+      <p class="lead">
+        Eingetragener Verein, gegründet {site.foundingYear}.
+        Spielstätte, Vorstand, Mitgliedschaft und Bankverbindung — alles Wichtige auf einer Seite.
+      </p>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="ueber-title">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">In Kürze</p>
+        <h2 id="ueber-title">Fakten zum Verein</h2>
+      </div>
+      <div class="stat-row" data-reveal>
+        <div class="stat-item">
+          <span class="stat-number">{years}+</span>
+          <span class="stat-label">Jahre aktiv</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">{site.memberCount}+</span>
+          <span class="stat-label">Mitglieder</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">{site.productionCount}+</span>
+          <span class="stat-label">Vorstellungen</span>
+        </div>
+      </div>
+      <dl class="facts" style="margin-top: var(--space-xl); max-width: 60ch;" data-reveal>
+        <div>
+          <dt>Rechtsform</dt>
+          <dd>Eingetragener Verein (e. V.)</dd>
+        </div>
+        <div>
+          <dt>Gründung</dt>
+          <dd>{site.foundingYear}</dd>
+        </div>
+        <div>
+          <dt>Vereinsregister</dt>
+          <dd>Amtsgericht Mainz · VR 10302</dd>
+        </div>
+        <div>
+          <dt>Gemeinnützig</dt>
+          <dd>Mitgliedsbeiträge und Spenden sind steuerlich absetzbar.</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="section section--alt" id="vorstand" aria-labelledby="vorstand-title">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Vorstand</p>
+        <h2 id="vorstand-title">Wer den Verein trägt</h2>
+      </div>
+      <div class="people-grid">
+        {vorstand.map((p, i) => (
+          <article class="person" data-reveal style={`--reveal-delay: ${i};`}>
+            <div class="person__avatar" aria-hidden="true">
+              {p.photo ? (
+                <img src={p.photo} alt="" width="96" height="96" loading="lazy" decoding="async" />
+              ) : (
+                personInitials(p.name)
+              )}
+            </div>
+            <div>
+              <p class="person__role">{p.role}</p>
+              <h3 class="person__name">{p.name}</h3>
+              <p class="person__note">{p.note}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {chronik.length > 0 && (
+    <section class="section" aria-labelledby="chronik-title">
+      <div class="container container--narrow">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow">Geschichte</p>
+          <h2 id="chronik-title">Stationen des Vereins</h2>
+        </div>
+        <ul class="timeline" data-reveal>
+          {chronik.map((c) => (
+            <li>
+              <span class="year">{c.year}</span>
+              <span class="event">{c.event}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  <section class="section section--brand" id="mitglied-werden" aria-labelledby="mitglied-title">
+    <div class="container" style="max-width: 64rem;">
+      <div class="section-head section-head--center" data-reveal>
+        <p class="eyebrow eyebrow--center" style="color: #fff;">Mitgliedschaft</p>
+        <h2 id="mitglied-title">Mitglied werden</h2>
+      </div>
+      <div class="benefits" data-reveal>
+        <div class="benefit">
+          <div class="benefit__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20" /></svg>
+          </div>
+          <h3>Mitgliedsbeitrag</h3>
+          <p>{site.vereinBank.membershipFee} € pro Jahr. Gemeinnützig — steuerlich absetzbar.</p>
+        </div>
+        <div class="benefit">
+          <div class="benefit__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M3 7h18M3 12h18M3 17h12" /></svg>
+          </div>
+          <h3>Stimmrecht</h3>
+          <p>Mitgliederversammlung · Vereinsregister VR 10302 (Amtsgericht Mainz).</p>
+        </div>
+        <div class="benefit">
+          <div class="benefit__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" /><path d="M4 22a8 8 0 0 1 16 0" /></svg>
+          </div>
+          <h3>Gemeinschaft</h3>
+          <p>{site.memberCount}+ Mitglieder — Laienspielgruppe in Rheinland-Pfalz.</p>
+        </div>
+      </div>
+      <div class="actions" style="justify-content: center; margin-top: var(--space-xl);" data-reveal>
+        <a class="btn btn-light btn-lg" href={`mailto:${site.email}?subject=Mitgliedschaft%20Volksb%C3%BChne%20Worms`}>
+          Mitgliedschaft anfragen
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="bank-title">
+    <div class="container container--narrow">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Bankverbindung</p>
+        <h2 id="bank-title">Spenden &amp; Beiträge</h2>
+        <p class="lead-compact">
+          Der Verein ist gemeinnützig. Mitgliedsbeiträge und Spenden sind steuerlich absetzbar.
+        </p>
+      </div>
+      <dl class="facts" data-reveal>
+        <div>
+          <dt>{site.vereinBank.bankPrimary}</dt>
+          <dd>
+            IBAN: {site.vereinBank.ibanPrimary}<br />
+            BIC: {site.vereinBank.bicPrimary}
+          </dd>
+        </div>
+        <div>
+          <dt>{site.vereinBank.bankSecondary}</dt>
+          <dd>
+            IBAN: {site.vereinBank.ibanSecondary}<br />
+            BIC: {site.vereinBank.bicSecondary}
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+</BaseLayout>

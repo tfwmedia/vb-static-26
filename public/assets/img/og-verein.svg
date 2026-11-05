@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Verein — Volksbühne Worms 1908 e. V.</title>
+  <desc id="desc">Open Graph Bild der Vereinsseite.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a1a1a"/>
+      <stop offset="100%" stop-color="#3a3530"/>
+    </linearGradient>
+    <linearGradient id="curtain" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#c31e2e"/>
+      <stop offset="100%" stop-color="#7d121c"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="980" cy="120" r="220" fill="#ffffff0c"/>
+  <circle cx="120" cy="540" r="180" fill="#ffffff08"/>
+
+  <rect x="0" y="0" width="240" height="630" fill="url(#curtain)"/>
+  <rect x="240" y="0" width="4" height="630" fill="#7d121c"/>
+
+  <g transform="translate(80, 80)">
+    <rect width="80" height="80" rx="16" fill="#fff"/>
+    <path d="M16 16h12v48H16c3-6 5-12 5-24s-2-18-5-24Zm48 0H52v48h12c-3-6-5-12-5-24s2-18 5-24Z" fill="url(#curtain)"/>
+    <path d="M23 56c5-9 29-9 34 0" fill="none" stroke="#faf9f7" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="40" cy="36" r="4" fill="#faf9f7"/>
+  </g>
+
+  <text x="80" y="210" fill="#c31e2e" font-family="-apple-system, Segoe UI, Roboto, sans-serif" font-size="22" font-weight="700" letter-spacing="3">VOLKSBÜHNE WORMS</text>
+  <text x="80" y="240" fill="#c4bab4" font-family="-apple-system, Segoe UI, Roboto, sans-serif" font-size="16" letter-spacing="4" font-weight="500">EINGETRAGENER VEREIN</text>
+
+  <text x="80" y="380" fill="#fff" font-family="Georgia, 'Times New Roman', serif" font-size="84" font-weight="700">Seit 1908</text>
+  <text x="80" y="460" fill="#fff" font-family="Georgia, 'Times New Roman', serif" font-size="44" font-weight="400" opacity="0.85">auf der Bühne.</text>
+
+  <line x1="80" y1="540" x2="1120" y2="540" stroke="#ffffff22"/>
+  <text x="80" y="580" fill="#c4bab4" font-family="-apple-system, Segoe UI, Roboto, sans-serif" font-size="22" font-weight="500">Vorstand · Mitgliedschaft · Chronik</text>
+  <text x="1120" y="580" fill="#c4bab4" font-family="-apple-system, Segoe UI, Roboto, sans-serif" font-size="22" font-weight="500" text-anchor="end">volksbuehne-worms.de</text>
+</svg>

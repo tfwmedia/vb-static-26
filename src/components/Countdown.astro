@@ -1,0 +1,81 @@
+---
+import { formatDateDe, isoLocal } from '../lib/format';
+import { nextUpcomingEvent } from '../data/events';
+
+/**
+ * Countdown zur nächsten Vorstellung — wird serverseitig gerendert
+ * (aktuelles Datum des Builds) und clientseitig per <script> live
+ * weitergeführt. Fällt das Event hinter den Build-Zeitpunkt zurück,
+ * rendert die Komponente nichts.
+ */
+const next = nextUpcomingEvent();
+const target = next ? isoLocal(next.date, next.time) : null;
+const isPremiere = next ? next.subtitle.toLowerCase().includes('premiere') : false;
+const label = isPremiere ? 'Nächste Premiere' : 'Nächste Vorstellung';
+const soldOut = next?.status === 'sold_out';
+---
+
+{next && target && (
+  <div class="countdown" role="group" aria-labelledby="countdown-label" data-countdown={target}>
+    <p id="countdown-label" class="countdown__meta" style="margin: 0;">
+      {label}: {formatDateDe(next.date)} · {next.time} Uhr
+      {soldOut && (
+        <span class="chip chip--warning" style="margin-left: var(--space-sm);">
+          <span class="chip__dot" aria-hidden="true"></span>Ausverkauft
+        </span>
+      )}
+    </p>
+    <div class="countdown__units" aria-hidden="true">
+      <span class="countdown-unit"><span class="num" data-countdown-day>–</span><span class="lbl">Tage</span></span>
+      <span class="countdown-unit"><span class="num" data-countdown-hour>––</span><span class="lbl">Std</span></span>
+      <span class="countdown-unit"><span class="num" data-countdown-min>––</span><span class="lbl">Min</span></span>
+      <span class="countdown-unit"><span class="num" data-countdown-sec>––</span><span class="lbl">Sek</span></span>
+    </div>
+    <span class="visually-hidden" data-countdown-live aria-live="polite">
+      Countdown zur {isPremiere ? 'Premiere' : 'nächsten Vorstellung'}
+    </span>
+  </div>
+)}
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-countdown]');
+  if (root) {
+    const target = new Date(root.getAttribute('data-countdown') ?? '').getTime();
+    const dayEl = root.querySelector('[data-countdown-day]');
+    const hourEl = root.querySelector('[data-countdown-hour]');
+    const minEl = root.querySelector('[data-countdown-min]');
+    const secEl = root.querySelector('[data-countdown-sec]');
+    const liveEl = root.querySelector('[data-countdown-live]');
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const pad = (n: number) => String(n).padStart(2, '0');
+
+    const render = () => {
+      const diff = target - Date.now();
+      if (diff <= 0) {
+        if (dayEl) dayEl.textContent = '0';
+        if (hourEl) hourEl.textContent = '00';
+        if (minEl) minEl.textContent = '00';
+        if (secEl) secEl.textContent = '00';
+        if (liveEl) liveEl.textContent = 'Die Vorstellung hat begonnen.';
+        return;
+      }
+      const days = Math.floor(diff / 86400000);
+      const hours = Math.floor(diff / 3600000) % 24;
+      const mins = Math.floor(diff / 60000) % 60;
+      const secs = Math.floor(diff / 1000) % 60;
+      if (dayEl) dayEl.textContent = String(days);
+      if (hourEl) hourEl.textContent = pad(hours);
+      if (minEl) minEl.textContent = pad(mins);
+      if (secEl) secEl.textContent = pad(secs);
+      if (liveEl) {
+        liveEl.textContent = `Noch ${days} Tage, ${hours} Stunden, ${mins} Minuten bis zur Vorstellung.`;
+      }
+    };
+
+    render();
+    // Reduzierte Bewegung: kein Sekundentakt, Minutenaktualisierung genügt.
+    const interval = window.setInterval(render, reduced ? 60000 : 1000);
+    window.addEventListener('pagehide', () => window.clearInterval(interval));
+  }
+</script>

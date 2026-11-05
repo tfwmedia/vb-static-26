@@ -1,0 +1,27 @@
+---
+export interface Crumb {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  items: Crumb[];
+}
+
+const { items } = Astro.props;
+const last = items.length - 1;
+---
+
+{items.length > 0 && (
+  <nav class="breadcrumb-nav" aria-label="Brotkrumen">
+    <ol class="breadcrumb">
+      {items.map((item, i) =>
+        i === last || !item.href ? (
+          <li><span aria-current="page">{item.label}</span></li>
+        ) : (
+          <li><a href={item.href}>{item.label}</a></li>
+        )
+      )}
+    </ol>
+  </nav>
+)}

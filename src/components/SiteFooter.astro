@@ -1,0 +1,88 @@
+---
+import { site } from '../data/site';
+
+const year = new Date().getFullYear();
+const newsletterSubject = encodeURIComponent('Newsletter-Anmeldung Volksbühne Worms');
+const newsletterBody = encodeURIComponent(
+  'Hallo Volksbühne-Team,\n\nbitte tragt mich für den Newsletter ein.\n\nVielen Dank!'
+);
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <img class="footer-brand__mark" src="/assets/img/vb-logo.png" width="432" height="324" alt="" loading="lazy" decoding="async" />
+        <p class="footer-brand__text">
+          Seit {site.foundingYear} steht die Volksbühne Worms für handgemachtes, nahbares Theater in der Region — von Klassikern bis zum Weihnachtsmärchen.
+        </p>
+        <div class="footer-socials" aria-label="Soziale Netzwerke">
+          <a href={site.social.facebook} aria-label={`${site.shortName} auf Facebook`} rel="noopener noreferrer" target="_blank">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M22 12a10 10 0 1 0-11.6 9.9V14.9H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.5V12h2.7l-.4 2.9h-2.3V22A10 10 0 0 0 22 12Z" />
+            </svg>
+          </a>
+          <a href={site.social.instagram} aria-label={`${site.shortName} auf Instagram`} rel="noopener noreferrer" target="_blank">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="5" ry="5" fill="none" stroke="currentColor" stroke-width="2" />
+              <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2" />
+              <circle cx="17.5" cy="6.5" r="1.2" />
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <nav aria-label="Spielzeit-Links">
+        <h2>Spielzeit</h2>
+        <ul class="footer-links">
+          <li><a href="/">Aktuelle Spielzeit</a></li>
+          <li><a href="/spielzeit/">Alle Produktionen</a></li>
+          <li><a href="/weihnachtsmaerchen/">Weihnachtsmärchen</a></li>
+          <li><a href={site.spielzeitTicketUrl} rel="noopener">Tickets kaufen</a></li>
+        </ul>
+      </nav>
+
+      <div>
+        <nav aria-label="Verein-Links">
+          <h2>Verein</h2>
+          <ul class="footer-links">
+            <li><a href="/verein/">Über uns</a></li>
+            <li><a href="/verein/#vorstand">Vorstand</a></li>
+            <li><a href="/verein/#mitglied-werden">Mitglied werden</a></li>
+            <li><a href="/kontakt/">Kontakt</a></li>
+          </ul>
+        </nav>
+        <div class="footer-newsletter">
+          <p class="footer-newsletter__text">
+            Spielplan &amp; Premieren direkt ins Postfach — komplett werbefrei, jederzeit kündbar.
+          </p>
+          <a class="btn btn-light btn-sm" href={`mailto:${site.email}?subject=${newsletterSubject}&body=${newsletterBody}`}>
+            Newsletter abonnieren
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <h2>Kontakt</h2>
+        <address>
+          {site.address.name}<br />
+          {site.address.street}<br />
+          {site.address.postalCity}
+        </address>
+        <ul class="footer-links" style="margin-top: var(--space-sm);">
+          <li><a href={`tel:${site.phoneHref}`}>{site.phoneDisplay}</a></li>
+          <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; {year} {site.name}. Alle Rechte vorbehalten.</p>
+      <p class="footer-bottom__legal">
+        <a href="/impressum/">Impressum</a>
+        <a href="/datenschutz/">Datenschutz</a>
+        <a href="/sitemap.xml">Sitemap</a>
+      </p>
+    </div>
+  </div>
+</footer>

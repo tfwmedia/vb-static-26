@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">Logo Volksbühne Worms</title>
+  <desc id="desc">Abstraktes Bühnenlogo mit Vorhang und Lichtkegel</desc>
+  <defs>
+    <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c7492f"/>
+      <stop offset="100%" stop-color="#8f2f1f"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="56" height="56" rx="14" fill="#1f2428"/>
+  <path d="M16 16h12v32H16c3-4 5-10 5-16s-2-12-5-16Zm32 0H36v32h12c-3-4-5-10-5-16s2-12 5-16Z" fill="url(#g1)"/>
+  <path d="M23 44c5-6 13-6 18 0" fill="none" stroke="#f8e5cb" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="32" cy="28" r="4" fill="#f8e5cb"/>
+</svg>

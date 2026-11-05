@@ -1,0 +1,19 @@
+---
+import type { EventStatus } from '../data/events';
+import { EVENT_STATUS_LABELS } from '../data/events';
+
+interface Props {
+  status: EventStatus;
+  /** Kompakte Variante ohne Punkt (für enge Zeilen). */
+  compact?: boolean;
+}
+
+const { status, compact = false } = Astro.props;
+const variant =
+  status === 'tickets' ? 'chip--success' : status === 'sold_out' || status === 'few_left' ? 'chip--warning' : 'chip--brand';
+---
+
+<span class={`chip ${variant}`}>
+  {!compact && <span class="chip__dot" aria-hidden="true"></span>}
+  {EVENT_STATUS_LABELS[status]}
+</span>

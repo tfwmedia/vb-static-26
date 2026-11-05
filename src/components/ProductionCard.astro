@@ -1,0 +1,67 @@
+---
+import { truncateText, slugify } from '../lib/format';
+import type { Production } from '../data/productions';
+
+interface Props {
+  production: Production;
+}
+
+const { production: prod } = Astro.props;
+const href = prod.kind === 'maerchen' ? '/weihnachtsmaerchen/' : `#${slugify(prod.title)}`;
+const price = prod.kind === 'maerchen' ? 'VVK 12,00 €' : 'VVK 25,00 €';
+const venue = prod.kind === 'maerchen'
+  ? 'Das Wormser, Rathenaustraße 11, Worms'
+  : 'Volksbühne — kleines Theater, Würdtweinstraße 11, Worms';
+---
+
+<article id={slugify(prod.title)} class="production-card" itemscope itemtype="https://schema.org/TheaterEvent">
+  <a class="production-card__media" href={href} itemprop="url" aria-label={prod.title}>
+    <img src={prod.image} alt={prod.imageAlt} width="450" height="300" loading="lazy" decoding="async" itemprop="image" />
+    <span class="production-card__chips">
+      {prod.kind === 'maerchen' ? (
+        <span class="chip chip--brand">Märchen</span>
+      ) : (
+        <span class="chip">Saisonstück</span>
+      )}
+    </span>
+  </a>
+  <div class="production-card__body">
+    <p class="eyebrow" style="margin-bottom: 0;">{prod.subtitle}</p>
+    <h2 class="production-card__title" itemprop="name">{prod.title}</h2>
+    <p class="production-card__text" itemprop="description">{truncateText(prod.lead, 220, '…')}</p>
+    <dl class="facts">
+      <div>
+        <dt>Autor</dt>
+        <dd>{prod.author}</dd>
+      </div>
+      <div>
+        <dt>Inszenierung</dt>
+        <dd>{prod.director}</dd>
+      </div>
+      <div>
+        <dt>Spielstätte</dt>
+        <dd>{venue}</dd>
+      </div>
+    </dl>
+  </div>
+  <div class="production-card__footer">
+    <span class="price-tag">
+      <small>Tickets</small>
+      {price}
+    </span>
+    <a
+      class="btn btn-primary btn-sm"
+      href={prod.ticketUrl}
+      rel="noopener"
+      itemprop="offers"
+      itemscope
+      itemtype="https://schema.org/Offer"
+    >
+      <meta itemprop="url" content={prod.ticketUrl} />
+      <meta itemprop="availability" content="https://schema.org/InStock" />
+      <meta itemprop="priceCurrency" content="EUR" />
+      <meta itemprop="price" content={prod.kind === 'maerchen' ? '12.00' : '25.00'} />
+      Tickets kaufen
+    </a>
+  </div>
+</article>

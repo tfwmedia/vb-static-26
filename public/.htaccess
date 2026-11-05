@@ -1,0 +1,17 @@
+RewriteEngine On
+
+# Tickets: externer Kauf bei Ticket-Regional (301).
+RewriteRule ^tickets-kaufen/?$ https://www.ticket-regional.de/events.php?mysearchSpecificType=eventtype&mysearchSpecificID=1883 [R=301,L]
+
+# Astro build:format=directory erzeugt /route/index.html.
+# DirectoryIndex liefert die index.html automatisch; direkte Datei-/Verzeichnis-
+# Anfragen bleiben unangetastet, alles andere geht auf die SPA-artige 404.
+ErrorDocument 404 /404.html
+
+<IfModule mod_headers.c>
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'none'"
+    Header always set X-Frame-Options "DENY"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+</IfModule>
