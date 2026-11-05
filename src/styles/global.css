@@ -37,7 +37,7 @@
   --surface-deep: #ece9e3;
   --ink: #1a1a1a;
   --ink-2: #4a4a48;
-  --ink-muted: #8a8a87;
+  --ink-muted: #6b6b68;
   --line: #e0ddd8;
   --line-strong: #c9c5be;
   --brand: #c31e2e;
@@ -807,9 +807,10 @@ p {
   padding-block: clamp(3rem, 2.5rem + 4vw, 5.5rem);
 }
 
-/* Der Event-Strip sitzt direkt unter dem Hero-Grid ohne Extra-Polster */
+/* Der Event-Strip sitzt direkt unter dem Hero-Grid ohne Extra-Polster;
+   unten Luft, damit der Hinweis nicht an der Sektionslinie klebt */
 .hero-inner .event-strip-wrap {
-  padding-block: 0 0;
+  padding-block: 0 clamp(1.5rem, 1rem + 2vw, 2.5rem);
 }
 
 /* Subpages: H1 deutlich kleiner als Home-Hero. Mobile muss auch das
@@ -971,6 +972,7 @@ p {
 .production-card {
   display: flex;
   flex-direction: column;
+  height: 100%;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
@@ -1010,6 +1012,12 @@ p {
   flex-direction: column;
   gap: var(--space-sm);
   flex: 1;
+}
+
+/* Fakten-Block unten bündigen: Karten gleicher Höhe erhalten so
+   ausgerichtete Autor-/Inszenierungs-Zeilen und Footers */
+.production-card__body .facts {
+  margin-top: auto;
 }
 
 .production-card__title {
@@ -1128,7 +1136,7 @@ p {
   display: grid;
   grid-template-columns: 4.5rem 1fr auto;
   gap: var(--space-md);
-  align-items: center;
+  align-items: start;
   padding-block: 0.65em;
   border-top: 1px solid var(--line);
 }
