@@ -156,6 +156,8 @@ p a {
   text-decoration: underline;
   text-decoration-color: color-mix(in srgb, var(--brand) 40%, transparent);
   transition: text-decoration-color var(--t-fast);
+  /* Tap-Target >= 24px (WCAG 2.5.8): vertikale Klickfläche ohne Layout-Versatz */
+  padding-block: 0.2em;
 }
 
 p a:hover {
@@ -637,6 +639,8 @@ p {
 }
 
 .breadcrumb a {
+  display: inline-block;
+  padding: 0.3em 0.2em;
   color: var(--ink-2);
   text-decoration: none;
 }
@@ -933,6 +937,10 @@ p {
   line-height: 1.65;
   color: var(--ink-muted);
   max-width: 75ch;
+}
+
+.strip-note a {
+  padding-block: 0.4em;
 }
 @media (max-width: 1000px) {
   .event-strip {
@@ -1545,6 +1553,7 @@ p {
 .legal a {
   color: var(--brand-deep);
   overflow-wrap: anywhere;
+  padding-block: 0.25em;
 }
 
 /* =====================================================================
