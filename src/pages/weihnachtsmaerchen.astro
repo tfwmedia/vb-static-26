@@ -111,44 +111,44 @@ const structuredData = {
           <a class="btn btn-tertiary" href={`tel:${site.maerchenContactPhoneHref}`}>Anrufen: {site.maerchenContactPhoneDisplay}</a>
         </div>
       </div>
-      <aside class="event-meta" aria-label="Veranstaltungsdetails" data-reveal style="--reveal-delay: 1;">
-        <figure class="poster">
-          <img
-            src="/assets/img/bsm.webp"
-            width="1024"
-            height="1536"
-            alt="Titelmotiv des Weihnachtsmärchens 2026: Die Bremer Stadtmusikanten"
-            loading="lazy"
-            decoding="async"
-          />
-          <figcaption>Die Bremer Stadtmusikanten — Weihnachtsmärchen 2026</figcaption>
-        </figure>
-        <p class="eyebrow" style="margin-top: var(--space-lg);">Vorstellungen 2026</p>
-        <dl class="facts facts--stacked" style="background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-md); padding: var(--space-sm) var(--space-lg);">
-          <div>
-            <dt>Datum</dt>
-            <dd>
-              <time datetime="2026-12-01">Dienstag, 01.12.2026</time>, 18:00 Uhr<br />
-              <time datetime="2026-12-02">Mittwoch, 02.12.2026</time>, 18:00 Uhr
-            </dd>
-          </div>
-          <div>
-            <dt>Ort</dt>
-            <dd>Das Wormser, Rathenaustraße 11, 67549 Worms</dd>
-          </div>
-          <div>
-            <dt>Vorverkauf</dt>
-            <dd><strong>12,00 €</strong> <small style="color: var(--ink-muted);">Vorverkaufspreis</small></dd>
-          </div>
-          <div>
-            <dt>Abendkasse</dt>
-            <dd><strong>14,00 €</strong> <small style="color: var(--ink-muted);">Tagespreis</small></dd>
-          </div>
-        </dl>
-        <div class="actions" style="margin-top: var(--space-md);">
+      <figure class="poster" data-reveal style="--reveal-delay: 1;">
+        <img
+          src="/assets/img/bsm.webp"
+          width="1024"
+          height="1536"
+          alt="Titelmotiv des Weihnachtsmärchens 2026: Die Bremer Stadtmusikanten"
+          fetchpriority="high"
+          decoding="async"
+        />
+        <figcaption>Die Bremer Stadtmusikanten — Weihnachtsmärchen 2026</figcaption>
+      </figure>
+    </div>
+
+    <div class="container event-strip-wrap">
+      <dl class="event-strip" data-reveal>
+        <div>
+          <dt>Datum</dt>
+          <dd>
+            <time datetime="2026-12-01">Dienstag, 01.12.2026</time>, 18:00 Uhr<br />
+            <time datetime="2026-12-02">Mittwoch, 02.12.2026</time>, 18:00 Uhr
+          </dd>
+        </div>
+        <div>
+          <dt>Ort</dt>
+          <dd>Das Wormser,<br />Rathenaustraße 11, 67549 Worms</dd>
+        </div>
+        <div>
+          <dt>Vorverkauf</dt>
+          <dd><strong>12,00 €</strong> <small>Vorverkaufspreis</small></dd>
+        </div>
+        <div>
+          <dt>Abendkasse</dt>
+          <dd><strong>14,00 €</strong> <small>Tagespreis</small></dd>
+        </div>
+        <div class="event-strip__cta">
           <a class="btn btn-primary" href={site.maerchenTicketUrl} rel="noopener">Tickets bestellen</a>
         </div>
-      </aside>
+      </dl>
     </div>
   </section>
 
