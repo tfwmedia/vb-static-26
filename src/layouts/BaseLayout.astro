@@ -62,6 +62,7 @@ const ogImageAlt = meta.ogImageAlt ?? site.name;
 
     {preloadHero && <link rel="preload" href="/assets/img/bsm.webp" as="image" fetchpriority="high" />}
     <link rel="preload" href="/assets/fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin />
+    <script is:inline src="/js/site.js" defer></script>
 
     {structuredData && <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />}
   </head>
@@ -80,45 +81,5 @@ const ogImageAlt = meta.ogImageAlt ?? site.name;
     </main>
 
     <SiteFooter />
-
-    <script>
-      // Scroll-Schatten am Sticky-Header
-      const header = document.querySelector('[data-header]');
-      const onScroll = () => header?.classList.toggle('is-scrolled', window.scrollY > 8);
-      onScroll();
-      window.addEventListener('scroll', onScroll, { passive: true });
-
-      // Mobile Navigation (natives <dialog>)
-      const dialog = document.querySelector<HTMLDialogElement>('[data-nav-dialog]');
-      document.querySelectorAll('[data-nav-open]').forEach((btn) =>
-        btn.addEventListener('click', () => dialog?.showModal())
-      );
-      document.querySelectorAll('[data-nav-close]').forEach((btn) =>
-        btn.addEventListener('click', () => dialog?.close())
-      );
-      dialog?.addEventListener('click', (e) => {
-        // Klick auf Backdrop schließt das Menü
-        if (e.target === dialog) dialog.close();
-      });
-
-      // Scroll-Reveal
-      const revealables = document.querySelectorAll('[data-reveal]');
-      if ('IntersectionObserver' in window) {
-        const io = new IntersectionObserver(
-          (entries) => {
-            for (const entry of entries) {
-              if (entry.isIntersecting) {
-                entry.target.classList.add('is-revealed');
-                io.unobserve(entry.target);
-              }
-            }
-          },
-          { rootMargin: '0px 0px -10% 0px', threshold: 0.05 }
-        );
-        revealables.forEach((el) => io.observe(el));
-      } else {
-        revealables.forEach((el) => el.classList.add('is-revealed'));
-      }
-    </script>
   </body>
 </html>
