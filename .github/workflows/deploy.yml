@@ -138,6 +138,8 @@ jobs:
           check "/spielzeit/" "2026-10-03" "Spielplan: Premiere Löffelliste"
           check "/impressum/" "VR 10302" "Impressum: Vereinsregister"
           check "/datenschutz/" "Datenschutz-Grundverordnung" "Datenschutz: DSGVO-Erklärung"
+          check "/tickets-kaufen/" "url=https://www.ticket-regional.de/events.php" "Ticket-Redirect-Fallback (Meta-Refresh)"
+          check "/tickets-kaufen/" "mysearchSpecificID=1883" "Ticket-Redirect-Ziel (Eventtyp 1883)"
 
       - name: Upload static server log on failure
         if: failure()

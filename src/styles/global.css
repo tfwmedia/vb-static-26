@@ -66,7 +66,7 @@
   --text-xl: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
   --text-2xl: clamp(2rem, 1.6rem + 2vw, 2.875rem);
   --text-display: clamp(2.75rem, 2rem + 3.6vw, 4.75rem);
-  --text-hero: clamp(3rem, 2.2rem + 4vw, 5.25rem);
+  --text-hero: clamp(2.25rem, 1.8rem + 1.8vw, 4.25rem);
 
   /* Raum */
   --space-2xs: 4px;
@@ -79,10 +79,10 @@
   --space-3xl: 96px;
   --section-y: clamp(4rem, 3rem + 5vw, 7.5rem);
 
-  /* Radien (zurückhaltend, seriös) */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  /* Radien (druckgerecht scharf) */
+  --radius-sm: 2px;
+  --radius-md: 2px;
+  --radius-lg: 4px;
   --radius-pill: 999px;
 
   /* Schatten */
@@ -187,12 +187,20 @@ h4 {
   text-wrap: balance;
 }
 
+/* H1 bricht natürlich (kein Balance-Zwang): sonst stehen kurze
+   Wörter isoliert ("1908.", "du uns.") */
 h1 {
   font-size: var(--text-hero);
+  text-wrap: initial;
 }
 
 h2 {
   font-size: var(--text-2xl);
+}
+
+/* H2 in Karten eine Stufe kleiner als Sektions-H2s */
+.contact-card h2 {
+  font-size: var(--text-xl);
 }
 
 h3 {
@@ -241,6 +249,13 @@ p {
   flex: none;
 }
 
+/* Auf roten/dunklen Bändern der Strich in Textfarbe (Rot auf Rot wäre unsichtbar) */
+.section--brand .eyebrow::before,
+.section--ink .eyebrow::before {
+  background: currentColor;
+  opacity: 0.7;
+}
+
 .eyebrow--center {
   justify-content: center;
 }
@@ -276,7 +291,7 @@ p {
 }
 
 .section--brand {
-  background: linear-gradient(135deg, var(--brand-deep), var(--brand));
+  background: var(--brand);
   color: var(--on-brand);
   border-block: 1px solid var(--brand-deep);
 }
@@ -642,9 +657,7 @@ p {
   position: relative;
   overflow: hidden;
   border-bottom: 1px solid var(--line);
-  background:
-    radial-gradient(1100px 500px at 85% -10%, var(--brand-softer), transparent 65%),
-    var(--bg);
+  background: var(--bg);
 }
 
 .hero-grid {
@@ -674,13 +687,6 @@ p {
   height: 8px;
   border-radius: 50%;
   background: var(--brand);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 20%, transparent);
-  animation: pulse 2.4s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 20%, transparent); }
-  50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--brand) 8%, transparent); }
 }
 
 .hero h1 {
@@ -692,11 +698,11 @@ p {
   color: var(--brand);
 }
 
-/* Countdown-Leiste */
+/* Countdown-Leiste: Meta-Zeile oben, Einheiten darunter */
 .countdown {
   display: grid;
-  grid-template-columns: auto auto;
-  gap: var(--space-md) var(--space-xl);
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
   align-items: center;
   margin-block: var(--space-xl);
   padding: var(--space-md) var(--space-lg);
@@ -716,7 +722,7 @@ p {
 
 .countdown__units {
   display: flex;
-  gap: var(--space-md);
+  gap: var(--space-lg);
 }
 
 .countdown-unit {
@@ -753,35 +759,23 @@ p {
   }
 }
 
-/* Poster mit rotem Versatz-Rahmen — Signatur-Element */
-.poster-frame {
-  position: relative;
+/* Poster im Programmheft-Stil: feiner Rahmen, Caption mit rotem Abschlusstrich */
+.poster {
   max-width: 460px;
   margin-inline: auto;
 }
 
-.poster-frame::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  transform: translate(14px, 14px);
-  background: var(--brand);
-  border-radius: var(--radius-md);
-  z-index: 0;
+.poster img {
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
 }
 
-.poster-frame img {
-  position: relative;
-  z-index: 1;
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-lg);
-  border: 1px solid var(--line);
-}
-
-.poster-frame figcaption {
-  position: relative;
-  z-index: 1;
-  margin-top: calc(var(--space-md) + 14px);
+.poster figcaption {
+  margin-top: var(--space-sm);
+  padding-top: var(--space-sm);
+  border-top: 2px solid var(--brand);
   font-size: var(--text-xs);
   color: var(--ink-muted);
   letter-spacing: 0.02em;
@@ -813,7 +807,11 @@ p {
   padding-block: clamp(3rem, 2.5rem + 4vw, 5.5rem);
 }
 
+/* Subpages: H1 deutlich kleiner als Home-Hero. Mobile muss auch das
+   längste einzelne Wort ("Datenschutzerklärung", 20 Zeichen) ohne
+   Overflow in den schmalen Container passen. */
 .hero-inner h1 {
+  font-size: clamp(1.9rem, 1.6rem + 1.6vw, 3.5rem);
   margin-bottom: var(--space-md);
 }
 
@@ -845,7 +843,7 @@ p {
 }
 
 /* Poster in der Seiten-Spalte kompakter */
-.hero-grid--side .poster-frame {
+.hero-grid--side .poster {
   max-width: 320px;
 }
 
@@ -855,6 +853,10 @@ p {
 .card-grid {
   display: grid;
   gap: var(--space-xl);
+}
+
+.card-grid > * {
+  min-width: 0;
 }
 
 .card-grid--featured {
@@ -874,13 +876,12 @@ p {
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
   overflow: hidden;
-  transition: box-shadow var(--t-base), transform var(--t-base), border-color var(--t-base);
+  transition: border-color var(--t-base), box-shadow var(--t-base);
 }
 
 .production-card:hover {
-  box-shadow: var(--shadow-md);
   border-color: var(--line-strong);
-  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
 }
 
 .production-card__media {
@@ -894,11 +895,6 @@ p {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform var(--t-slow);
-}
-
-.production-card:hover .production-card__media img {
-  transform: scale(1.02);
 }
 
 .production-card__chips {
@@ -973,6 +969,7 @@ p {
   padding: var(--space-md) var(--space-lg);
   border-top: 1px solid var(--line);
   background: var(--surface-alt);
+  flex-wrap: wrap;
 }
 
 .price-tag {
@@ -980,7 +977,6 @@ p {
   font-weight: 800;
   font-size: var(--text-md);
   letter-spacing: -0.01em;
-  white-space: nowrap;
 }
 
 .price-tag small {
@@ -1140,6 +1136,13 @@ p {
   color: var(--warning);
 }
 
+/* Gestapelte Fakten (schmale Spalten, z. B. Event-Meta-Card) */
+.facts--stacked > div {
+  grid-template-columns: 1fr;
+  gap: 0.1em;
+  padding-block: 0.7em;
+}
+
 /* =====================================================================
    12. Stats + Vorstand
    ===================================================================== */
@@ -1265,9 +1268,9 @@ p {
 .benefit {
   padding: var(--space-lg);
   border-radius: var(--radius-md);
-  background: color-mix(in srgb, #fff 12%, transparent);
-  border: 1px solid color-mix(in srgb, #fff 22%, transparent);
-  color: #fff;
+  background: var(--surface);
+  border: 1px solid var(--surface);
+  color: var(--ink);
 }
 
 .benefit__icon {
@@ -1276,7 +1279,8 @@ p {
   display: grid;
   place-items: center;
   border-radius: var(--radius-sm);
-  background: color-mix(in srgb, #fff 18%, transparent);
+  background: var(--brand-soft);
+  color: var(--brand);
   margin-bottom: var(--space-md);
 }
 
@@ -1291,14 +1295,14 @@ p {
 }
 
 .benefit h3 {
-  color: #fff;
+  color: var(--ink);
   font-size: var(--text-md);
   margin-bottom: 0.35em;
 }
 
 .benefit p {
   font-size: var(--text-sm);
-  color: rgba(255, 255, 255, 0.88);
+  color: var(--ink-2);
   line-height: 1.6;
 }
 
@@ -1319,6 +1323,17 @@ p {
 .contact-card > .actions {
   justify-content: flex-end;
   flex-wrap: wrap;
+}
+
+/* Variante für schmale Container: Text voll, Aktionen darunter */
+.contact-card--flow {
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+  align-items: start;
+}
+
+.contact-card--flow > .actions {
+  justify-content: flex-start;
 }
 
 @media (max-width: 760px) {

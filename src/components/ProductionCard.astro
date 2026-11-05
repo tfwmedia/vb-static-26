@@ -1,5 +1,5 @@
 ---
-import { truncateText, slugify } from '../lib/format';
+import { slugify } from '../lib/format';
 import type { Production } from '../data/productions';
 
 interface Props {
@@ -28,7 +28,7 @@ const venue = prod.kind === 'maerchen'
   <div class="production-card__body">
     <p class="eyebrow" style="margin-bottom: 0;">{prod.subtitle}</p>
     <h2 class="production-card__title" itemprop="name">{prod.title}</h2>
-    <p class="production-card__text" itemprop="description">{truncateText(prod.lead, 220, '…')}</p>
+    <p class="production-card__text" itemprop="description">{prod.lead}</p>
     <dl class="facts">
       <div>
         <dt>Autor</dt>

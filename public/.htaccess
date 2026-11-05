@@ -1,6 +1,9 @@
 RewriteEngine On
 
 # Tickets: externer Kauf bei Ticket-Regional (301).
+# Der Rewrite greift VOR dem Dateizugriff; die statische Fallback-Seite
+# dist/tickets-kaufen/index.html (Meta-Refresh, noindex) wird auf Apache
+# daher nie ausgeliefert - sie dient nur nicht-Apache-Hosts.
 RewriteRule ^tickets-kaufen/?$ https://www.ticket-regional.de/events.php?mysearchSpecificType=eventtype&mysearchSpecificID=1883 [R=301,L]
 
 # Astro build:format=directory erzeugt /route/index.html.
