@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import PromoPopup from '../components/PromoPopup.astro';
 import Breadcrumbs, { type Crumb } from '../components/Breadcrumbs.astro';
 import { absoluteUrl, metaDefaults, site, type PageMeta } from '../data/site';
 
@@ -81,5 +82,8 @@ const ogImageAlt = meta.ogImageAlt ?? site.name;
     </main>
 
     <SiteFooter />
+
+    {/* TEMPORÄR (Konzertwerbung JAT, Auto-Aus 20.11.2026 22 Uhr): */}
+    <PromoPopup />
   </body>
 </html>

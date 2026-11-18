@@ -1,0 +1,54 @@
+---
+/**
+ * TEMPORÄRE WERBUNG: Sonderkonzert Johannes Ambrosius Trio, Fr 20.11.2026.
+ *
+ * Anzeige steuert /js/promo.js (einmal pro Sitzung, Klick auf Backdrop/ESC
+ * schließt). Automatisches Aus nach dem Konzertabend: Stichtag
+ * Fr, 20.11.2026, 22:00 Uhr (MEZ, UTC+1) fest in promo.js hinterlegt.
+ *
+ * Aufräumen nach dem Stichtag (alle drei Teile zusammen):
+ *   1. diese Komponente + Einbindung in BaseLayout.astro entfernen
+ *   2. public/js/promo.js entfernen
+ *   3. CSS-Block ".promo-popup" in src/styles/global.css entfernen
+ */
+---
+
+<dialog class="promo-popup" id="promo-popup" tabindex="-1" aria-labelledby="promo-popup-title" aria-describedby="promo-popup-text">
+  <button class="promo-popup__close" type="button" data-promo-close aria-label="Ankündigung schließen">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none">
+      <path d="M6 6l12 12M18 6L6 18" />
+    </svg>
+  </button>
+  <img
+    class="promo-popup__img"
+    src="/assets/img/jat-trio.jpg"
+    width="1280"
+    height="853"
+    alt="Das Johannes Ambrosius Trio: drei Musiker in schwarzer Kleidung vor dunklem Hintergrund"
+  />
+  <div class="promo-popup__body">
+    <p class="promo-popup__kicker">Sonderkonzert</p>
+    <h2 class="promo-popup__title" id="promo-popup-title">Johannes Ambrosius Trio</h2>
+    <p class="promo-popup__genre">Contemporary Acoustic - Melodic Progressive Music</p>
+    <p class="promo-popup__meta">
+      Freitag, 20. November 2026<br />
+      20:00 Uhr <span>· Einlass 19:00 Uhr</span><br />
+      Volksbühne Worms
+    </p>
+    <p class="promo-popup__text" id="promo-popup-text">
+      Drei Musiker, eigene Kompositionen und die Freiheit des Augenblicks:
+      Zwischen eingängigen Melodien, kraftvollen Grooves und feinfühligen
+      Klanglandschaften entfaltet das Trio eine facettenreiche Musik voller
+      Energie, Tiefe und Überraschungen.
+    </p>
+    <p class="promo-popup__price">
+      Eintritt 15,- / Schüler 10,-<br />
+      <span>nur Abendkasse</span>
+    </p>
+    <div class="promo-popup__actions">
+      <button class="btn btn-primary promo-popup__cta" type="button" data-promo-close>Schließen</button>
+    </div>
+  </div>
+</dialog>
+
+<script is:inline src="/js/promo.js" defer></script>
